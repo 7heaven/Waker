@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:waker="http://schemas.android.com/apk/res/com.cfm.waker"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <com.cfm.waker.widget.AlarmClockBlock
+        android:id="@+id/alarm"
+        android:layout_width="50.0dip"
+        android:layout_height="50.0dip"
+        waker:color="#FFF99661" />
+
+</LinearLayout>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="160.0dip"
+    xmlns:waker="http://schemas.android.com/apk/res/com.cfm.waker">
+    
+    <com.cfm.waker.widget.AlarmClockBlock
+        android:id="@+id/alarm0"
+        android:layout_width="80.0dip"
+        android:layout_height="80.0dip"
+        waker:color="#FFF99661"
+        android:visibility="gone" />
+    
+    <com.cfm.waker.widget.AlarmClockBlock
+        android:id="@+id/alarm1"
+        android:layout_width="80.0dip"
+        android:layout_height="80.0dip"
+        waker:color="#FF0099CC"
+        android:visibility="gone" />
+    
+    <com.cfm.waker.widget.AlarmClockBlock
+        android:id="@+id/alarm2"
+        android:layout_width="80.0dip"
+        android:layout_height="80.0dip"
+        waker:color="#FF8BCA09"
+        android:visibility="gone" />
+    
+    <com.cfm.waker.widget.AlarmClockBlock
+        android:id="@+id/alarm3"
+        android:layout_width="80.0dip"
+        android:layout_height="80.0dip"
+        waker:color="#FFFFFFFF"
+        android:visibility="gone" />
+
+</LinearLayout>

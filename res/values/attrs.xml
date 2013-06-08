@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <declare-styleable name="FontTextView" >
+        <attr name="font" format="string" />
+    </declare-styleable>
+    
+    <declare-styleable name="DialTimePicker" >
+        <attr name="outer_circle" format="dimension" />
+        <attr name="inner_circle" format="dimension" />
+    </declare-styleable>
+    
+    <declare-styleable name="RiseView" >
+        <attr name="rise_range" format="dimension" />
+        <attr name="fall_range" format="dimension" />
+    </declare-styleable>
+    
+    <declare-styleable name="AlarmClockBlock" >
+        <attr name="typeface" format="string" />
+        <attr name="color" format="color" />
+    </declare-styleable>
+</resources>

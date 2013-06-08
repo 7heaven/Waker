@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:waker="http://schemas.android.com/apk/res/com.cfm.waker"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <com.cfm.waker.view.RiseView 
+        android:id="@+id/shake_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        waker:rise_range="5.0dip"
+        waker:fall_range="2.0dip" />
+
+</RelativeLayout>
