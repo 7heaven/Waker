@@ -49,8 +49,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	private boolean pickingTime;
 	
 	private ViewPager viewPager;
-	private ArrayList<View> alarmList;
-	private ArrayList<Alarm> alarms;
+	private ArrayList<Alarm> alarmList;
 	private AlarmListAdapter alarmListAdapter;
 	
 	private int alarmCount;
@@ -87,12 +86,10 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		pickingTime = false;
 		
 		viewPager = (ViewPager) findViewById(R.id.alarm_list);
-		alarmList = new ArrayList<View>();
-		alarmList.add(getLayoutInflater().inflate(R.layout.viewpager_page_alarmblock, null));
-		alarmListAdapter = new AlarmListAdapter(alarmList);
+		alarmList = new ArrayList<Alarm>();
+		alarmListAdapter = new AlarmListAdapter(this, alarmList);
 		viewPager.setAdapter(alarmListAdapter);
 		
-		alarms = new ArrayList<Alarm>();
 		alarmCount = 0;
 		
 		mOnVerticallySlideListener = new OnVerticallySlideListener(){
@@ -140,7 +137,6 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 				if(!mApplication.is24()) amPm.setText(calendar.get(Calendar.AM_PM) == Calendar.AM ? "am" : "pm");
 				
 				timeHandler.postDelayed(tRunnable, 500);
-				
 				
 			}
 			
@@ -196,57 +192,21 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	
 	private void addAlarm(Calendar calendar){
 		Alarm alarm = new Alarm(calendar, mApplication.is24());
-		alarms.add(alarm);
 		WakerDatabaseHelper.getInstance(this).insertAlarm(alarm);
 		
 		addAlarmsByDatabase();
 	}
 	
 	private void addAlarmsByDatabase(){
-		alarms.clear();
 		List<Alarm> tmp_list = WakerDatabaseHelper.getInstance(this).getAlarms(mApplication.is24());
 		if(null != tmp_list)
-		    alarms.addAll(tmp_list);
-		
-		addAlarmsIntoRow(tmp_list);
-		
-		viewPager.invalidate();
+			addAlarmsIntoRow(tmp_list);
 		
 	}
 	
 	private void addAlarmsIntoRow(List<Alarm>  alarms){
 		alarmList.clear();
-		
-		if(null == alarms){
-			alarmList.add(getLayoutInflater().inflate(R.layout.viewpager_page_no_saved_alarm, null, false));
-		}else{
-			int div = alarms.size() / 4;
-			int r = alarms.size() % 4;
-			int pageCount = r == 0 ? div : div + 1;
-			
-			Log.d(TAG, "alarms_size:" + alarms.size() + " pageCount:" + pageCount + " div:" + div + " r:" + r);
-			
-			int i = 0;
-			do{
-				RowBlock rowBlock = new RowBlock(this);
-				alarmList.add(rowBlock);
-				int position;
-				
-				if(i == pageCount - 1 && r != 0){
-					position = r;
-				}else{
-					position = 4;
-				}
-				
-				int j = 0;
-				do{
-					rowBlock.getAlarmBlock(j).setVisibility(View.VISIBLE);
-					rowBlock.getAlarmBlock(j).setAlarm(alarms.get(i * 4 + j));
-					
-				}while(++j < position);
-			}while(++i < pageCount);
-		}
-		
+		alarmList.addAll(alarms);
 		alarmListAdapter.notifyDataSetChanged();
 	}
 	
