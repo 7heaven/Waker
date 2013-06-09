@@ -105,7 +105,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 			@Override
 			public void onVerticallySlide(int distance){
 				if(viewPager.getScrollY() >= 0 && viewPager.getScrollY() <= viewPager.getMeasuredHeight()){
-					
+					if(viewPager.getCurrentItem() != 0) viewPager.setCurrentItem(0, false);
 					viewPager.scrollTo(0, y - distance);
 				}
 			}

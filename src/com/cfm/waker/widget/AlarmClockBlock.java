@@ -136,7 +136,7 @@ public class AlarmClockBlock extends View {
 					touchMode = TOUCHMODE_IDLE;
 					enabled = !enabled;
 					alarm.setEnabled(enabled);
-					onStateChangeListener.onStateChanged(alarm.getId(), enabled);
+					if(null != onStateChangeListener) onStateChangeListener.onStateChanged(alarm.getId(), enabled);
 					returnToOriginalSpot();
 				}
 				

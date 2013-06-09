@@ -51,8 +51,16 @@ public class AlarmListAdapter extends PagerAdapter{
 			LayoutInflater inflater = LayoutInflater.from(context);
 			View v = inflater.inflate(R.layout.viewpager_page_no_saved_alarm, null, false);
 			((ViewPager) view).addView(v);
+			((ViewPager) view).setTag(v);
 			return v;
 		}else{
+			if(position == 0){
+				try{
+					((ViewPager) view).removeView((View) ((ViewPager) view).getTag());
+				}catch(NullPointerException e){
+					e.printStackTrace();
+				}
+			}
 			RowBlock rowBlock;
 			try{
 				rowBlock = (RowBlock) viewList.get(position);
@@ -73,7 +81,7 @@ public class AlarmListAdapter extends PagerAdapter{
 				
 				rowBlock.getAlarmBlock(i).setVisibility(View.VISIBLE);
 				rowBlock.getAlarmBlock(i).setAlarm(alarmList.get(position * 4 + i));
-				Log.d(TAG, "i:" + i + ", bdg:" + bdg + " pageCount:" + getCount() + " alarmList:" + alarmList.size() + "position:" + position + " visibility" + i + ":" + rowBlock.getAlarmBlock(i).getVisibility());
+				//Log.d(TAG, "i:" + i + ", bdg:" + bdg + " pageCount:" + getCount() + " alarmList:" + alarmList.size() + "position:" + position + " visibility" + i + ":" + rowBlock.getAlarmBlock(i).getVisibility());
 				
 			}while(++i < bdg);
 			
