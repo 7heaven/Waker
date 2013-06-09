@@ -47,6 +47,29 @@ public class Alarm {
 		message = "wake up! you baster!";
 	}
 	
+	public Alarm(long TimeInMillis, boolean is24Format){
+		this.is24Format = is24Format;
+		calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(TimeInMillis);
+		
+		snoozeTime = 3000;
+		enabled = true;
+		vibrate = true;
+		
+		ringtone = "weather";
+		
+		week = 1;
+		message = "wake up! you baster!";
+	}
+	
+	public long getId(){
+		return calendar.getTimeInMillis();
+	}
+	
+	public void setId(long milliseconds){
+		calendar.setTimeInMillis(milliseconds);
+	}
+	
 	public int getHour(){
 		return calendar.get(Calendar.HOUR_OF_DAY);
 	}

@@ -24,11 +24,6 @@ public class SettingActivity extends BaseSlidableActivity {
 		setContentView(R.layout.activity_settings);
 		
 		content = (TextView) findViewById(R.id.content);
-		alarm = WakerDatabaseHelper.getInstance(this).getAlarms(true);
-		int position = 0;
-		do{
-			content.append(alarm.get(position).getFormatedTime() + "/n");
-		}while(++position < alarm.size() - 1);
 	}
 
 	@Override
@@ -36,10 +31,12 @@ public class SettingActivity extends BaseSlidableActivity {
 		super.onResume();
 		content.setText("");
 		alarm = WakerDatabaseHelper.getInstance(this).getAlarms(true);
-		int position = 0;
-		do{
-			content.append(alarm.get(position).getFormatedTime() + "\n");
-		}while(++position < alarm.size() - 1);
+		if(null != alarm){
+			int position = 0;
+			do{
+				content.append(alarm.get(position).getFormatedTime() + "\n");
+			}while(++position < alarm.size());
+		}
 	}
 	
 	@Override

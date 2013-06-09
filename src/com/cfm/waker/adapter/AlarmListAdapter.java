@@ -53,11 +53,6 @@ public class AlarmListAdapter extends PagerAdapter{
 			((ViewPager) view).addView(v);
 			return v;
 		}else{
-			try{
-				((ViewPager) view).removeViewAt(position);
-			}catch(NullPointerException e){
-				e.printStackTrace();
-			}
 			RowBlock rowBlock;
 			try{
 				rowBlock = (RowBlock) viewList.get(position);

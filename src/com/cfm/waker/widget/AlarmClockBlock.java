@@ -1,9 +1,7 @@
 package com.cfm.waker.widget;
 
 import java.lang.Runnable;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -12,7 +10,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Handler;
-import android.text.format.DateFormat;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -55,6 +52,12 @@ public class AlarmClockBlock extends View {
 	private Handler handler;
 	private MyRunnable runnable;
 	
+	private OnStateChangeListener onStateChangeListener;
+	
+	public interface OnStateChangeListener{
+		public void onStateChanged(long id, boolean isEnabled);
+	}
+	
 	public AlarmClockBlock(Context context){
 		this(context, null);
 	}
@@ -92,10 +95,12 @@ public class AlarmClockBlock extends View {
 	
 	public void setAlarm(Calendar calendar, boolean is24Format){
 		alarm = new Alarm(calendar, is24Format);
+		enabled = alarm.isEnabled();
 	}
 	
 	public void setAlarm(Alarm alarm){
 		this.alarm = alarm;
+		enabled = alarm.isEnabled();
 	}
 	
 	@Override
@@ -130,6 +135,8 @@ public class AlarmClockBlock extends View {
 				}else if(moveY > centerY + radius * 2){
 					touchMode = TOUCHMODE_IDLE;
 					enabled = !enabled;
+					alarm.setEnabled(enabled);
+					onStateChangeListener.onStateChanged(alarm.getId(), enabled);
 					returnToOriginalSpot();
 				}
 				
