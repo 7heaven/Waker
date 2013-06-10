@@ -1,3 +1,10 @@
+/*
+ * Waker project 2013
+ * 
+ * folks studio
+ * 
+ * by caifangmao8@gmail.com
+ */
 package com.cfm.waker.dao;
 
 import android.content.Context;
@@ -11,6 +18,8 @@ public class WakerPreferenceManager {
 	private static final String PREFERENCE_NAME = "waker_preference";
 	
 	private static final String SCREEN_DENSITY = "screen_density";
+	private static final String SCREEN_WIDTH = "screen_width";
+	private static final String SCREEN_HEIGHT = "screen_height";
 	
 	private SharedPreferences wakerPreferences;
 	
@@ -40,6 +49,22 @@ public class WakerPreferenceManager {
 	
 	public float getScreenDensity(){
 		return getPreference().getFloat(SCREEN_DENSITY, 1F);
+	}
+	
+	public void setScreenResolution(int width, int height){
+		SharedPreferences.Editor editor = getPreference().edit();
+		editor.putInt(SCREEN_WIDTH, width);
+		editor.putInt(SCREEN_HEIGHT, height);
+		
+		editor.commit();
+	}
+	
+	public int getScreenWidth(){
+		return getPreference().getInt(SCREEN_WIDTH, 480);
+	}
+	
+	public int getScreenHeight(){
+		return getPreference().getInt(SCREEN_HEIGHT, 800);
 	}
 	
 }

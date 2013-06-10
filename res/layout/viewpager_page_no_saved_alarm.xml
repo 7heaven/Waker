@@ -11,7 +11,7 @@
         android:textSize="16.0dip"
         android:textColor="#FFFFFFFF"
         android:gravity="center"
-        android:background="#FF000000" />
+        android:background="#FF262632" />
     
 
 </RelativeLayout>

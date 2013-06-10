@@ -1,3 +1,10 @@
+/*
+ * Waker project 2013
+ * 
+ * folks studio
+ * 
+ * by caifangmao8@gmail.com
+ */
 package com.cfm.waker.ui;
 
 import java.util.List;

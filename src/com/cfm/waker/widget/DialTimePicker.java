@@ -1,6 +1,14 @@
+/*
+ * Waker project 2013
+ * 
+ * folks studio
+ * 
+ * by caifangmao8@gmail.com
+ */
 package com.cfm.waker.widget;
 
 import com.cfm.waker.R;
+import com.cfm.waker.util.DensityUtil;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -15,6 +23,8 @@ public class DialTimePicker extends View{
 	
 	private static final String TAG = "DialTimePicker";
 	
+	private Context context;
+	
 	private int outerCircleRange;
 	private int innerCircleRange;
 	private int mediumCircleRange;
@@ -23,6 +33,8 @@ public class DialTimePicker extends View{
 	
 	private int outerPressRange;
 	private int innerPressRange;
+	
+	private int circleWidth;
 	
 	private Point centerPoint;
 	
@@ -54,10 +66,14 @@ public class DialTimePicker extends View{
 	public DialTimePicker(Context context, AttributeSet attrs, int defStyle){
 		super(context, attrs, defStyle);
 		
+		this.context = context;
+		
 		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.DialTimePicker);
 		
 		outerCircleRange = (int) ta.getDimension(R.styleable.DialTimePicker_outer_circle, 0) / 2;
 		innerCircleRange = (int) ta.getDimension(R.styleable.DialTimePicker_inner_circle, 0) / 2;
+		
+		circleWidth = outerCircleRange - innerCircleRange;
 		
 		ta.recycle();
 		
@@ -68,6 +84,7 @@ public class DialTimePicker extends View{
 			
 			outerPressRange = mediumCircleRange + thumbPressRange / 2;
 			innerPressRange = mediumCircleRange - thumbPressRange / 2;
+			
 		}
 		
 		isDrawPressPoint = false;
@@ -168,15 +185,15 @@ public class DialTimePicker extends View{
 	public void onDraw(Canvas canvas){
 		super.onDraw(canvas);
 		
-		paint.setColor(0xFF0099cc);
+		paint.setColor(0xFF24BCF6);
 		paint.setStyle(Paint.Style.STROKE);
-		paint.setStrokeWidth(outerCircleRange - innerCircleRange);
+		paint.setStrokeWidth(circleWidth);
 		canvas.drawCircle(centerPoint.x, centerPoint.y, mediumCircleRange, paint);
 		
-		paint.setColor(0xFFFFFFFF);
-		paint.setStyle(Paint.Style.FILL);
 		if(isDrawPressPoint){
-			canvas.drawCircle(drawPoint.x, drawPoint.y, 15, paint);
+			paint.setColor(0xFFFFFFFF);
+			paint.setStyle(Paint.Style.FILL);
+			canvas.drawCircle(drawPoint.x, drawPoint.y, circleWidth * 2, paint);
 		}
 		
 	}

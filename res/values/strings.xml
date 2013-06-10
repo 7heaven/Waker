@@ -8,5 +8,12 @@
     <string name="am">am</string>
     <string name="pm">pm</string>
     <string name="no_saved_alarm">no saved alarm</string>
+    
+    <!-- settings page -->
+    <string name="setting_page_alarm_style">Alarm Style</string>
+    <string name="setting_page_shake_level">Shake Level</string>
+    <string name="setting_page_snooze_time">Snooze Time</string>
+    <string name="setting_page_sound_effects">Sound Effects</string>
+    <string name="setting_page_alarm_volume">Alarm Volume</string>
 
 </resources>

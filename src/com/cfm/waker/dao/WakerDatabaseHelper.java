@@ -1,3 +1,10 @@
+/*
+ * Waker project 2013
+ * 
+ * folks studio
+ * 
+ * by caifangmao8@gmail.com
+ */
 package com.cfm.waker.dao;
 
 import java.util.ArrayList;
@@ -68,17 +75,6 @@ public class WakerDatabaseHelper extends SQLiteOpenHelper {
 	
 	public List<Alarm> getAlarms(boolean is24Format){
 		SQLiteDatabase db = getReadableDatabase();
-		String[] columns = {Alarm.Columns.ID,
-				            Alarm.Columns.HOUR,
-				            Alarm.Columns.MINUTE,
-				            Alarm.Columns.SNOOZE_TIME,
-				            Alarm.Columns.ENABLED,
-				            Alarm.Columns.VIBRATE,
-				            Alarm.Columns.RINGTONE,
-				            Alarm.Columns.DAYS_OF_WEEK,
-				            Alarm.Columns.MESSAGE};
-		
-		//Cursor cursor = db.query(TABLE_NAME, columns, null, null, null, null, Alarm.Columns.ID + " ASC");
 		String sql = "SELECT * FROM " + TABLE_NAME + " ORDER BY " + Alarm.Columns.ID + " ASC";
 		Cursor cursor = db.rawQuery(sql, null);
 		

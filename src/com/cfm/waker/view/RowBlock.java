@@ -1,3 +1,10 @@
+/*
+ * Waker project 2013
+ * 
+ * folks studio
+ * 
+ * by caifangmao8@gmail.com
+ */
 package com.cfm.waker.view;
 
 import com.cfm.waker.R;
@@ -7,9 +14,16 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
-public class RowBlock extends LinearLayout {
+/**
+ * a RowBlock is a simple Class contain 4 AlarmClockBLock </br>
+ * @author caifangmao8@gmail.com
+ *
+ */
+public class RowBlock extends RelativeLayout {
+	
+	private static final String TAG = "RowBlock";
 	
 	private AlarmClockBlock alarm0;
 	private AlarmClockBlock alarm1;

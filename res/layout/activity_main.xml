@@ -4,38 +4,50 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:background="#FF222222" >
+    android:background="@drawable/background" >
     
     <android.support.v4.view.ViewPager
         android:id="@+id/alarm_list"
         android:layout_width="match_parent"
-        android:layout_height="160.0dip" />
+        android:layout_height="160.0dip"
+        android:overScrollMode="never" />
     
-    <TextView
-        android:id="@+id/time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="08:12"
-        android:textColor="#FFFFFFFF"
-        android:textSize="80.0dip"
-        android:layout_centerInParent="true" />
-    
-    <TextView
-        android:id="@+id/am_pm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="am"
-        android:textColor="#FFFFFF"
-        android:textSize="40.0dip"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/time" />
-    
-    <com.cfm.waker.widget.DialTimePicker
-        android:id="@+id/time_pick"
+    <RelativeLayout 
+        android:id="@+id/dial_layout"
         android:layout_width="300.0dip"
         android:layout_height="300.0dip"
-        android:layout_centerInParent="true"
-        waker:outer_circle="250.0dip"
-        waker:inner_circle="240.0dip" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="130.0dip">
+        
+        <com.cfm.waker.widget.FontTextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            waker:font="fonts/swiss_ht.ttf"
+            android:text="08:12"
+            android:textColor="#FFFFFFFF"
+            android:textSize="80.0dip"
+            android:layout_centerInParent="true" />
+        
+        <com.cfm.waker.widget.FontTextView
+            android:id="@+id/am_pm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            waker:font="fonts/swiss_ht.ttf"
+            android:text="am"
+            android:textColor="#FFFFFFFF"
+            android:textSize="40.0dip"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/time" />
+        
+        <com.cfm.waker.widget.DialTimePicker
+            android:id="@+id/time_pick"
+            android:layout_width="300.0dip"
+            android:layout_height="300.0dip"
+            android:layout_centerInParent="true"
+            waker:outer_circle="250.0dip"
+            waker:inner_circle="240.0dip" />
+        
+    </RelativeLayout>
 
 </RelativeLayout>

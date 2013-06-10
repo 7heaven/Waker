@@ -1,3 +1,10 @@
+/*
+ * Waker project 2013
+ * 
+ * folks studio
+ * 
+ * by caifangmao8@gmail.com
+ */
 package com.cfm.waker.adapter;
 
 import java.util.ArrayList;
@@ -54,6 +61,7 @@ public class AlarmListAdapter extends PagerAdapter{
 			((ViewPager) view).setTag(v);
 			return v;
 		}else{
+			//remove the no saved alarm layout
 			if(position == 0){
 				try{
 					((ViewPager) view).removeView((View) ((ViewPager) view).getTag());
@@ -61,6 +69,8 @@ public class AlarmListAdapter extends PagerAdapter{
 					e.printStackTrace();
 				}
 			}
+			
+			//add RowBlock into ViewPager and recalculate visible and invisible items;
 			RowBlock rowBlock;
 			try{
 				rowBlock = (RowBlock) viewList.get(position);
@@ -71,11 +81,15 @@ public class AlarmListAdapter extends PagerAdapter{
 			
 			int i = 0;
 			int bdg = 0;
+			
+			//calculate whether RowBlock should make all items visible or not;
+			//bdg is the count of how many Alarms left in alarmList in a single RowBlock
 			if(position == getCount() - 1 && alarmList.size() % 4 != 0){
 				bdg = alarmList.size() % 4;
 			}else{
 				bdg = 4;
 			}
+			
 			
 			do{
 				
@@ -98,6 +112,8 @@ public class AlarmListAdapter extends PagerAdapter{
 
 	@Override
 	public int getCount() {
+		//when alarmList.size() == 0 shall return 1 for the no alarm saved layout
+		//otherwise calculate the pagecount in ViewPager by using alarmList.size()
 		if(alarmList.size() == 0){
 			return 1;
 		}else{

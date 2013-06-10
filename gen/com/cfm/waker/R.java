@@ -92,32 +92,22 @@ containing a value of this type.
         public static final int activity_vertical_margin=0x7f050001;
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
-        public static final int number_0=0x7f020001;
-        public static final int number_1=0x7f020002;
-        public static final int number_2=0x7f020003;
-        public static final int number_3=0x7f020004;
-        public static final int number_4=0x7f020005;
-        public static final int number_5=0x7f020006;
-        public static final int number_6=0x7f020007;
-        public static final int number_7=0x7f020008;
-        public static final int number_8=0x7f020009;
-        public static final int number_9=0x7f02000a;
-        public static final int number_dot=0x7f02000b;
-        public static final int ui_time_circle=0x7f02000c;
+        public static final int background=0x7f020000;
+        public static final int ic_launcher=0x7f020001;
     }
     public static final class id {
-        public static final int alarm=0x7f090006;
-        public static final int alarm0=0x7f090007;
-        public static final int alarm1=0x7f090008;
-        public static final int alarm2=0x7f090009;
-        public static final int alarm3=0x7f09000a;
+        public static final int alarm=0x7f090007;
+        public static final int alarm0=0x7f090008;
+        public static final int alarm1=0x7f090009;
+        public static final int alarm2=0x7f09000a;
+        public static final int alarm3=0x7f09000b;
         public static final int alarm_list=0x7f090000;
-        public static final int am_pm=0x7f090002;
-        public static final int content=0x7f090004;
-        public static final int shake_view=0x7f090005;
-        public static final int time=0x7f090001;
-        public static final int time_pick=0x7f090003;
+        public static final int am_pm=0x7f090003;
+        public static final int content=0x7f090005;
+        public static final int dial_layout=0x7f090001;
+        public static final int shake_view=0x7f090006;
+        public static final int time=0x7f090002;
+        public static final int time_pick=0x7f090004;
     }
     public static final class layout {
         public static final int activity_about=0x7f030000;
@@ -138,6 +128,13 @@ containing a value of this type.
         public static final int hello_world=0x7f060002;
         public static final int no_saved_alarm=0x7f060005;
         public static final int pm=0x7f060004;
+        /**  settings page 
+         */
+        public static final int setting_page_alarm_style=0x7f060006;
+        public static final int setting_page_alarm_volume=0x7f06000a;
+        public static final int setting_page_shake_level=0x7f060007;
+        public static final int setting_page_snooze_time=0x7f060008;
+        public static final int setting_page_sound_effects=0x7f060009;
     }
     public static final class style {
         /** 

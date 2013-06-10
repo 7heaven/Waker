@@ -1,3 +1,10 @@
+/*
+ * Waker project 2013
+ * 
+ * folks studio
+ * 
+ * by caifangmao8@gmail.com
+ */
 package com.cfm.waker.widget;
 
 import java.lang.Runnable;
@@ -78,7 +85,7 @@ public class AlarmClockBlock extends View {
 		textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
 		
 		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.AlarmClockBlock);
-		if(null != ta.getString(R.styleable.AlarmClockBlock_typeface)){
+		if(null != ta.getString(R.styleable.AlarmClockBlock_typeface) && !isInEditMode()){
 			Typeface typeface = Typeface.createFromAsset(context.getAssets(), ta.getString(R.styleable.AlarmClockBlock_typeface));
 			textPaint.setTypeface(typeface);
 		}
@@ -131,9 +138,9 @@ public class AlarmClockBlock extends View {
 			case TOUCHMODE_DRAGGING:
 				moveX = centerX;
 				moveY = dy + event.getY();
-				if(moveY > centerY && moveY <= centerY + radius * 2){
+				if(moveY > centerY && moveY <= centerY + DensityUtil.dip2px(context, 80)){
 					invalidate();
-				}else if(moveY > centerY + radius * 2){
+				}else if(moveY > centerY + DensityUtil.dip2px(context, 80)){
 					touchMode = TOUCHMODE_IDLE;
 					enabled = !enabled;
 					alarm.setEnabled(enabled);
@@ -197,19 +204,25 @@ public class AlarmClockBlock extends View {
 		moveY = moveY == 0 ? centerY : moveY;
 		
 		/*
-		//for background
-		paint.setColor(color);
+		paint.setColor(0xFF060612);
 		paint.setStyle(Paint.Style.FILL);
 		bound.top = 0;
 		bound.left = 0;
 		bound.right = width;
 		bound.bottom = height;
 		canvas.drawRect(bound, paint);
-		 */
+		//for background
+		paint.setColor(0xFF363745);
+		bound.top = (int) (moveY - centerY);
+		bound.left = (int) (moveX - centerX);
+		bound.right = (int) (moveX + centerX);
+		bound.bottom = (int) (moveY + centerY);
+		canvas.drawRect(bound, paint);
+		*/
 		
 		paint.setColor(enabled ? color : 0xFF999999);
 		paint.setStyle(Paint.Style.STROKE);
-		paint.setStrokeWidth(2);
+		paint.setStrokeWidth(DensityUtil.dip2px(context, 2));
 		canvas.drawCircle(moveX, moveY, radius, paint);
 		String text = alarm.getFormatedTime();
 		if(null != text){

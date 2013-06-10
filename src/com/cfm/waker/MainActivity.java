@@ -1,3 +1,10 @@
+/*
+ * Waker project 2013
+ * 
+ * folks studio
+ * 
+ * by caifangmao8@gmail.com
+ */
 package com.cfm.waker;
 
 import java.text.SimpleDateFormat;
@@ -15,25 +22,23 @@ import com.cfm.waker.ui.ShakeActivity;
 import com.cfm.waker.ui.base.BaseSlidableActivity;
 import com.cfm.waker.widget.DialTimePicker;
 import com.cfm.waker.widget.DialTimePicker.OnTimePickListener;
+import com.cfm.waker.widget.FontTextView;
 
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainActivity extends BaseSlidableActivity implements OnTimePickListener{
 	
-	private TextView timeText;
-	private TextView amPm;
+	private FontTextView timeText;
+	private FontTextView amPm;
 	private DialTimePicker dialTimePicker;
 	
 	private TimeRunnable tRunnable;
@@ -60,12 +65,8 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		dialTimePicker = (DialTimePicker) findViewById(R.id.time_pick);
 		dialTimePicker.setOnTimePickListener(this);
 		
-		Typeface typeface = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/swiss_ht.ttf");
-		
-		timeText = (TextView) findViewById(R.id.time);
-		timeText.setTypeface(typeface);
-		amPm = (TextView) findViewById(R.id.am_pm);
-		amPm.setTypeface(typeface);
+		timeText = (FontTextView) findViewById(R.id.time);
+		amPm = (FontTextView) findViewById(R.id.am_pm);
 		
 		tRunnable = new TimeRunnable();
 		timeHandler = new Handler();
@@ -247,11 +248,6 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, ++alarmCount);
 		alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-		//Toast.makeText(this, "alarm " + dateFormat.format(calendar.getTime()) + " set!", Toast.LENGTH_LONG).show();
-		/*
-		Intent intent = new Intent(MainActivity.this, ShakeActivity.class);
-		startActivity(intent);
-		*/
 		
 		timeHandler.post(tRunnable);
 	}
