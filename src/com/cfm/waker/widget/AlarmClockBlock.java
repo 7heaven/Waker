@@ -18,6 +18,7 @@ import android.view.View;
 
 import com.cfm.waker.R;
 import com.cfm.waker.entity.Alarm;
+import com.cfm.waker.util.DensityUtil;
 
 public class AlarmClockBlock extends View {
 	
@@ -221,7 +222,7 @@ public class AlarmClockBlock extends View {
 				textPaint.setTextSize(textPaint.getTextSize() / 2);
 				textPaint.getTextBounds(text, 0, text.length(), bound2);
 				
-				canvas.drawText(text, moveX - bound2.width() / 2, moveY + bound.height() / 2 + bound2.height() * 2, textPaint);
+				canvas.drawText(text, moveX - bound2.width() / 2, moveY + bound.height() / 2 + bound2.height() + DensityUtil.dip2px(context, 5), textPaint);
 			}
 		}
 	}

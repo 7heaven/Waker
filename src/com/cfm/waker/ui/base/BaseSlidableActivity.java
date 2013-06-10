@@ -1,3 +1,10 @@
+/*
+ * Waker project 2013
+ * 
+ * folks studio
+ * 
+ * by caifangmao8@gmail.com
+ */
 package com.cfm.waker.ui.base;
 
 import java.lang.Runnable;
@@ -11,14 +18,19 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+/**
+ * this base Activity enable < ? extends BaseSlidableActivity > to detect and response a slide movement
+ * @author caifangmao8@gmail.com
+ *
+ */
 public abstract class BaseSlidableActivity extends BaseActivity {
 	
 	protected static final String TAG = "BaseSlidableActivity";
 	
 	private View mContent;
 	
-	private View leftIcon;
-	private View rightIcon;
+  //private View leftIcon;
+  //private View rightIcon;
 	
 	private int dx, dy;
 	private int moveX = 0;
@@ -37,12 +49,43 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 	private MyRunnable runnable;
 	private Handler handler;
 	
+	/**
+	 * Must Override this class to return a left enter view(Activity) for a right Fling movement </br></br>
+	 * 
+	 * Any class<? extends Activity> return itself will trigger finish()  </br></br>
+	 * 
+	 * You can return null when you don't want any action for a right Fling movement
+	 * @return Class<? extends Activity>
+	 */
 	protected abstract Class<? extends Activity> getLeftActivityClass();
+	
+	/**
+	 * Must Override this class to return a left enter view(Activity) for a left Fling movement </br></br>
+	 * 
+	 * Any class<? extends Activity> return itself will trigger finish()  </br></br>
+	 * 
+	 * You can return null when you don't want any action for a left Fling movement
+	 * @return Class<? extends Activity>
+	 */
 	protected abstract Class<? extends Activity> getRightActivityClass();
 	
+	/**
+	 * return a View for right Fling hint
+	 * @return
+	 */
 	protected abstract View getLeftView();
+	
+	/**
+	 * return a View for left Fling hint
+	 * @return
+	 */
 	protected abstract View getRightView();
 	
+	/**
+	 * this Listener provide a interface for customize vertically slide action
+	 * @author LeisureIsland
+	 *
+	 */
 	public interface OnVerticallySlideListener{
 		public void onVerticallySlidePressed();
 		public void onVerticallySlide(int distance);
@@ -65,6 +108,7 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 		setContentView(getLayoutInflater().inflate(resId, null));
 	}
 	
+	//Override setContentView(View, ViewGroup.LayoutParams) to get main content of this Activity
 	@Override
 	public void setContentView(View view, ViewGroup.LayoutParams params){
 		super.setContentView(view, params);
@@ -94,13 +138,14 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 					//addContentView(rightIcon, null);
 				}else{
 					touchMode = TOUCHMODE_DRAGGING_VERTICALLY;
-					if(null != mOnVerticallySlideListener) mOnVerticallySlideListener.onVerticallySlidePressed();
+					if(null != mOnVerticallySlideListener)
+						mOnVerticallySlideListener.onVerticallySlidePressed();
 				}
 				break;
 			case TOUCHMODE_DRAGGING_HORIZONTALLY:
 				moveX = (int) (dx - event.getX());
 				if(moveX < distance && moveX > -distance) mContent.scrollTo(moveX, 0);
-				if(moveX > distance){
+				if(moveX >= distance){
 					if(null != getRightActivityClass()){
 						if(this.getClass() == getRightActivityClass()){
 							finish();
@@ -115,7 +160,7 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 					return true;
 				}
 				
-				if(moveX < -distance){
+				if(moveX <= -distance){
 					if(null != getLeftActivityClass()){
 						if(this.getClass() == getLeftActivityClass()){
 		                    finish();
@@ -131,14 +176,17 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 				}
 				break;
 			case TOUCHMODE_DRAGGING_VERTICALLY:
-				if(null != mOnVerticallySlideListener) mOnVerticallySlideListener.onVerticallySlide((int) (event.getY() - dy));
+				if(null != mOnVerticallySlideListener)
+					mOnVerticallySlideListener.onVerticallySlide((int) (event.getY() - dy));
 				break;
 			}
 			break;
 		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_CANCEL:
 			//向右滑动出界  && 左边Activity为空 || 向左滑动出界  && 右边Activity为空 || 滑动未超出界限
-			if((null == getLeftActivityClass() && moveX < 0) || (null == getRightActivityClass() && moveX > 0) || (moveX < distance && moveX > -distance)){
+			if((null == getLeftActivityClass() && moveX <= 0) 
+			    || (null == getRightActivityClass() && moveX >= 0) 
+			    || (moveX < distance && moveX > -distance)){
 				backToOriginalSpot();
 			}else{
 				stopContentMovement();
@@ -146,7 +194,9 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 			
 			moveX = 0;
 			
-			if(touchMode == TOUCHMODE_DRAGGING_VERTICALLY && null != mOnVerticallySlideListener) mOnVerticallySlideListener.onVerticallySlideReleased();
+			if(touchMode == TOUCHMODE_DRAGGING_VERTICALLY && null != mOnVerticallySlideListener)
+                mOnVerticallySlideListener.onVerticallySlideReleased();
+			
 			touchMode = TOUCHMODE_IDLE;
 			break;
 		}

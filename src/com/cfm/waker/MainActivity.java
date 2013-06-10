@@ -7,13 +7,12 @@ import java.util.List;
 import java.util.Locale;
 
 import com.cfm.waker.adapter.AlarmListAdapter;
-import com.cfm.waker.db.WakerDatabaseHelper;
+import com.cfm.waker.dao.WakerDatabaseHelper;
 import com.cfm.waker.entity.Alarm;
 import com.cfm.waker.receiver.AlarmReceiver;
 import com.cfm.waker.ui.SettingActivity;
 import com.cfm.waker.ui.ShakeActivity;
 import com.cfm.waker.ui.base.BaseSlidableActivity;
-import com.cfm.waker.view.RowBlock;
 import com.cfm.waker.widget.DialTimePicker;
 import com.cfm.waker.widget.DialTimePicker.OnTimePickListener;
 
@@ -100,14 +99,22 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 				y = viewPager.getScrollY();
 				vmHandler.removeCallbacks(vmRunnable);
 				viewPager.setVisibility(View.VISIBLE);
+				if(viewPager.getCurrentItem() != 0) viewPager.setCurrentItem(0, false);
 			}
 			
 			@Override
 			public void onVerticallySlide(int distance){
-				if(viewPager.getScrollY() >= 0 && viewPager.getScrollY() <= viewPager.getMeasuredHeight()){
-					if(viewPager.getCurrentItem() != 0) viewPager.setCurrentItem(0, false);
-					viewPager.scrollTo(0, y - distance);
+				int dis = y - distance;
+				
+				if(dis <= 0 ){
+					dis = 0;
 				}
+				
+				if(dis >= viewPager.getMeasuredHeight()){
+					dis = viewPager.getMeasuredHeight();
+				}
+				
+				viewPager.scrollTo(0, dis);
 			}
 			
 			@Override
@@ -125,6 +132,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		addAlarmsByDatabase();
 	}
 	
+	//time tick movement
 	private class TimeRunnable implements Runnable{
 		@Override
 		public void run(){
@@ -134,7 +142,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 				
 				dialTimePicker.performDial(6 * calendar.get(Calendar.SECOND));
 				timeText.setText(dateFormat.format(calendar.getTime()));
-				if(!mApplication.is24()) amPm.setText(calendar.get(Calendar.AM_PM) == Calendar.AM ? "am" : "pm");
+				if(!mApplication.is24()) amPm.setText(calendar.get(Calendar.AM_PM) == Calendar.AM ? getString(R.string.am) : getString(R.string.pm));
 				
 				timeHandler.postDelayed(tRunnable, 500);
 				

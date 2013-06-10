@@ -7,5 +7,6 @@
     
     <string name="am">am</string>
     <string name="pm">pm</string>
+    <string name="no_saved_alarm">no saved alarm</string>
 
 </resources>

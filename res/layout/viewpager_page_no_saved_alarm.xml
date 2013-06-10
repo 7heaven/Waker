@@ -6,8 +6,8 @@
     <TextView
         android:id="@+id/content"
         android:layout_width="match_parent"
-        android:layout_height="30.0dip"
-        android:text="no saved alarm"
+        android:layout_height="40.0dip"
+        android:text="@string/no_saved_alarm"
         android:textSize="16.0dip"
         android:textColor="#FFFFFFFF"
         android:gravity="center"

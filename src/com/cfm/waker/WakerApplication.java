@@ -1,26 +1,31 @@
 package com.cfm.waker;
 
+import com.cfm.waker.dao.WakerPreferenceManager;
+
 import android.app.AlarmManager;
 import android.app.Application;
 import android.content.Context;
 import android.text.format.DateFormat;
+import android.util.DisplayMetrics;
+import android.view.WindowManager;
 
 public class WakerApplication extends Application{
 	
 	AlarmManager mAlarmManager;
-	
-	private boolean is24Format;
 	
 	@Override
 	public void onCreate(){
 		super.onCreate();
 		mAlarmManager = (AlarmManager) getBaseContext().getSystemService(Context.ALARM_SERVICE);
 		
-		is24Format = DateFormat.is24HourFormat(getBaseContext());
+		DisplayMetrics dm = new DisplayMetrics();
+		((WindowManager) getBaseContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(dm);
+		WakerPreferenceManager.getInstance(getBaseContext()).setScreenDensity(dm.density);
+		
 	}
 
 	public boolean is24(){
-		return is24Format;
+		return DateFormat.is24HourFormat(getBaseContext());
 	}
 	
 }
