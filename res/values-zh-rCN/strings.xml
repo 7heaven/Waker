@@ -9,4 +9,14 @@
     <string name="pm">下午</string>
     <string name="no_saved_alarm">还没有设置闹钟</string>
 
+    <!-- settings page -->
+    <string name="setting_page_alarm_style">闹钟类型</string>
+    <string name="setting_page_shake_level">摇晃度</string>
+    <string name="setting_page_snooze_time">打个盹</string>
+    <string name="setting_page_sound_effects">声音效果</string>
+    <string name="setting_page_alarm_volume">闹钟音量</string>
+    
+    <!-- settings content -->
+    <string name="drop_database">删除数据</string>
+    
 </resources>

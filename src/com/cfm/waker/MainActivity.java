@@ -130,7 +130,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 			}
 		};
 		
-		addAlarmsByDatabase();
+		updateAlarmsByDatabase();
 	}
 	
 	//time tick movement
@@ -203,10 +203,10 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		Alarm alarm = new Alarm(calendar, mApplication.is24());
 		WakerDatabaseHelper.getInstance(this).insertAlarm(alarm);
 		
-		addAlarmsByDatabase();
+		updateAlarmsByDatabase();
 	}
 	
-	private void addAlarmsByDatabase(){
+	private void updateAlarmsByDatabase(){
 		List<Alarm> tmp_list = WakerDatabaseHelper.getInstance(this).getAlarms(mApplication.is24());
 		if(null != tmp_list)
 			addAlarmsIntoRow(tmp_list);
@@ -272,6 +272,15 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	@Override
 	protected View getRightView(){
 		return null;
+	}
+	
+	@Override
+	public void onResume(){
+		super.onResume();
+		if(mApplication.isDatabaseChanged()){
+			updateAlarmsByDatabase();
+			mApplication.setDatabaseChanged(false);
+		}
 	}
 
 }

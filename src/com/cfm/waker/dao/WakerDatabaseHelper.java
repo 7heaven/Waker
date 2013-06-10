@@ -62,15 +62,16 @@ public class WakerDatabaseHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int currentVersion){
 		Log.d(TAG, "Upgrade waker database from" + oldVersion + "to" + currentVersion);
-		deleteAllAlarms(db);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
 		onCreate(db);
 		
 	}
 	
-	public void deleteAllAlarms(SQLiteDatabase db){
-		if(null == db)
-			db = getWritableDatabase();
-		db.execSQL("DROP TABLE IF EXISTS" + TABLE_NAME);
+	public void deleteAllAlarms(){
+		SQLiteDatabase db = getWritableDatabase();
+		
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+		onCreate(db);
 	}
 	
 	public List<Alarm> getAlarms(boolean is24Format){

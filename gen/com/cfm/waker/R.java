@@ -103,8 +103,9 @@ containing a value of this type.
         public static final int alarm3=0x7f09000b;
         public static final int alarm_list=0x7f090000;
         public static final int am_pm=0x7f090003;
-        public static final int content=0x7f090005;
+        public static final int content=0x7f09000c;
         public static final int dial_layout=0x7f090001;
+        public static final int remove_database=0x7f090005;
         public static final int shake_view=0x7f090006;
         public static final int time=0x7f090002;
         public static final int time_pick=0x7f090004;
@@ -125,10 +126,15 @@ containing a value of this type.
         public static final int action_settings=0x7f060001;
         public static final int am=0x7f060003;
         public static final int app_name=0x7f060000;
+        /**  settings content 
+ settings content 
+         */
+        public static final int drop_database=0x7f06000b;
         public static final int hello_world=0x7f060002;
         public static final int no_saved_alarm=0x7f060005;
         public static final int pm=0x7f060004;
         /**  settings page 
+ settings page 
          */
         public static final int setting_page_alarm_style=0x7f060006;
         public static final int setting_page_alarm_volume=0x7f06000a;

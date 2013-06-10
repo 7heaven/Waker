@@ -18,7 +18,9 @@ import android.view.WindowManager;
 
 public class WakerApplication extends Application{
 	
-	AlarmManager mAlarmManager;
+	private AlarmManager mAlarmManager;
+	
+	private boolean isDatabaseChanged;
 	
 	@Override
 	public void onCreate(){
@@ -29,10 +31,18 @@ public class WakerApplication extends Application{
 		((WindowManager) getBaseContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(dm);
 		WakerPreferenceManager.getInstance(getBaseContext()).setScreenDensity(dm.density);
 		
+		isDatabaseChanged = false;
 	}
 
 	public boolean is24(){
 		return DateFormat.is24HourFormat(getBaseContext());
 	}
 	
+	public boolean isDatabaseChanged(){
+		return isDatabaseChanged;
+	}
+	
+	public void setDatabaseChanged(boolean changed){
+		isDatabaseChanged = changed;
+	}
 }

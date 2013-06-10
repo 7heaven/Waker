@@ -15,5 +15,8 @@
     <string name="setting_page_snooze_time">Snooze Time</string>
     <string name="setting_page_sound_effects">Sound Effects</string>
     <string name="setting_page_alarm_volume">Alarm Volume</string>
+    
+    <!-- settings content -->
+    <string name="drop_database">drop database</string>
 
 </resources>

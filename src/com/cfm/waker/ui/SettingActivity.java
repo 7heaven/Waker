@@ -14,36 +14,25 @@ import com.cfm.waker.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 import com.cfm.waker.dao.WakerDatabaseHelper;
 import com.cfm.waker.entity.Alarm;
 import com.cfm.waker.ui.base.BaseSlidableActivity;
 
-public class SettingActivity extends BaseSlidableActivity {
+public class SettingActivity extends BaseSlidableActivity implements OnClickListener{
 	
-	private TextView content;
 	private List<Alarm> alarm;
+	private Button removeButton;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
 		
-		content = (TextView) findViewById(R.id.content);
-	}
-
-	@Override
-	public void onResume(){
-		super.onResume();
-		content.setText("");
-		alarm = WakerDatabaseHelper.getInstance(this).getAlarms(true);
-		if(null != alarm){
-			int position = 0;
-			do{
-				content.append(alarm.get(position).getFormatedTime() + "\n");
-			}while(++position < alarm.size());
-		}
+		removeButton = (Button) findViewById(R.id.remove_database);
+		removeButton.setOnClickListener(this);
 	}
 	
 	@Override
@@ -68,6 +57,16 @@ public class SettingActivity extends BaseSlidableActivity {
 	protected View getRightView() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch(v.getId()){
+		case R.id.remove_database:
+			WakerDatabaseHelper.getInstance(this).deleteAllAlarms();
+			mApplication.setDatabaseChanged(true);
+			break;
+		}
 	}
 
 }
