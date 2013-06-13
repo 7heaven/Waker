@@ -17,6 +17,7 @@ public class WakerPreferenceManager {
 	
 	private static final String PREFERENCE_NAME = "waker_preference";
 	
+	private static final String FIRST_TIME_BOOTUP = "first_time_bootup";
 	private static final String SCREEN_DENSITY = "screen_density";
 	private static final String SCREEN_WIDTH = "screen_width";
 	private static final String SCREEN_HEIGHT = "screen_height";
@@ -41,6 +42,14 @@ public class WakerPreferenceManager {
 		}
 		
 		return wakerPreferences;
+	}
+	
+	public void setIsFirstTimeBoot(int firstTime){
+		getPreference().edit().putInt(FIRST_TIME_BOOTUP, firstTime);
+	}
+	
+	public int isFirstTimeBoot(){
+		return getPreference().getInt(FIRST_TIME_BOOTUP, -1);
 	}
 	
 	public void setScreenDensity(float density){

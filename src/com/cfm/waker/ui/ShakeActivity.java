@@ -14,6 +14,7 @@ import com.cfm.waker.view.ShakeDetector;
 import com.cfm.waker.view.ShakeDetector.OnShakeListener;
 import com.cfm.waker.ui.base.BaseActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 public class ShakeActivity extends BaseActivity implements OnShakeListener,
@@ -52,6 +53,8 @@ public class ShakeActivity extends BaseActivity implements OnShakeListener,
 
 	@Override
 	public void onExceedTop() {
+		Intent intent = new Intent(ShakeActivity.this, AfterWakeUpActivity.class);
+		startActivity(intent);
 		finish();
 	}
 

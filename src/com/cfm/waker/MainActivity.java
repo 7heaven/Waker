@@ -208,14 +208,13 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	
 	private void updateAlarmsByDatabase(){
 		List<Alarm> tmp_list = WakerDatabaseHelper.getInstance(this).getAlarms(mApplication.is24());
-		if(null != tmp_list)
-			addAlarmsIntoRow(tmp_list);
-		
+
+		addAlarmsIntoRow(tmp_list);
 	}
 	
 	private void addAlarmsIntoRow(List<Alarm>  alarms){
 		alarmList.clear();
-		alarmList.addAll(alarms);
+		if(null != alarms) alarmList.addAll(alarms);
 		alarmListAdapter.notifyDataSetChanged();
 	}
 	

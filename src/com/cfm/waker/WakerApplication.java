@@ -9,7 +9,6 @@ package com.cfm.waker;
 
 import com.cfm.waker.dao.WakerPreferenceManager;
 
-import android.app.AlarmManager;
 import android.app.Application;
 import android.content.Context;
 import android.text.format.DateFormat;
@@ -18,18 +17,24 @@ import android.view.WindowManager;
 
 public class WakerApplication extends Application{
 	
-	private AlarmManager mAlarmManager;
+	private WakerPreferenceManager preferenceManager;
 	
 	private boolean isDatabaseChanged;
 	
 	@Override
 	public void onCreate(){
 		super.onCreate();
-		mAlarmManager = (AlarmManager) getBaseContext().getSystemService(Context.ALARM_SERVICE);
 		
 		DisplayMetrics dm = new DisplayMetrics();
 		((WindowManager) getBaseContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(dm);
-		WakerPreferenceManager.getInstance(getBaseContext()).setScreenDensity(dm.density);
+		preferenceManager = WakerPreferenceManager.getInstance(getBaseContext());
+		preferenceManager.setScreenDensity(dm.density);
+		
+		if(preferenceManager.isFirstTimeBoot() == -1){
+			preferenceManager.setIsFirstTimeBoot(1);
+		}else if(preferenceManager.isFirstTimeBoot() == 1){
+			preferenceManager.setIsFirstTimeBoot(0);
+		}
 		
 		isDatabaseChanged = false;
 	}
@@ -42,7 +47,7 @@ public class WakerApplication extends Application{
 		return isDatabaseChanged;
 	}
 	
-	public void setDatabaseChanged(boolean changed){
-		isDatabaseChanged = changed;
+	public void setDatabaseChanged(boolean isDatabaseChanged){
+		this.isDatabaseChanged = isDatabaseChanged;
 	}
 }

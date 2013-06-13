@@ -125,7 +125,7 @@ public class DialTimePicker extends View{
 				isDrawPressPoint = true;
 				isCirclePressed = true;
 				increment = null;
-				mOnTimePickListener.onStartPick();
+				if(null != mOnTimePickListener) mOnTimePickListener.onStartPick();
 			}
 			break;
 		case MotionEvent.ACTION_MOVE:
@@ -148,7 +148,7 @@ public class DialTimePicker extends View{
 					if(positiveIncrement > 180)
 						incrementValue = -(incrementValue / positiveIncrement) * (360 - positiveIncrement);
 				}
-				mOnTimePickListener.onPick(tDegree, incrementValue);
+				if(null != mOnTimePickListener) mOnTimePickListener.onPick(tDegree, incrementValue);
 				increment = tDegree;
 				invalidate();
 			}
@@ -157,7 +157,7 @@ public class DialTimePicker extends View{
 		case MotionEvent.ACTION_CANCEL:
 			isDrawPressPoint = false;
 			isCirclePressed = false;
-			mOnTimePickListener.onStopPick();
+			if(null != mOnTimePickListener) mOnTimePickListener.onStopPick();
 			invalidate();
 			break;
 		}
