@@ -92,8 +92,17 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		
 		alarmCount = 0;
 		
-		mOnVerticallySlideListener = new OnVerticallySlideListener(){
+		mOnSlideListener = new OnSlideListener(){
 			int y;
+			
+			@Override
+			public void onHorizontallySlidePressed(){viewPagerShow(false);}
+			
+			@Override
+			public void onHorizontallySlide(int distance){}
+			
+			@Override
+			public void onHorizontallySlideReleased(){}
 			
 			@Override
 			public void onVerticallySlidePressed(){
@@ -170,8 +179,8 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		public void run() {
 			if((int) moveX != destinationX || (int) moveY != destinationY){
 				if(view.getVisibility() == View.INVISIBLE) view.setVisibility(View.VISIBLE);
-				moveX += (destinationX - moveX) * 0.6F;
-				moveY += (destinationY - moveY) * 0.6F;
+				moveX += (destinationX - moveX) * 0.51F;
+				moveY += (destinationY - moveY) * 0.51F;
 				view.scrollTo((int) moveX, (int) moveY);
 				
 				Log.d(TAG, "runnable run");

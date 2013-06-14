@@ -35,7 +35,7 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 	private int dx, dy;
 	private int moveX = 0;
   //private int moveY = 0;
-	private int distance;
+	private float distance;
 	
 	private static final int TOUCHMODE_IDLE = 0;
 	private static final int TOUCHMODE_DOWN = 1;
@@ -44,7 +44,7 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 	
 	private int touchMode;
 	
-	protected OnVerticallySlideListener mOnVerticallySlideListener;
+	protected OnSlideListener mOnSlideListener;
 	
 	private MyRunnable runnable;
 	private Handler handler;
@@ -52,7 +52,7 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 	/**
 	 * Must Override this class to return a left enter view(Activity) for a right Fling movement </br></br>
 	 * 
-	 * Any class<? extends Activity> return itself will trigger finish()  </br></br>
+	 * Any class< ? extends Activity > return itself will trigger finish()  </br></br>
 	 * 
 	 * You can return null when you don't want any action for a right Fling movement
 	 * @return Class<? extends Activity>
@@ -62,7 +62,7 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 	/**
 	 * Must Override this class to return a left enter view(Activity) for a left Fling movement </br></br>
 	 * 
-	 * Any class<? extends Activity> return itself will trigger finish()  </br></br>
+	 * Any class< ? extends Activity > return itself will trigger finish()  </br></br>
 	 * 
 	 * You can return null when you don't want any action for a left Fling movement
 	 * @return Class<? extends Activity>
@@ -82,11 +82,14 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 	protected abstract View getRightView();
 	
 	/**
-	 * this Listener provide a interface for customize vertically slide action
-	 * @author LeisureIsland
+	 * this Listener provide a interface for customize slide action
+	 * @author 7heaven
 	 *
 	 */
-	public interface OnVerticallySlideListener{
+	public interface OnSlideListener{
+		public void onHorizontallySlidePressed();
+		public void onHorizontallySlide(int distance);
+		public void onHorizontallySlideReleased();
 		public void onVerticallySlidePressed();
 		public void onVerticallySlide(int distance);
 		public void onVerticallySlideReleased();
@@ -136,15 +139,30 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 					//rightIcon = getRightView();
 					//addContentView(leftIcon, null);
 					//addContentView(rightIcon, null);
+					if(null != mOnSlideListener) mOnSlideListener.onHorizontallySlidePressed();
 				}else{
 					touchMode = TOUCHMODE_DRAGGING_VERTICALLY;
-					if(null != mOnVerticallySlideListener)
-						mOnVerticallySlideListener.onVerticallySlidePressed();
+					if(null != mOnSlideListener) mOnSlideListener.onVerticallySlidePressed();
 				}
 				break;
 			case TOUCHMODE_DRAGGING_HORIZONTALLY:
 				moveX = (int) (dx - event.getX());
-				if(moveX < distance && moveX > -distance) mContent.scrollTo(moveX, 0);
+				//Temporally solution for overScroll bounce
+				float diff = moveX / (distance * 2);
+				
+				if(null != mOnSlideListener) mOnSlideListener.onHorizontallySlide(-moveX);
+				if(moveX < distance && moveX > -distance){
+					//Temporally solution for overScroll bounce
+					if(moveX < 0){
+						moveX = (int) ((dx - event.getX()) - (event.getX() - dx) * diff);
+					}
+					if(moveX > 0){
+						moveX = (int) ((dx - event.getX()) + (event.getX() - dx) * diff);
+					}
+					
+					mContent.scrollTo(moveX, 0);
+					Log.d(TAG, diff + "");
+				}
 				if(moveX >= distance){
 					if(null != getRightActivityClass()){
 						if(this.getClass() == getRightActivityClass()){
@@ -152,8 +170,8 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 						}else{
 							Intent intent = new Intent(this, getRightActivityClass());
 							startActivity(intent);
-							touchMode = TOUCHMODE_IDLE;
 						}
+						touchMode = TOUCHMODE_IDLE;
 						moveX = 0;
 					}
 					
@@ -167,8 +185,8 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 						}else{
 							Intent intent = new Intent(this, getLeftActivityClass());
 							startActivity(intent);
-							touchMode = TOUCHMODE_IDLE;
 						}
+						touchMode = TOUCHMODE_IDLE;
 						moveX = 0;
 					}
 					
@@ -176,26 +194,29 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 				}
 				break;
 			case TOUCHMODE_DRAGGING_VERTICALLY:
-				if(null != mOnVerticallySlideListener)
-					mOnVerticallySlideListener.onVerticallySlide((int) (event.getY() - dy));
+				if(null != mOnSlideListener) mOnSlideListener.onVerticallySlide((int) (event.getY() - dy));
 				break;
 			}
 			break;
 		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_CANCEL:
 			//向右滑动出界  && 左边Activity为空 || 向左滑动出界  && 右边Activity为空 || 滑动未超出界限
-			if((null == getLeftActivityClass() && moveX <= 0) 
+			if(/*(null == getLeftActivityClass() && moveX <= 0) 
 			    || (null == getRightActivityClass() && moveX >= 0) 
-			    || (moveX < distance && moveX > -distance)){
+			    || (moveX < distance && moveX > -distance)*/
+					touchMode != TOUCHMODE_IDLE){
 				backToOriginalSpot();
-			}else{
-				stopContentMovement();
 			}
 			
 			moveX = 0;
 			
-			if(touchMode == TOUCHMODE_DRAGGING_VERTICALLY && null != mOnVerticallySlideListener)
-                mOnVerticallySlideListener.onVerticallySlideReleased();
+			if(null != mOnSlideListener){
+				if(touchMode == TOUCHMODE_DRAGGING_VERTICALLY){
+					mOnSlideListener.onVerticallySlideReleased();
+				}else if(touchMode == TOUCHMODE_DRAGGING_HORIZONTALLY){
+					mOnSlideListener.onHorizontallySlideReleased();
+				}
+			}
 			
 			touchMode = TOUCHMODE_IDLE;
 			break;
