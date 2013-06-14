@@ -62,13 +62,12 @@ public class WakerDatabaseHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int currentVersion){
 		Log.d(TAG, "Upgrade waker database from" + oldVersion + "to" + currentVersion);
-		db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
-		onCreate(db);
 		
+		deleteAllAlarms(db);
 	}
 	
-	public void deleteAllAlarms(){
-		SQLiteDatabase db = getWritableDatabase();
+	public void deleteAllAlarms(SQLiteDatabase db){
+		if(null == db) db = getWritableDatabase();
 		
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
 		onCreate(db);
@@ -162,6 +161,8 @@ public class WakerDatabaseHelper extends SQLiteOpenHelper {
 		cv.put(Alarm.Columns.RINGTONE, alarm.getRingtone());
 		cv.put(Alarm.Columns.DAYS_OF_WEEK, alarm.getWeek());
 		cv.put(Alarm.Columns.MESSAGE, alarm.getMessage());
+		
+		Log.d(TAG, cv.toString());
 		
 		return cv;
 		

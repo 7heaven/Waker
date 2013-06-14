@@ -33,6 +33,8 @@ public class SettingActivity extends BaseSlidableActivity implements OnClickList
 		
 		removeButton = (Button) findViewById(R.id.remove_database);
 		removeButton.setOnClickListener(this);
+		
+		setIsHorizontallyOnly(true);
 	}
 	
 	@Override
@@ -63,7 +65,7 @@ public class SettingActivity extends BaseSlidableActivity implements OnClickList
 	public void onClick(View v) {
 		switch(v.getId()){
 		case R.id.remove_database:
-			WakerDatabaseHelper.getInstance(this).deleteAllAlarms();
+			WakerDatabaseHelper.getInstance(this).deleteAllAlarms(null);
 			mApplication.setDatabaseChanged(true);
 			break;
 		}

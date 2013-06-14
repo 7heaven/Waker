@@ -36,6 +36,7 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 	private int moveX = 0;
   //private int moveY = 0;
 	private float distance;
+	private float overScrollDistance;
 	
 	private static final int TOUCHMODE_IDLE = 0;
 	private static final int TOUCHMODE_DOWN = 1;
@@ -43,6 +44,8 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 	private static final int TOUCHMODE_DRAGGING_VERTICALLY = 3;
 	
 	private int touchMode;
+	
+	private boolean onlyHorizontallyScroll = false;
 	
 	protected OnSlideListener mOnSlideListener;
 	
@@ -118,9 +121,14 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 		mContent = view;
 	}
 	
+	public void setIsHorizontallyOnly(boolean arg){
+		onlyHorizontallyScroll = arg;
+	}
+	
 	@Override
 	public boolean onTouchEvent(MotionEvent event){
-		distance = mContent.getMeasuredWidth() / 5;
+		distance = mContent.getMeasuredWidth() * 0.3F;
+		overScrollDistance = mContent.getMeasuredWidth() * 0.6F;
 		switch(event.getAction() & MotionEvent.ACTION_MASK){
 		case MotionEvent.ACTION_DOWN:
 			dx = (int) event.getX();
@@ -133,31 +141,31 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 			case TOUCHMODE_IDLE:
 				break;
 			case TOUCHMODE_DOWN:
-				if(Math.abs(event.getX() - dx) > Math.abs(event.getY() - dy)){
+				if(onlyHorizontallyScroll){
 					touchMode = TOUCHMODE_DRAGGING_HORIZONTALLY;
-					//leftIcon = getLeftView();
-					//rightIcon = getRightView();
-					//addContentView(leftIcon, null);
-					//addContentView(rightIcon, null);
-					if(null != mOnSlideListener) mOnSlideListener.onHorizontallySlidePressed();
 				}else{
-					touchMode = TOUCHMODE_DRAGGING_VERTICALLY;
-					if(null != mOnSlideListener) mOnSlideListener.onVerticallySlidePressed();
+					if(Math.abs(event.getX() - dx) > Math.abs(event.getY() - dy)){
+						touchMode = TOUCHMODE_DRAGGING_HORIZONTALLY;
+						if(null != mOnSlideListener) mOnSlideListener.onHorizontallySlidePressed();
+					}else{
+						touchMode = TOUCHMODE_DRAGGING_VERTICALLY;
+						if(null != mOnSlideListener) mOnSlideListener.onVerticallySlidePressed();
+					}
 				}
 				break;
 			case TOUCHMODE_DRAGGING_HORIZONTALLY:
 				moveX = (int) (dx - event.getX());
 				//Temporally solution for overScroll bounce
-				float diff = moveX / (distance * 2);
+				float diff = moveX / overScrollDistance;
 				
 				if(null != mOnSlideListener) mOnSlideListener.onHorizontallySlide(-moveX);
 				if(moveX < distance && moveX > -distance){
 					//Temporally solution for overScroll bounce
 					if(moveX < 0){
-						moveX = (int) ((dx - event.getX()) - (event.getX() - dx) * diff);
+						moveX = (int) (moveX + moveX * diff);
 					}
 					if(moveX > 0){
-						moveX = (int) ((dx - event.getX()) + (event.getX() - dx) * diff);
+						moveX = (int) (moveX - moveX * diff);
 					}
 					
 					mContent.scrollTo(moveX, 0);
@@ -200,13 +208,8 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 			break;
 		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_CANCEL:
-			//向右滑动出界  && 左边Activity为空 || 向左滑动出界  && 右边Activity为空 || 滑动未超出界限
-			if(/*(null == getLeftActivityClass() && moveX <= 0) 
-			    || (null == getRightActivityClass() && moveX >= 0) 
-			    || (moveX < distance && moveX > -distance)*/
-					touchMode != TOUCHMODE_IDLE){
+			if(touchMode != TOUCHMODE_IDLE)
 				backToOriginalSpot();
-			}
 			
 			moveX = 0;
 			

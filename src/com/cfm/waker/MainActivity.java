@@ -16,7 +16,6 @@ import java.util.Locale;
 import com.cfm.waker.adapter.AlarmListAdapter;
 import com.cfm.waker.dao.WakerDatabaseHelper;
 import com.cfm.waker.entity.Alarm;
-import com.cfm.waker.receiver.AlarmReceiver;
 import com.cfm.waker.ui.SettingActivity;
 import com.cfm.waker.ui.ShakeActivity;
 import com.cfm.waker.ui.base.BaseSlidableActivity;
