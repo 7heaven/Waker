@@ -16,8 +16,8 @@ import java.util.Locale;
 import com.cfm.waker.adapter.AlarmListAdapter;
 import com.cfm.waker.dao.WakerDatabaseHelper;
 import com.cfm.waker.entity.Alarm;
+import com.cfm.waker.receiver.AlarmReceiver;
 import com.cfm.waker.ui.SettingActivity;
-import com.cfm.waker.ui.ShakeActivity;
 import com.cfm.waker.ui.base.BaseSlidableActivity;
 import com.cfm.waker.widget.DialTimePicker;
 import com.cfm.waker.widget.DialTimePicker.OnTimePickListener;
@@ -207,11 +207,13 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		vmHandler.post(vmRunnable);
 	}
 	
-	private void addAlarm(Calendar calendar){
+	private Alarm addAlarm(Calendar calendar){
 		Alarm alarm = new Alarm(calendar, mApplication.is24());
 		WakerDatabaseHelper.getInstance(this).insertAlarm(alarm);
 		
 		updateAlarmsByDatabase();
+		
+		return alarm;
 	}
 	
 	private void updateAlarmsByDatabase(){
@@ -246,14 +248,20 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	public void onStopPick(){
 		pickingTime = false;
 		
-		Intent intent = new Intent(MainActivity.this, ShakeActivity.class);
+		Intent intent = new Intent(MainActivity.this, AlarmReceiver.class);
+		
+		boolean beforeTime = calendar.getTimeInMillis() <= System.currentTimeMillis();
+		
+		Log.d(TAG, beforeTime + "");
 		
 		calendar.set(Calendar.SECOND, 0);
 		
-		addAlarm(calendar);
+		intent.putExtra("alarm_id", addAlarm(calendar).getId());
+		intent.putExtra("before_time", beforeTime);
+		intent.putExtra("flag", alarmCount + 1);
 		
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, ++alarmCount);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent, ++alarmCount);
 		alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
 		
 		timeHandler.post(tRunnable);

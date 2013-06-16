@@ -73,6 +73,21 @@ public class WakerDatabaseHelper extends SQLiteOpenHelper {
 		onCreate(db);
 	}
 	
+	public Alarm getAlarm(long id, boolean is24Format){
+		SQLiteDatabase db = getReadableDatabase();
+		String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + Alarm.Columns.ID + "=?";
+		String[] selectionArgs = { id + "" };
+		Cursor cursor = db.rawQuery(sql, selectionArgs);
+		
+		Alarm alarm = null;
+		if(cursor.moveToFirst()){
+			alarm = getAlarmByCursor(cursor, is24Format);
+		}
+		
+		cursor.close();
+		return alarm;
+	}
+	
 	public List<Alarm> getAlarms(boolean is24Format){
 		SQLiteDatabase db = getReadableDatabase();
 		String sql = "SELECT * FROM " + TABLE_NAME + " ORDER BY " + Alarm.Columns.ID + " ASC";

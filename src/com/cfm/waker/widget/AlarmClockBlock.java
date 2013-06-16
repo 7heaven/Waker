@@ -24,6 +24,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.cfm.waker.R;
+import com.cfm.waker.dao.WakerDatabaseHelper;
 import com.cfm.waker.entity.Alarm;
 import com.cfm.waker.util.DensityUtil;
 
@@ -144,6 +145,7 @@ public class AlarmClockBlock extends View {
 					touchMode = TOUCHMODE_IDLE;
 					enabled = !enabled;
 					alarm.setEnabled(enabled);
+					WakerDatabaseHelper.getInstance(context).updateAlarm(alarm.getId(), alarm);
 					if(null != onStateChangeListener) onStateChangeListener.onStateChanged(alarm.getId(), enabled);
 					returnToOriginalSpot();
 				}

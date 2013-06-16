@@ -7,14 +7,20 @@
  */
 package com.cfm.waker.entity;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
 import com.cfm.waker.R;
 
-public class Alarm {
+public class Alarm implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8799155296144926576L;
+
 	public static class Columns{
         public static final String             ID = "id";
         public static final String           HOUR = "hour";
@@ -39,6 +45,8 @@ public class Alarm {
 	
 	private int week;
 	private String message;
+	
+	private final Integer[] weekTransform = {0, 0x40, 0x20, 0x10, 0x8, 0x4, 0x2, 0x1};
 	
 	public Alarm(Calendar calendar, boolean is24Format){
 		this.is24Format = is24Format;
@@ -171,4 +179,32 @@ public class Alarm {
 		return dateFormat.format(calendar.getTime());
 	}
 	
+	public boolean isDaySet(int day){
+		return (week & weekTransform[day]) > 0;
+	}
+	
+	public int getNextDaySet(int day){
+		int i = weekTransform[day] >> 1;
+		do{
+			if(isDaySet(day)) return getIndexOfWeek(i);
+			
+			if(i == 0x1){
+				i = 0x40;
+			}else{
+				i >>= 1;
+			}
+			
+		}while(i != day);
+		
+		return day;
+	}
+	
+	private int getIndexOfWeek(int day){
+		int i = 1;
+		do{
+			if(day == weekTransform[i]) return i;
+		}while(++i < weekTransform.length);
+		
+		return 0;
+	}
 }
