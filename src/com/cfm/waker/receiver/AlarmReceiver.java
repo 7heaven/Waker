@@ -26,8 +26,8 @@ public class AlarmReceiver extends BroadcastReceiver{
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		long alarmId = intent.getLongExtra("alarm_id", -1);
-		boolean isBeforeTime = intent.getBooleanExtra("before_time", false);
+		final long alarmId = intent.getLongExtra("alarm_id", -1);
+		final boolean isBeforeTime = intent.getBooleanExtra("before_time", false);
 		int flag = intent.getIntExtra("flag", 0);
 		Alarm alarm = WakerDatabaseHelper.getInstance(context).getAlarm(alarmId, DateFormat.is24HourFormat(context));
 		if(null != alarm){
@@ -41,7 +41,7 @@ public class AlarmReceiver extends BroadcastReceiver{
 				PendingIntent pi = PendingIntent.getBroadcast(context, 0, myIntent, ++flag);
 				alarmManager.set(AlarmManager.RTC_WAKEUP, getNextAlarmTime(alarm), pi);
 				
-				Log.d("RECEIVER", isBeforeTime + "");
+				Log.d("RECEIVER", isBeforeTime + ":" + getNextAlarmTime(alarm) + ":" + System.currentTimeMillis());
 				if(!isBeforeTime){
 					Toast.makeText(context, "alarm!!", Toast.LENGTH_LONG).show();
 					Intent mIntent = new Intent(context, ShakeActivity.class);
@@ -61,8 +61,10 @@ public class AlarmReceiver extends BroadcastReceiver{
 		
 		if(count < dayOfWeek){
 			count = 7 - (dayOfWeek - count);
-		}else{
+		}else if(count > dayOfWeek){
 			count = count - dayOfWeek;
+		}else{
+			count = 7;
 		}
 
         return alarm.getCalendar().getTimeInMillis() + (86400000L * count);

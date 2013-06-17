@@ -9,6 +9,7 @@ package com.cfm.waker.entity;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -102,10 +103,10 @@ public class Alarm implements Serializable{
 	}
 	
 	public int getSnoozeTime() {
-		return snoozeTime;
+		return snoozeTime / 60 / 1000;
 	}
 	public void setSnoozeTime(int snoozeTime) {
-		this.snoozeTime = snoozeTime;
+		this.snoozeTime = snoozeTime * 60 * 1000;
 	}
 	public boolean isEnabled() {
 		return enabled;
@@ -140,12 +141,13 @@ public class Alarm implements Serializable{
 	
 	@Override
 	public String toString() {
-		return "Alarm [snoozeTime=" + snoozeTime + ", enabled=" 
-	            + enabled + ", vibrate=" + vibrate
-				+ ", ringtone=" + ringtone + ", week=" + week + ", message="
-				+ message + "]";
+		return "Alarm [calendar=" + calendar + ", is24Format=" + is24Format
+				+ ", snoozeTime=" + snoozeTime + ", enabled=" + enabled
+				+ ", vibrate=" + vibrate + ", ringtone=" + ringtone + ", week="
+				+ week + ", message=" + message + ", weekTransform="
+				+ Arrays.toString(weekTransform) + "]";
 	}
-	
+
 	public Calendar getCalendar() {
 		return calendar;
 	}

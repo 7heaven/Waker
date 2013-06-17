@@ -219,12 +219,15 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	private void updateAlarmsByDatabase(){
 		List<Alarm> tmp_list = WakerDatabaseHelper.getInstance(this).getAlarms(mApplication.is24());
 
+		
 		addAlarmsIntoRow(tmp_list);
 	}
 	
 	private void addAlarmsIntoRow(List<Alarm>  alarms){
 		alarmList.clear();
-		if(null != alarms) alarmList.addAll(alarms);
+		if(null != alarms){
+			alarmList.addAll(alarms);
+		}
 		alarmListAdapter.notifyDataSetChanged();
 	}
 	
@@ -250,9 +253,9 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		
 		Intent intent = new Intent(MainActivity.this, AlarmReceiver.class);
 		
-		boolean beforeTime = calendar.getTimeInMillis() <= System.currentTimeMillis();
+		final boolean beforeTime = calendar.getTimeInMillis() <= System.currentTimeMillis();
 		
-		Log.d(TAG, beforeTime + "");
+		Log.d(TAG, "beforeTime:" + beforeTime);
 		
 		calendar.set(Calendar.SECOND, 0);
 		

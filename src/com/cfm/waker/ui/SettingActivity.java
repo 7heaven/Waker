@@ -7,32 +7,20 @@
  */
 package com.cfm.waker.ui;
 
-import java.util.List;
-
 import com.cfm.waker.R;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 
-import com.cfm.waker.dao.WakerDatabaseHelper;
-import com.cfm.waker.entity.Alarm;
 import com.cfm.waker.ui.base.BaseSlidableActivity;
 
-public class SettingActivity extends BaseSlidableActivity implements OnClickListener{
-	
-	private List<Alarm> alarm;
-	private Button removeButton;
+public class SettingActivity extends BaseSlidableActivity{
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
-		
-		removeButton = (Button) findViewById(R.id.remove_database);
-		removeButton.setOnClickListener(this);
 		
 		setIsHorizontallyOnly(true);
 	}
@@ -61,14 +49,5 @@ public class SettingActivity extends BaseSlidableActivity implements OnClickList
 		return null;
 	}
 
-	@Override
-	public void onClick(View v) {
-		switch(v.getId()){
-		case R.id.remove_database:
-			WakerDatabaseHelper.getInstance(this).deleteAllAlarms(null);
-			mApplication.setDatabaseChanged(true);
-			break;
-		}
-	}
 
 }

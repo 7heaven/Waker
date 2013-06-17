@@ -18,9 +18,17 @@ public class WakerPreferenceManager {
 	private static final String PREFERENCE_NAME = "waker_preference";
 	
 	private static final String FIRST_TIME_BOOTUP = "first_time_bootup";
+	
+	//screen measurement
 	private static final String SCREEN_DENSITY = "screen_density";
 	private static final String SCREEN_WIDTH = "screen_width";
 	private static final String SCREEN_HEIGHT = "screen_height";
+	
+	//settings
+	private static final String GLOBAL_SHAKE_LEVEL = "global_shakelevel";
+	private static final String GLOBAL_SNOOZETIME = "global_snoozetime";
+	private static final String GLOBAL_RINGTONE = "global_ringtone";
+	private static final String GLOBAL_ALARM_VOLUME = "global_alarm_volume";
 	
 	private SharedPreferences wakerPreferences;
 	
@@ -76,4 +84,11 @@ public class WakerPreferenceManager {
 		return getPreference().getInt(SCREEN_HEIGHT, 800);
 	}
 	
+	public void setGlobalSnoozeTime(int snoozeTime){
+	    getPreference().edit().putLong(GLOBAL_SNOOZETIME, snoozeTime).commit();
+	}
+	
+	public long getGlobalSnoozeTime(){
+		return getPreference().getLong(GLOBAL_SNOOZETIME, 0L);
+	}
 }
