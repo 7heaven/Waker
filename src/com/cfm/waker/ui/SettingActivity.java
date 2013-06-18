@@ -11,9 +11,13 @@ import com.cfm.waker.R;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 
+import com.cfm.waker.dao.WakerPreferenceManager;
 import com.cfm.waker.ui.base.BaseSlidableActivity;
+import com.cfm.waker.widget.ExactLinearLayout;
 
 public class SettingActivity extends BaseSlidableActivity{
 	
@@ -22,7 +26,46 @@ public class SettingActivity extends BaseSlidableActivity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
 		
-		setIsHorizontallyOnly(true);
+		mOnSlideListener = new OnSlideListener(){
+			int y;
+			int measuredHeight = ((ExactLinearLayout) getContentView()).getChildAt(0).getMeasuredHeight();
+			int screenHeight = WakerPreferenceManager.getInstance(SettingActivity.this).getScreenHeight();
+
+			@Override
+			public void onHorizontallySlidePressed() {}
+
+			@Override
+			public void onHorizontallySlide(int distance) {}
+
+			@Override
+			public void onHorizontallySlideReleased() {}
+
+			@Override
+			public void onVerticallySlidePressed() {
+				y = getContentView().getScrollY();
+			}
+
+			@Override
+			public void onVerticallySlide(int distance) {
+				int dis = y - distance;
+				
+				if(dis <= 0){
+					dis = 0;
+				}
+				
+				if(dis + screenHeight > measuredHeight){
+					dis = measuredHeight - screenHeight;
+				}
+				
+				if(measuredHeight > screenHeight) getContentView().scrollTo(0, dis);
+				
+				Log.d(TAG, ((ExactLinearLayout) getContentView()).getChildAt(0).getMeasuredHeight() + ":" + dis);
+			}
+
+			@Override
+			public void onVerticallySlideReleased() {}
+			
+		};
 	}
 	
 	@Override

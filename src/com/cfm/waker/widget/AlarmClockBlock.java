@@ -27,14 +27,15 @@ import com.cfm.waker.R;
 import com.cfm.waker.dao.WakerDatabaseHelper;
 import com.cfm.waker.entity.Alarm;
 import com.cfm.waker.util.DensityUtil;
+import com.cfm.waker.view.SlideEvent;
 
-public class AlarmClockBlock extends View {
+public class AlarmClockBlock extends BaseSlideWidget {
 	
 	private static final String TAG = "AlarmClockBlock";
 	
 	private Context context;
 	
-	private static final int TOUCHMODE_IDLE = 0;
+	//private static final int TOUCHMODE_IDLE = 0;
 	private static final int TOUCHMODE_DOWN = 1;
 	private static final int TOUCHMODE_DRAGGING = 2;
 	
@@ -113,6 +114,41 @@ public class AlarmClockBlock extends View {
 	}
 	
 	@Override
+	public boolean onSlideEvent(SlideEvent event){
+		switch(event.getAction()){
+		case SlideEvent.TOUCHMODE_DOWN:
+			if(event.getStartY() < height){
+				getParent().requestDisallowInterceptTouchEvent(true);
+				return true;
+			}
+			break;
+		case SlideEvent.TOUCHMODE_DRAGGING_HORIZONTALLY:
+			getParent().requestDisallowInterceptTouchEvent(false);
+			break;
+		case SlideEvent.TOUCHMODE_DRAGGING_VERTICALLY:
+			moveX = centerX;
+			moveY = centerY - event.getStartY() + event.getY();
+			if(moveY > centerY && moveY <= centerY + DensityUtil.dip2px(context, 80)){
+				invalidate();
+			}else if(moveY > centerY + DensityUtil.dip2px(context, 80)){
+				event.setAction(SlideEvent.TOUCHMODE_IDLE);
+				enabled = !enabled;
+				alarm.setEnabled(enabled);
+				WakerDatabaseHelper.getInstance(context).updateAlarm(alarm.getId(), alarm);
+				if(null != onStateChangeListener) onStateChangeListener.onStateChanged(alarm.getId(), enabled);
+				returnToOriginalSpot(event);
+			}
+			return true;
+		case SlideEvent.TOUCHMODE_IDLE:
+			returnToOriginalSpot(event);
+			break;
+		}
+		
+		return false;
+	}
+	
+	/*
+	@Override
 	public boolean onTouchEvent(MotionEvent event){
 		switch(event.getAction() & MotionEvent.ACTION_MASK){
 		case MotionEvent.ACTION_DOWN:
@@ -162,19 +198,27 @@ public class AlarmClockBlock extends View {
 		
 		return true;
 	}
+	 */
 	
-	private void returnToOriginalSpot(){
+	private void returnToOriginalSpot(SlideEvent event){
 		handler = new Handler();
-		runnable = new MyRunnable();
+		runnable = new MyRunnable(event);
 		
 		handler.post(runnable);
 		
 	}
 	
 	private class MyRunnable implements Runnable{
+		
+		private SlideEvent event;
+		
+		public MyRunnable(SlideEvent event){
+			this.event = event;
+		}
+		
 		@Override
 		public void run(){
-			if(touchMode == TOUCHMODE_IDLE && moveY != centerY){
+			if(touchMode == event.TOUCHMODE_IDLE && moveY != centerY){
 				moveY += (centerY - moveY) * 0.6F;
 				invalidate();
 				

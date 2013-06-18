@@ -13,7 +13,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,6 +101,7 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		handler = new Handler();
+		touchMode = TOUCHMODE_IDLE;
 	}
 	
 	@Override
@@ -121,10 +121,16 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 		mContent = view;
 	}
 	
+	public View getContentView(){
+		return mContent;
+	}
+	
 	public void setIsHorizontallyOnly(boolean arg){
 		onlyHorizontallyScroll = arg;
 	}
 	
+	//all those reduplicated and seems unnecessary codes are wrote to prevent TouchEvent being intercept if any child view have it's own onTouchEvent
+	//this is a temporally solution for the situation posted previously
 	@Override
 	public boolean onTouchEvent(MotionEvent event){
 		distance = mContent.getMeasuredWidth() * 0.3F;
@@ -136,24 +142,31 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 			touchMode = TOUCHMODE_DOWN;
 			break;
 		case MotionEvent.ACTION_MOVE:
-			Log.d(TAG, "move");
 			switch(touchMode){
 			case TOUCHMODE_IDLE:
+				touchMode = TOUCHMODE_DOWN;
 				break;
 			case TOUCHMODE_DOWN:
 				if(onlyHorizontallyScroll){
 					touchMode = TOUCHMODE_DRAGGING_HORIZONTALLY;
 				}else{
+					if(null == (Integer) dx) dx = (int) event.getHistoricalX(event.getHistorySize() - 1);
+					if(null == (Integer) dy) dy = (int) event.getHistoricalY(event.getHistorySize() - 1);
 					if(Math.abs(event.getX() - dx) > Math.abs(event.getY() - dy)){
+						dx = (int) event.getX();
+						dy = (int) event.getY();
 						touchMode = TOUCHMODE_DRAGGING_HORIZONTALLY;
 						if(null != mOnSlideListener) mOnSlideListener.onHorizontallySlidePressed();
 					}else{
+						dx = (int) event.getX();
+						dy = (int) event.getY();
 						touchMode = TOUCHMODE_DRAGGING_VERTICALLY;
 						if(null != mOnSlideListener) mOnSlideListener.onVerticallySlidePressed();
 					}
 				}
 				break;
 			case TOUCHMODE_DRAGGING_HORIZONTALLY:
+				int scrollY = mContent.getScrollY();
 				moveX = (int) (dx - event.getX());
 				//Temporally solution for overScroll bounce
 				float diff = moveX / overScrollDistance;
@@ -168,8 +181,7 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 						moveX = (int) (moveX - moveX * diff);
 					}
 					
-					mContent.scrollTo(moveX, 0);
-					Log.d(TAG, diff + "");
+					mContent.scrollTo(moveX, scrollY);
 				}
 				if(moveX >= distance){
 					if(null != getRightActivityClass()){
@@ -205,6 +217,7 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 				if(null != mOnSlideListener) mOnSlideListener.onVerticallySlide((int) (event.getY() - dy));
 				break;
 			}
+			
 			break;
 		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_CANCEL:
@@ -239,7 +252,7 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 	}
 	
 	private void backToOriginalSpot(){
-		runnable = new MyRunnable(mContent.getScrollX(), 0);
+		runnable = new MyRunnable(mContent.getScrollX(), mContent.getScrollY());
 		handler.post(runnable);
 	}
 	
@@ -252,10 +265,9 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 		}
 		@Override
 		public void run(){
-			Log.d(TAG, "x:" + moveX + ",y:" + moveY);
 			if((int) moveX != 0 || (int) moveY != 0){
 				moveX += (0 - moveX) * 0.6F;
-				moveY += (0 - moveY) * 0.6F;
+				//moveY += (0 - moveY) * 0.6F;
 				
 				mContent.scrollTo((int) moveX, (int) moveY);
 				handler.postDelayed(runnable, 20);

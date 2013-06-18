@@ -29,6 +29,7 @@ public class WakerApplication extends Application{
 		((WindowManager) getBaseContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(dm);
 		preferenceManager = WakerPreferenceManager.getInstance(getBaseContext());
 		preferenceManager.setScreenDensity(dm.density);
+		preferenceManager.setScreenResolution(dm.widthPixels, dm.heightPixels);
 		
 		if(preferenceManager.isFirstTimeBoot() == -1){
 			preferenceManager.setIsFirstTimeBoot(1);
