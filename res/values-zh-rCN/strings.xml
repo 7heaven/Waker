@@ -5,8 +5,6 @@
     <string name="action_settings">设置</string>
     <string name="hello_world">哈你妹啊</string>
     
-    <string name="am">上午</string>
-    <string name="pm">下午</string>
     <string name="no_saved_alarm">还没有设置闹钟</string>
 
     <!-- settings page -->

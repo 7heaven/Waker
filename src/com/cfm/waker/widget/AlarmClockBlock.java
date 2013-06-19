@@ -19,15 +19,13 @@ import android.graphics.Typeface;
 import android.os.Handler;
 import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
 
 import com.cfm.waker.R;
 import com.cfm.waker.dao.WakerDatabaseHelper;
 import com.cfm.waker.entity.Alarm;
 import com.cfm.waker.util.DensityUtil;
 import com.cfm.waker.view.SlideEvent;
+import com.cfm.waker.widget.base.BaseSlideWidget;
 
 public class AlarmClockBlock extends BaseSlideWidget {
 	
@@ -35,18 +33,11 @@ public class AlarmClockBlock extends BaseSlideWidget {
 	
 	private Context context;
 	
-	//private static final int TOUCHMODE_IDLE = 0;
-	private static final int TOUCHMODE_DOWN = 1;
-	private static final int TOUCHMODE_DRAGGING = 2;
-	
-	private int touchMode;
-	
 	private Alarm alarm;
 	
 	private int width, height;
 	private int centerX, centerY;
 	private int radius;
-	private float dx, dy;
 	private float moveX, moveY;
 	
 	private boolean enabled;
@@ -117,13 +108,10 @@ public class AlarmClockBlock extends BaseSlideWidget {
 	public boolean onSlideEvent(SlideEvent event){
 		switch(event.getAction()){
 		case SlideEvent.TOUCHMODE_DOWN:
-			if(event.getStartY() < height){
-				getParent().requestDisallowInterceptTouchEvent(true);
-				return true;
-			}
+			if(event.getStartY() > height) return false;
 			break;
-		case SlideEvent.TOUCHMODE_DRAGGING_HORIZONTALLY:
-			getParent().requestDisallowInterceptTouchEvent(false);
+		case SlideEvent.TOUCHMODE_VERTICAL_START:
+			getParent().requestDisallowInterceptTouchEvent(true);
 			break;
 		case SlideEvent.TOUCHMODE_DRAGGING_VERTICALLY:
 			moveX = centerX;
@@ -138,13 +126,13 @@ public class AlarmClockBlock extends BaseSlideWidget {
 				if(null != onStateChangeListener) onStateChangeListener.onStateChanged(alarm.getId(), enabled);
 				returnToOriginalSpot(event);
 			}
-			return true;
+			break;
 		case SlideEvent.TOUCHMODE_IDLE:
 			returnToOriginalSpot(event);
 			break;
 		}
 		
-		return false;
+		return true;
 	}
 	
 	/*
@@ -218,7 +206,7 @@ public class AlarmClockBlock extends BaseSlideWidget {
 		
 		@Override
 		public void run(){
-			if(touchMode == event.TOUCHMODE_IDLE && moveY != centerY){
+			if(event.getAction() == SlideEvent.TOUCHMODE_IDLE && moveY != centerY){
 				moveY += (centerY - moveY) * 0.6F;
 				invalidate();
 				
@@ -239,6 +227,7 @@ public class AlarmClockBlock extends BaseSlideWidget {
 		
 		radius = (int) (height * 0.4F);
 	    
+		//expand height to double size of the original height so it can leave room for slide action
 	    super.setMeasuredDimension(width, height * 2);
 	}
 	
@@ -277,7 +266,7 @@ public class AlarmClockBlock extends BaseSlideWidget {
 			
 			canvas.drawText(text, moveX - bound.width() / 2, moveY + bound.height() / 2, textPaint);
 			if(!alarm.is24Format()){
-				text = context.getString(alarm.getAmpmRes());
+				text = alarm.getAmpm();
 				textPaint.setTextSize(textPaint.getTextSize() / 2);
 				textPaint.getTextBounds(text, 0, text.length(), bound2);
 				

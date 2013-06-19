@@ -8,7 +8,6 @@
 package com.cfm.waker.widget;
 
 import com.cfm.waker.R;
-import com.cfm.waker.util.DensityUtil;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -22,8 +21,6 @@ import android.view.View;
 public class DialTimePicker extends View{
 	
 	private static final String TAG = "DialTimePicker";
-	
-	private Context context;
 	
 	private int outerCircleRange;
 	private int innerCircleRange;
@@ -65,8 +62,6 @@ public class DialTimePicker extends View{
 	
 	public DialTimePicker(Context context, AttributeSet attrs, int defStyle){
 		super(context, attrs, defStyle);
-		
-		this.context = context;
 		
 		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.DialTimePicker);
 		

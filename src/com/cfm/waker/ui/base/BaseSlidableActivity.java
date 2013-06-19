@@ -129,7 +129,7 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 		onlyHorizontallyScroll = arg;
 	}
 	
-	//all those reduplicated and seems unnecessary codes are wrote to prevent TouchEvent being intercept if any child view have it's own onTouchEvent
+	//all those reduplicated and seems unnecessary codes are wrote to prevent TouchEvent being intercept by child view if any child view have it's own onTouchEvent
 	//this is a temporally solution for the situation posted previously
 	@Override
 	public boolean onTouchEvent(MotionEvent event){
@@ -145,13 +145,15 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 			switch(touchMode){
 			case TOUCHMODE_IDLE:
 				touchMode = TOUCHMODE_DOWN;
+				if(null == (Integer) dx && null == (Integer) dy){
+					dx = (int) event.getHistoricalX(event.getHistorySize() - 1);
+					dy = (int) event.getHistoricalY(event.getHistorySize() - 1);
+				}
 				break;
 			case TOUCHMODE_DOWN:
 				if(onlyHorizontallyScroll){
 					touchMode = TOUCHMODE_DRAGGING_HORIZONTALLY;
 				}else{
-					if(null == (Integer) dx) dx = (int) event.getHistoricalX(event.getHistorySize() - 1);
-					if(null == (Integer) dy) dy = (int) event.getHistoricalY(event.getHistorySize() - 1);
 					if(Math.abs(event.getX() - dx) > Math.abs(event.getY() - dy)){
 						dx = (int) event.getX();
 						dy = (int) event.getY();

@@ -151,7 +151,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 				
 				dialTimePicker.performDial(6 * calendar.get(Calendar.SECOND));
 				timeText.setText(dateFormat.format(calendar.getTime()));
-				if(!mApplication.is24()) amPm.setText(calendar.get(Calendar.AM_PM) == Calendar.AM ? getString(R.string.am) : getString(R.string.pm));
+				if(!mApplication.is24()) amPm.setText(new SimpleDateFormat("a", Locale.CHINA).format(calendar.getTime()));
 				
 				timeHandler.postDelayed(tRunnable, 500);
 				
@@ -243,7 +243,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		Log.d("Activity", increment + "");
 		calendar.setTimeInMillis(calendar.getTimeInMillis() + (increment * 10000));
 		timeText.setText(dateFormat.format(calendar.getTime()));
-		if(!mApplication.is24()) amPm.setText(getString(calendar.get(Calendar.AM_PM) == Calendar.AM ? R.string.am : R.string.pm));
+		if(!mApplication.is24()) amPm.setText(new SimpleDateFormat("a", Locale.CHINA).format(calendar.getTime()));
 		
 	}
 	

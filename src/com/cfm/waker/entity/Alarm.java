@@ -13,8 +13,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
 
-import com.cfm.waker.R;
-
 public class Alarm implements Serializable{
 	
 	/**
@@ -164,10 +162,10 @@ public class Alarm implements Serializable{
 		this.is24Format = is24Format;
 	}
 	
-	public int getAmpmRes(){
+	public String getAmpm(){
 		if(is24Format) throw new IllegalStateException("can not use the function when it's 24 Format.");
 		
-		return calendar.get(Calendar.AM_PM) == Calendar.AM ? R.string.am : R.string.pm;
+		return new SimpleDateFormat("a", Locale.CHINA).format(calendar.getTime());
 	}
 
 	public String getFormatedTime(){

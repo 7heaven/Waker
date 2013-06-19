@@ -1,6 +1,7 @@
 package com.cfm.waker.widget;
 
 import com.cfm.waker.view.SlideEvent;
+import com.cfm.waker.widget.base.BaseSlideWidget;
 
 import android.content.Context;
 import android.graphics.Canvas;

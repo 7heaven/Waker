@@ -5,8 +5,6 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     
-    <string name="am">am</string>
-    <string name="pm">pm</string>
     <string name="no_saved_alarm">no saved alarm</string>
     
     <!-- settings page -->
