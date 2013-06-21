@@ -116,6 +116,7 @@ public class DialTimePicker extends View{
 			float x = event.getX() - centerPoint.x;
 			float y = event.getY() - centerPoint.y;
 			int pressedRange = (int) Math.sqrt(x * x + y * y);
+			//calculate the pressedRange to make sure it's in the clickable circle
 			if(outerPressRange > pressedRange && pressedRange > innerPressRange){
 				isDrawPressPoint = true;
 				isCirclePressed = true;
@@ -160,6 +161,7 @@ public class DialTimePicker extends View{
 		return isCirclePressed;
 	}
 	
+	//perform a dial action ever there's no touch event action
 	public void performDial(int angle){
 		double realAngle = angle - 90;
 		if(realAngle >= 180 && realAngle < 270){

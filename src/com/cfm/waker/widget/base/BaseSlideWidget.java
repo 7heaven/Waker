@@ -54,19 +54,22 @@ public abstract class BaseSlideWidget extends View{
 			mSlideEvent.setY(event.getY());
 			mSlideEvent.setDx(mSlideEvent.getX() - mSlideEvent.getStartX());
 			mSlideEvent.setDy(mSlideEvent.getY() - mSlideEvent.getStartY());
-			if(mSlideEvent.getAction() == SlideEvent.TOUCHMODE_DOWN){
+			
+			switch(mSlideEvent.getAction()){
+			case SlideEvent.TOUCHMODE_DOWN:
 				if(Math.abs(mSlideEvent.getDx()) > Math.abs(mSlideEvent.getDy())){
 					mSlideEvent.setAction(SlideEvent.TOUCHMODE_HORIZONTAL_START);
 				}else{
 					mSlideEvent.setAction(SlideEvent.TOUCHMODE_VERTICAL_START);
 				}
-			}
-			
-			if(mSlideEvent.getAction() == SlideEvent.TOUCHMODE_HORIZONTAL_START)
+				break;
+			case SlideEvent.TOUCHMODE_HORIZONTAL_START:
 				mSlideEvent.setAction(SlideEvent.TOUCHMODE_DRAGGING_HORIZONTALLY);
-			
-			if(mSlideEvent.getAction() == SlideEvent.TOUCHMODE_VERTICAL_START)
+				break;
+			case SlideEvent.TOUCHMODE_VERTICAL_START:
 				mSlideEvent.setAction(SlideEvent.TOUCHMODE_DRAGGING_VERTICALLY);
+				break;
+			}
 			
 			break;
 		case MotionEvent.ACTION_CANCEL:

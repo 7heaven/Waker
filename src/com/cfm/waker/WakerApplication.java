@@ -51,4 +51,5 @@ public class WakerApplication extends Application{
 	public void setDatabaseChanged(boolean isDatabaseChanged){
 		this.isDatabaseChanged = isDatabaseChanged;
 	}
+	
 }

@@ -116,9 +116,9 @@ public class AlarmClockBlock extends BaseSlideWidget {
 		case SlideEvent.TOUCHMODE_DRAGGING_VERTICALLY:
 			moveX = centerX;
 			moveY = centerY - event.getStartY() + event.getY();
-			if(moveY > centerY && moveY <= centerY + DensityUtil.dip2px(context, 80)){
+			if(event.getDy() > 0 && event.getDy() < DensityUtil.dip2px(context, 80)){
 				invalidate();
-			}else if(moveY > centerY + DensityUtil.dip2px(context, 80)){
+			}else if(event.getDy() > DensityUtil.dip2px(context, 80)){
 				event.setAction(SlideEvent.TOUCHMODE_IDLE);
 				enabled = !enabled;
 				alarm.setEnabled(enabled);

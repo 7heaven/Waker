@@ -12,13 +12,13 @@ import java.util.Calendar;
 import java.util.List;
 
 import com.cfm.waker.entity.Alarm;
+import com.cfm.waker.log.WLog;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 public class WakerDatabaseHelper extends SQLiteOpenHelper {
 	
@@ -61,7 +61,7 @@ public class WakerDatabaseHelper extends SQLiteOpenHelper {
 	
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int currentVersion){
-		Log.d(TAG, "Upgrade waker database from" + oldVersion + "to" + currentVersion);
+		WLog.print(TAG, "Upgrade waker database from" + oldVersion + "to" + currentVersion);
 		
 		deleteAllAlarms(db);
 	}
@@ -177,7 +177,7 @@ public class WakerDatabaseHelper extends SQLiteOpenHelper {
 		cv.put(Alarm.Columns.DAYS_OF_WEEK, alarm.getWeek());
 		cv.put(Alarm.Columns.MESSAGE, alarm.getMessage());
 		
-		Log.d(TAG, cv.toString());
+		WLog.print(TAG, cv.toString());
 		
 		return cv;
 		

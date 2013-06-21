@@ -11,6 +11,7 @@ import java.util.Calendar;
 
 import com.cfm.waker.dao.WakerDatabaseHelper;
 import com.cfm.waker.entity.Alarm;
+import com.cfm.waker.log.WLog;
 import com.cfm.waker.ui.ShakeActivity;
 
 import android.app.AlarmManager;
@@ -19,7 +20,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.widget.Toast;
 
 public class AlarmReceiver extends BroadcastReceiver{
@@ -41,7 +41,7 @@ public class AlarmReceiver extends BroadcastReceiver{
 				PendingIntent pi = PendingIntent.getBroadcast(context, 0, myIntent, ++flag);
 				alarmManager.set(AlarmManager.RTC_WAKEUP, getNextAlarmTime(alarm), pi);
 				
-				Log.d("RECEIVER", isBeforeTime + ":" + getNextAlarmTime(alarm) + ":" + System.currentTimeMillis());
+				WLog.print("RECEIVER", isBeforeTime + ":" + getNextAlarmTime(alarm) + ":" + System.currentTimeMillis());
 				if(!isBeforeTime){
 					Toast.makeText(context, "alarm!!", Toast.LENGTH_LONG).show();
 					Intent mIntent = new Intent(context, ShakeActivity.class);
@@ -54,6 +54,8 @@ public class AlarmReceiver extends BroadcastReceiver{
 		
 	}
 	
+	//this function will generate the next trigger day of the alarm
+	//it's not a very bright way to do that (>_<) still finding a better way
 	private long getNextAlarmTime(Alarm alarm){
 		Calendar calendar = Calendar.getInstance();
 		int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);

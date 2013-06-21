@@ -19,4 +19,9 @@
         <attr name="typeface" format="string" />
         <attr name="color" format="color" />
     </declare-styleable>
+    
+    <declare-styleable name="SlideSwitcher">
+        <attr name="text_size" format="dimension" />
+        <attr name="text_color" format="color" />
+    </declare-styleable>
 </resources>

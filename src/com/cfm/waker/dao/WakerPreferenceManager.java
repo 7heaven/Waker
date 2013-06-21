@@ -84,11 +84,35 @@ public class WakerPreferenceManager {
 		return getPreference().getInt(SCREEN_HEIGHT, 800);
 	}
 	
+	public void setGlobalShakeLevel(int level){
+		getPreference().edit().putInt(GLOBAL_SHAKE_LEVEL, level).commit();
+	}
+	
+	public int getGlobalShakeLevel(){
+		return getPreference().getInt(GLOBAL_SHAKE_LEVEL, 0);
+	}
+	
 	public void setGlobalSnoozeTime(int snoozeTime){
 	    getPreference().edit().putLong(GLOBAL_SNOOZETIME, snoozeTime).commit();
 	}
 	
 	public long getGlobalSnoozeTime(){
 		return getPreference().getLong(GLOBAL_SNOOZETIME, 0L);
+	}
+	
+	public void setGlobalRingtone(String ringtone){
+		getPreference().edit().putString(GLOBAL_RINGTONE, ringtone).commit();
+	}
+	
+	public String getGlobalRingtone(){
+		return getPreference().getString(GLOBAL_RINGTONE, "");
+	}
+	
+	public void setGlobalAlarmVolume(int volume){
+		getPreference().edit().putInt(GLOBAL_ALARM_VOLUME, volume);
+	}
+	
+	public int getGlobalAlarmVolume(){
+		return getPreference().getInt(GLOBAL_ALARM_VOLUME, 100);
 	}
 }

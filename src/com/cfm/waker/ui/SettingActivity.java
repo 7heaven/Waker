@@ -11,20 +11,40 @@ import com.cfm.waker.R;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 
 import com.cfm.waker.dao.WakerPreferenceManager;
+import com.cfm.waker.log.WLog;
 import com.cfm.waker.ui.base.BaseSlidableActivity;
 import com.cfm.waker.widget.ExactLinearLayout;
 
 public class SettingActivity extends BaseSlidableActivity{
 	
+	private SeekBar seekBar;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
+		
+		seekBar = (SeekBar) findViewById(R.id.volume);
+		seekBar.setProgress(WakerPreferenceManager.getInstance(this).getGlobalAlarmVolume());
+		seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener(){
+
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {}
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				WakerPreferenceManager.getInstance(SettingActivity.this).setGlobalAlarmVolume(seekBar.getProgress());
+			}
+			
+		});
 		
 		mOnSlideListener = new OnSlideListener(){
 			int y;
@@ -38,7 +58,7 @@ public class SettingActivity extends BaseSlidableActivity{
 			public void onHorizontallySlide(int distance) {}
 
 			@Override
-			public void onHorizontallySlideReleased() {}
+			public void onHorizontallySlideReleased(boolean isActionPerformed) {}
 
 			@Override
 			public void onVerticallySlidePressed() {
@@ -59,7 +79,7 @@ public class SettingActivity extends BaseSlidableActivity{
 				
 				if(measuredHeight > screenHeight) getContentView().scrollTo(0, dis);
 				
-				Log.d(TAG, ((ExactLinearLayout) getContentView()).getChildAt(0).getMeasuredHeight() + ":" + dis);
+				WLog.print(TAG, ((ExactLinearLayout) getContentView()).getChildAt(0).getMeasuredHeight() + ":" + dis);
 			}
 
 			@Override

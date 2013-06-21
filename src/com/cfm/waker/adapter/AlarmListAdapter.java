@@ -94,7 +94,6 @@ public class AlarmListAdapter extends PagerAdapter{
 				
 				rowBlock.getAlarmBlock(i).setVisibility(View.VISIBLE);
 				rowBlock.getAlarmBlock(i).setAlarm(alarmList.get(position * 4 + i));
-				//Log.d(TAG, "i:" + i + ", bdg:" + bdg + " pageCount:" + getCount() + " alarmList:" + alarmList.size() + "position:" + position + " visibility" + i + ":" + rowBlock.getAlarmBlock(i).getVisibility());
 				
 			}while(++i < bdg);
 			
@@ -111,7 +110,7 @@ public class AlarmListAdapter extends PagerAdapter{
 
 	@Override
 	public int getCount() {
-		//when alarmList.size() == 0 shall return 1 for the no alarm saved layout
+		//when alarmList.size() == 0, shall return 1 for the no alarm saved layout
 		//otherwise calculate the pagecount in ViewPager by using alarmList.size()
 		if(alarmList.size() == 0){
 			return 1;

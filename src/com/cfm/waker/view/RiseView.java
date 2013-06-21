@@ -8,6 +8,7 @@
 package com.cfm.waker.view;
 
 import com.cfm.waker.R;
+import com.cfm.waker.log.WLog;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -16,7 +17,6 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.view.View;
 import android.util.AttributeSet;
-import android.util.Log;
 
 public class RiseView extends View {
 	
@@ -72,7 +72,7 @@ public class RiseView extends View {
 		rect.top = getBottom();
 		rect.right = getRight();
 		rect.bottom = getBottom();
-		Log.d(TAG, rect.toString());
+		WLog.print(TAG, rect.toString());
 	}
 	
 	public void setColor(int color){

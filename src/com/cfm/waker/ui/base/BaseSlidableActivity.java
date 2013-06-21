@@ -44,12 +44,12 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 	
 	private int touchMode;
 	
-	private boolean onlyHorizontallyScroll = false;
+	private boolean horizontallyScrollOnly = false;
 	
 	protected OnSlideListener mOnSlideListener;
 	
-	private MyRunnable runnable;
-	private Handler handler;
+	private MyRunnable mRunnable;
+	private Handler mHandler;
 	
 	/**
 	 * Must Override this class to return a left enter view(Activity) for a right Fling movement </br></br>
@@ -91,7 +91,7 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 	public interface OnSlideListener{
 		public void onHorizontallySlidePressed();
 		public void onHorizontallySlide(int distance);
-		public void onHorizontallySlideReleased();
+		public void onHorizontallySlideReleased(boolean isActionPerformed);
 		public void onVerticallySlidePressed();
 		public void onVerticallySlide(int distance);
 		public void onVerticallySlideReleased();
@@ -100,7 +100,7 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		handler = new Handler();
+		mHandler = new Handler();
 		touchMode = TOUCHMODE_IDLE;
 	}
 	
@@ -126,7 +126,7 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 	}
 	
 	public void setIsHorizontallyOnly(boolean arg){
-		onlyHorizontallyScroll = arg;
+		horizontallyScrollOnly = arg;
 	}
 	
 	//all those reduplicated and seems unnecessary codes are wrote to prevent TouchEvent being intercept by child view if any child view have it's own onTouchEvent
@@ -151,7 +151,7 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 				}
 				break;
 			case TOUCHMODE_DOWN:
-				if(onlyHorizontallyScroll){
+				if(horizontallyScrollOnly){
 					touchMode = TOUCHMODE_DRAGGING_HORIZONTALLY;
 				}else{
 					if(Math.abs(event.getX() - dx) > Math.abs(event.getY() - dy)){
@@ -223,8 +223,13 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 			break;
 		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_CANCEL:
-			if(touchMode != TOUCHMODE_IDLE)
+			boolean isPerformed;
+			if(touchMode != TOUCHMODE_IDLE){
+				isPerformed = false;
 				backToOriginalSpot();
+			}else{
+				isPerformed = true;
+			}
 			
 			moveX = 0;
 			
@@ -232,7 +237,7 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 				if(touchMode == TOUCHMODE_DRAGGING_VERTICALLY){
 					mOnSlideListener.onVerticallySlideReleased();
 				}else if(touchMode == TOUCHMODE_DRAGGING_HORIZONTALLY){
-					mOnSlideListener.onHorizontallySlideReleased();
+					mOnSlideListener.onHorizontallySlideReleased(isPerformed);
 				}
 			}
 			
@@ -250,12 +255,12 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 	}
 	
 	private void stopContentMovement(){
-		handler.removeCallbacks(runnable);
+		mHandler.removeCallbacks(mRunnable);
 	}
 	
 	private void backToOriginalSpot(){
-		runnable = new MyRunnable(mContent.getScrollX(), mContent.getScrollY());
-		handler.post(runnable);
+		mRunnable = new MyRunnable(mContent.getScrollX(), mContent.getScrollY());
+		mHandler.post(mRunnable);
 	}
 	
 	private class MyRunnable implements Runnable{
@@ -272,7 +277,7 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 				//moveY += (0 - moveY) * 0.6F;
 				
 				mContent.scrollTo((int) moveX, (int) moveY);
-				handler.postDelayed(runnable, 20);
+				mHandler.postDelayed(mRunnable, 20);
 				
 			}
 		}

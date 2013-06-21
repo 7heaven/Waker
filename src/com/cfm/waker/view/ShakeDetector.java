@@ -9,12 +9,13 @@ package com.cfm.waker.view;
 
 import java.util.ArrayList;
 
+import com.cfm.waker.log.WLog;
+
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
 
 public class ShakeDetector implements SensorEventListener {
 	
@@ -91,7 +92,7 @@ public class ShakeDetector implements SensorEventListener {
 			float speed = Math.abs(x + y + z - mLastX - mLastY - mLastZ) / diffTime * 10000;
 			
 			if(speed > SHAKE_THRESHOLD){
-				Log.d(TAG, "shake detected w/ speed: " + speed);
+				WLog.print(TAG, "shake detected w/ speed: " + speed);
 				this.notifyListenersShake(speed);
 			}else{
 				this.notifyListenersNotShake();

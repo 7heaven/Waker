@@ -16,6 +16,7 @@ import java.util.Locale;
 import com.cfm.waker.adapter.AlarmListAdapter;
 import com.cfm.waker.dao.WakerDatabaseHelper;
 import com.cfm.waker.entity.Alarm;
+import com.cfm.waker.log.WLog;
 import com.cfm.waker.receiver.AlarmReceiver;
 import com.cfm.waker.ui.SettingActivity;
 import com.cfm.waker.ui.base.BaseSlidableActivity;
@@ -31,7 +32,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 
 public class MainActivity extends BaseSlidableActivity implements OnTimePickListener{
@@ -101,7 +101,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 			public void onHorizontallySlide(int distance){}
 			
 			@Override
-			public void onHorizontallySlideReleased(){}
+			public void onHorizontallySlideReleased(boolean isActionPerformed){}
 			
 			@Override
 			public void onVerticallySlidePressed(){
@@ -128,9 +128,8 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 			
 			@Override
 			public void onVerticallySlideReleased(){
-				Log.d(TAG, viewPager.getMeasuredHeight() + "");
+				WLog.print(TAG, viewPager.getMeasuredHeight() + "");
 				if(viewPager.getScrollY() > viewPager.getMeasuredHeight() / 4){
-					
 					viewPagerShow(false);
 				}else{
 					viewPagerShow(true);
@@ -182,12 +181,12 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 				moveY += (destinationY - moveY) * 0.51F;
 				view.scrollTo((int) moveX, (int) moveY);
 				
-				Log.d(TAG, "runnable run");
+				WLog.print(TAG, "runnable run");
 				
 				vmHandler.postDelayed(vmRunnable, 20);
 			}else{
 				if(hide){
-					Log.d(TAG, "runnable gone");
+					WLog.print(TAG, "runnable gone");
 					view.setVisibility(View.INVISIBLE);
 					hide = false;
 				}
@@ -197,6 +196,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		
 	}
 	
+	//show or hide the viewPager in a smooth way
 	private void viewPagerShow(boolean isShow){
 		if(isShow){
 			vmRunnable = new ViewMoveRunnable(viewPager, 0, 0, false);
@@ -240,7 +240,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	
 	@Override
 	public void onPick(int value, int increment){
-		Log.d("Activity", increment + "");
+		WLog.print("Activity", increment + "");
 		calendar.setTimeInMillis(calendar.getTimeInMillis() + (increment * 10000));
 		timeText.setText(dateFormat.format(calendar.getTime()));
 		if(!mApplication.is24()) amPm.setText(new SimpleDateFormat("a", Locale.CHINA).format(calendar.getTime()));
@@ -251,15 +251,19 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	public void onStopPick(){
 		pickingTime = false;
 		
+		//to setup a alarm and when the alarm being triggered start a AlarmReceiver anyway
+		//it's AlarmReceiver's job to decide whether start a new ShakeActivity to perform a alarm or not.
 		Intent intent = new Intent(MainActivity.this, AlarmReceiver.class);
 		
 		final boolean beforeTime = calendar.getTimeInMillis() <= System.currentTimeMillis();
 		
-		Log.d(TAG, "beforeTime:" + beforeTime);
+		WLog.print(TAG, "beforeTime:" + beforeTime);
 		
 		calendar.set(Calendar.SECOND, 0);
 		
 		intent.putExtra("alarm_id", addAlarm(calendar).getId());
+		//put a boolean into intent to tell AlarmReceiver to stop this alarm and set a new alarm for the next trigger day 
+		//in case the trigger time of this alarm is before the currentTime
 		intent.putExtra("before_time", beforeTime);
 		intent.putExtra("flag", alarmCount + 1);
 		
@@ -272,13 +276,11 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 
 	@Override
 	protected Class<? extends Activity> getLeftActivityClass() {
-		// TODO Auto-generated method stub
 		return this.getClass();
 	}
 
 	@Override
 	protected Class<? extends Activity> getRightActivityClass() {
-		// TODO Auto-generated method stub
 		return SettingActivity.class;
 	}
 	
