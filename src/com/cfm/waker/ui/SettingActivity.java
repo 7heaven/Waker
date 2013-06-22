@@ -10,6 +10,7 @@ package com.cfm.waker.ui;
 import com.cfm.waker.R;
 
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.SeekBar;
@@ -101,13 +102,13 @@ public class SettingActivity extends BaseSlidableActivity{
 	}
 
 	@Override
-	protected View getLeftView() {
+	protected Drawable getLeftDrawable() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	protected View getRightView() {
+	protected Drawable getRightDrawable() {
 		// TODO Auto-generated method stub
 		return null;
 	}

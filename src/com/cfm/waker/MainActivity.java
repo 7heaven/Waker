@@ -29,10 +29,12 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.FrameLayout;
 
 public class MainActivity extends BaseSlidableActivity implements OnTimePickListener{
 	
@@ -51,6 +53,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	
 	private boolean pickingTime;
 	
+	private FrameLayout viewPagerLayout;
 	private ViewPager viewPager;
 	private ArrayList<Alarm> alarmList;
 	private AlarmListAdapter alarmListAdapter;
@@ -84,6 +87,8 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		
 		pickingTime = false;
 		
+		viewPagerLayout = (FrameLayout) findViewById(R.id.viewpager_layout);
+		
 		viewPager = (ViewPager) findViewById(R.id.alarm_list);
 		alarmList = new ArrayList<Alarm>();
 		alarmListAdapter = new AlarmListAdapter(this, alarmList);
@@ -105,10 +110,9 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 			
 			@Override
 			public void onVerticallySlidePressed(){
-				y = viewPager.getScrollY();
+				y = viewPagerLayout.getScrollY();
 				vmHandler.removeCallbacks(vmRunnable);
-				viewPager.setVisibility(View.VISIBLE);
-				if(viewPager.getCurrentItem() != 0) viewPager.setCurrentItem(0, false);
+				viewPagerLayout.setVisibility(View.VISIBLE);
 			}
 			
 			@Override
@@ -119,17 +123,17 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 					dis = 0;
 				}
 				
-				if(dis >= viewPager.getMeasuredHeight()){
-					dis = viewPager.getMeasuredHeight();
+				if(dis >= viewPagerLayout.getMeasuredHeight()){
+					dis = viewPagerLayout.getMeasuredHeight();
 				}
 				
-				viewPager.scrollTo(0, dis);
+				viewPagerLayout.scrollTo(0, dis);
 			}
 			
 			@Override
 			public void onVerticallySlideReleased(){
-				WLog.print(TAG, viewPager.getMeasuredHeight() + "");
-				if(viewPager.getScrollY() > viewPager.getMeasuredHeight() / 4){
+				WLog.print(TAG, viewPagerLayout.getMeasuredHeight() + "");
+				if(viewPagerLayout.getScrollY() > viewPagerLayout.getMeasuredHeight() / 4){
 					viewPagerShow(false);
 				}else{
 					viewPagerShow(true);
@@ -188,7 +192,6 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 				if(hide){
 					WLog.print(TAG, "runnable gone");
 					view.setVisibility(View.INVISIBLE);
-					hide = false;
 				}
 			}
 			
@@ -197,11 +200,13 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	}
 	
 	//show or hide the viewPager in a smooth way
+	//scroll viewPagerLayout here because if we scroll viewPager itself, viewPager will become unstable
+	//don't know why, still looking for an answer :P
 	private void viewPagerShow(boolean isShow){
 		if(isShow){
-			vmRunnable = new ViewMoveRunnable(viewPager, 0, 0, false);
+			vmRunnable = new ViewMoveRunnable(viewPagerLayout, 0, 0, false);
 		}else{
-			vmRunnable = new ViewMoveRunnable(viewPager, 0, viewPager.getMeasuredHeight() / 2, true);
+			vmRunnable = new ViewMoveRunnable(viewPagerLayout, 0, viewPagerLayout.getMeasuredHeight() / 2, true);
 		}
 		
 		vmHandler.post(vmRunnable);
@@ -285,13 +290,13 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	}
 	
 	@Override
-	protected View getLeftView(){
-		return null;
+	protected Drawable getLeftDrawable(){
+		return getResources().getDrawable(R.drawable.ic_launcher);
 	}
 	
 	@Override
-	protected View getRightView(){
-		return null;
+	protected Drawable getRightDrawable(){
+		return getResources().getDrawable(R.drawable.ic_launcher);
 	}
 	
 	@Override

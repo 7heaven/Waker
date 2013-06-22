@@ -34,6 +34,7 @@ public class SlideEvent {
 	public static final int        TOUCHMODE_DIRECTION_MASK = 0x000000F0;
 	
 	private int touchMode;
+	private int previouslyMode;
 	
 	public float getDx() {
 		return dx;
@@ -87,7 +88,12 @@ public class SlideEvent {
 		return touchMode;
 	}
 	
+	public int getPreviouslyAction(){
+		return previouslyMode;
+	}
+	
 	public void setAction(int touchMode){
+		if(null != (Integer) touchMode) previouslyMode = this.touchMode;
 		this.touchMode = touchMode;
 	}
 }

@@ -6,11 +6,18 @@
     tools:context=".MainActivity"
     android:background="@drawable/background" >
     
-    <android.support.v4.view.ViewPager
-        android:id="@+id/alarm_list"
+    <FrameLayout
+        android:id="@+id/viewpager_layout"
         android:layout_width="match_parent"
-        android:layout_height="160.0dip"
-        android:overScrollMode="never" />
+        android:layout_height="160.0dip" >
+        
+        <android.support.v4.view.ViewPager
+            android:id="@+id/alarm_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never" />
+        
+    </FrameLayout>
     
     <RelativeLayout 
         android:id="@+id/dial_layout"
@@ -49,5 +56,11 @@
             waker:inner_circle="240.0dip" />
         
     </RelativeLayout>
+    
+    <com.cfm.waker.widget.WeekSelector
+        android:id="@+id/selector"
+        android:layout_width="match_parent"
+        android:layout_height="50.0dip"
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

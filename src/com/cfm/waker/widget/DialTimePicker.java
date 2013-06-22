@@ -8,6 +8,7 @@
 package com.cfm.waker.widget;
 
 import com.cfm.waker.R;
+import com.cfm.waker.util.DensityUtil;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -68,11 +69,11 @@ public class DialTimePicker extends View{
 		outerCircleRange = (int) ta.getDimension(R.styleable.DialTimePicker_outer_circle, 0) / 2;
 		innerCircleRange = (int) ta.getDimension(R.styleable.DialTimePicker_inner_circle, 0) / 2;
 		
-		circleWidth = outerCircleRange - innerCircleRange;
-		
 		ta.recycle();
 		
-		thumbPressRange = 100;
+		circleWidth = outerCircleRange - innerCircleRange;
+		
+		thumbPressRange = DensityUtil.dip2px(context, 60);
 		
 		if(outerCircleRange != 0 && innerCircleRange != 0 && outerCircleRange > innerCircleRange){
 			mediumCircleRange = (outerCircleRange + innerCircleRange) / 2;
@@ -161,7 +162,7 @@ public class DialTimePicker extends View{
 		return isCirclePressed;
 	}
 	
-	//perform a dial action ever there's no touch event action
+	//perform a dial action ever there's no touch event input
 	public void performDial(int angle){
 		double realAngle = angle - 90;
 		if(realAngle >= 180 && realAngle < 270){

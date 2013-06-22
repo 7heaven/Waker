@@ -9,13 +9,18 @@ package com.cfm.waker.ui.base;
 
 import java.lang.Runnable;
 
+import com.cfm.waker.R;
+
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout.LayoutParams;
 
 /**
  * this base Activity enable < ? extends BaseSlidableActivity > to detect and response a slide movement
@@ -27,6 +32,11 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 	protected static final String TAG = "BaseSlidableActivity";
 	
 	private View mContent;
+	private View leftContent;
+	private View rightContent;
+	
+	private int leftContentWidth;
+	private int rightContentWidth;
 	
   //private View leftIcon;
   //private View rightIcon;
@@ -75,13 +85,13 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 	 * return a View for right Fling hint
 	 * @return
 	 */
-	protected abstract View getLeftView();
+	protected abstract Drawable getLeftDrawable();
 	
 	/**
 	 * return a View for left Fling hint
 	 * @return
 	 */
-	protected abstract View getRightView();
+	protected abstract Drawable getRightDrawable();
 	
 	/**
 	 * this Listener provide a interface for customize slide action
@@ -119,6 +129,24 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 	public void setContentView(View view, ViewGroup.LayoutParams params){
 		super.setContentView(view, params);
 		mContent = view;
+		
+		LayoutParams param = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		if(null != getLeftDrawable()){
+			leftContent = getLayoutInflater().inflate(R.layout.baseactivity_left_view, null, false);
+			ImageView leftDrawable = (ImageView) leftContent.findViewById(R.id.imageview);
+			leftDrawable.setImageDrawable(getLeftDrawable());
+			leftContentWidth = getLeftDrawable().getIntrinsicWidth();
+			
+			addContentView(leftContent, param);
+		}
+		if(null != getRightDrawable()){
+			rightContent = getLayoutInflater().inflate(R.layout.baseactivity_right_view, null, false);
+			rightContentWidth = getRightDrawable().getIntrinsicWidth();
+			ImageView rightDrawable = (ImageView) rightContent.findViewById(R.id.imageview);
+			rightDrawable.setImageDrawable(getRightDrawable());
+			
+			addContentView(rightContent, param);
+		}
 	}
 	
 	public View getContentView(){
@@ -184,6 +212,8 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 					}
 					
 					mContent.scrollTo(moveX, scrollY);
+					scrollLeftContent(moveX + leftContentWidth, 0);
+					scrollRightContent(moveX - rightContentWidth, 0);
 				}
 				if(moveX >= distance){
 					if(null != getRightActivityClass()){
@@ -252,6 +282,16 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 	public void onResume(){
 		super.onResume();
 		mContent.scrollTo(0, 0);
+		scrollLeftContent(leftContentWidth, 0);
+		scrollRightContent(-rightContentWidth, 0);
+	}
+	
+	private void scrollLeftContent(int x, int y){
+		if(null != leftContent) leftContent.scrollTo(x, y);
+	}
+	
+	private void scrollRightContent(int x, int y){
+		if(null != rightContent) rightContent.scrollTo(x, y);
 	}
 	
 	private void stopContentMovement(){
@@ -277,6 +317,8 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 				//moveY += (0 - moveY) * 0.6F;
 				
 				mContent.scrollTo((int) moveX, (int) moveY);
+				scrollLeftContent((int) (moveX + leftContentWidth), 0);
+				scrollRightContent((int) (moveX - rightContentWidth), 0);
 				mHandler.postDelayed(mRunnable, 20);
 				
 			}
