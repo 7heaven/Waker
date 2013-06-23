@@ -189,8 +189,10 @@ public class DialTimePicker extends View{
 		canvas.drawCircle(centerPoint.x, centerPoint.y, mediumCircleRange, paint);
 		
 		if(isDrawPressPoint){
-			paint.setColor(0xFFFFFFFF);
+			paint.setColor(0x44FFFFFF);
 			paint.setStyle(Paint.Style.FILL);
+			canvas.drawCircle(drawPoint.x, drawPoint.y, circleWidth * 3, paint);
+			paint.setColor(0x99FFFFFF);
 			canvas.drawCircle(drawPoint.x, drawPoint.y, circleWidth * 2, paint);
 		}
 		

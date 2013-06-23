@@ -55,6 +55,7 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 	private int touchMode;
 	
 	private boolean horizontallyScrollOnly = false;
+    private boolean re = false;
 	
 	protected OnSlideListener mOnSlideListener;
 	
@@ -111,7 +112,7 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		mHandler = new Handler();
-		touchMode = TOUCHMODE_IDLE;
+		touchMode = TOUCHMODE_DOWN;
 	}
 	
 	@Override
@@ -172,13 +173,12 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 		case MotionEvent.ACTION_MOVE:
 			switch(touchMode){
 			case TOUCHMODE_IDLE:
-				touchMode = TOUCHMODE_DOWN;
+				break;
+			case TOUCHMODE_DOWN:
 				if(null == (Integer) dx && null == (Integer) dy){
 					dx = (int) event.getHistoricalX(event.getHistorySize() - 1);
 					dy = (int) event.getHistoricalY(event.getHistorySize() - 1);
 				}
-				break;
-			case TOUCHMODE_DOWN:
 				if(horizontallyScrollOnly){
 					touchMode = TOUCHMODE_DRAGGING_HORIZONTALLY;
 				}else{
@@ -225,6 +225,7 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 						}
 						touchMode = TOUCHMODE_IDLE;
 						moveX = 0;
+						re = true;
 					}
 					
 					return true;
@@ -240,6 +241,7 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 						}
 						touchMode = TOUCHMODE_IDLE;
 						moveX = 0;
+						re = true;
 					}
 					
 					return true;
@@ -253,12 +255,8 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 			break;
 		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_CANCEL:
-			boolean isPerformed;
 			if(touchMode != TOUCHMODE_IDLE){
-				isPerformed = false;
 				backToOriginalSpot();
-			}else{
-				isPerformed = true;
 			}
 			
 			moveX = 0;
@@ -267,11 +265,11 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 				if(touchMode == TOUCHMODE_DRAGGING_VERTICALLY){
 					mOnSlideListener.onVerticallySlideReleased();
 				}else if(touchMode == TOUCHMODE_DRAGGING_HORIZONTALLY){
-					mOnSlideListener.onHorizontallySlideReleased(isPerformed);
+					mOnSlideListener.onHorizontallySlideReleased(touchMode == TOUCHMODE_IDLE);
 				}
 			}
 			
-			touchMode = TOUCHMODE_IDLE;
+			touchMode = TOUCHMODE_DOWN;
 			break;
 		}
 		
