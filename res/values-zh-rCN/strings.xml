@@ -16,5 +16,14 @@
     
     <!-- settings content -->
     <string name="drop_database">删除数据</string>
+        
+    <!-- week -->
+    <string name="week_0">日</string>
+    <string name="week_1">一</string>
+    <string name="week_2">二</string>
+    <string name="week_3">三</string>
+    <string name="week_4">四</string>
+    <string name="week_5">五</string>
+    <string name="week_6">六</string>
     
 </resources>

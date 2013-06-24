@@ -23,8 +23,7 @@
         android:id="@+id/dial_layout"
         android:layout_width="300.0dip"
         android:layout_height="300.0dip"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="100.0dip">
+        android:layout_centerInParent="true" >
         
         <com.cfm.waker.widget.FontTextView
             android:id="@+id/time"

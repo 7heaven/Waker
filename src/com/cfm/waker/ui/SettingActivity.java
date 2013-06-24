@@ -12,7 +12,6 @@ import com.cfm.waker.R;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
@@ -104,7 +103,7 @@ public class SettingActivity extends BaseSlidableActivity{
 	@Override
 	protected Drawable getLeftDrawable() {
 		// TODO Auto-generated method stub
-		return null;
+		return getResources().getDrawable(R.drawable.icon_mainpage);
 	}
 
 	@Override

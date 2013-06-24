@@ -16,5 +16,14 @@
     
     <!-- settings content -->
     <string name="drop_database">drop database</string>
+    
+    <!-- week -->
+    <string name="week_0">S</string>
+    <string name="week_1">M</string>
+    <string name="week_2">T</string>
+    <string name="week_3">W</string>
+    <string name="week_4">Th</string>
+    <string name="week_5">F</string>
+    <string name="week_6">S</string>
 
 </resources>

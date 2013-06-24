@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.TextView;
 
 /**
  * this base Activity enable < ? extends BaseSlidableActivity > to detect and response a slide movement
@@ -135,16 +136,20 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 		if(null != getLeftDrawable()){
 			leftContent = getLayoutInflater().inflate(R.layout.baseactivity_left_view, null, false);
 			ImageView leftDrawable = (ImageView) leftContent.findViewById(R.id.imageview);
+			TextView leftText = (TextView) leftContent.findViewById(R.id.content);
 			leftDrawable.setImageDrawable(getLeftDrawable());
 			leftContentWidth = getLeftDrawable().getIntrinsicWidth();
+			leftText.setVisibility(View.GONE);
 			
 			addContentView(leftContent, param);
 		}
 		if(null != getRightDrawable()){
 			rightContent = getLayoutInflater().inflate(R.layout.baseactivity_right_view, null, false);
-			rightContentWidth = getRightDrawable().getIntrinsicWidth();
 			ImageView rightDrawable = (ImageView) rightContent.findViewById(R.id.imageview);
+			TextView rightText = (TextView) rightContent.findViewById(R.id.content);
 			rightDrawable.setImageDrawable(getRightDrawable());
+			rightContentWidth = getLeftDrawable().getIntrinsicWidth();
+			rightText.setVisibility(View.GONE);
 			
 			addContentView(rightContent, param);
 		}

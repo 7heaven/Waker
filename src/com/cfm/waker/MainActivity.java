@@ -291,12 +291,12 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	
 	@Override
 	protected Drawable getLeftDrawable(){
-		return getResources().getDrawable(R.drawable.ic_launcher);
+		return getResources().getDrawable(R.drawable.icon_exit);
 	}
 	
 	@Override
 	protected Drawable getRightDrawable(){
-		return getResources().getDrawable(R.drawable.ic_launcher);
+		return getResources().getDrawable(R.drawable.icon_settings);
 	}
 	
 	@Override

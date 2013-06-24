@@ -1,10 +1,14 @@
 package com.cfm.waker.widget;
 
+import com.cfm.waker.R;
 import com.cfm.waker.log.WLog;
+import com.cfm.waker.util.DensityUtil;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,6 +17,8 @@ public class WeekSelector extends View {
 	
 	private static final String TAG = "WeekSelector";
 	
+	private Context context;
+	
 	private int weekSet;
 	private int movementSet;
 	
@@ -20,6 +26,8 @@ public class WeekSelector extends View {
 	private int blockWidth;
 	
 	private Paint paint;
+	
+	private Rect textBound;
 	
 	public WeekSelector(Context context){
 		this(context, null);
@@ -31,15 +39,21 @@ public class WeekSelector extends View {
 	
 	public WeekSelector(Context context, AttributeSet attrs, int defStyle){
 		super(context, attrs, defStyle);
-		
+		this.context = context;
 		paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		paint.setColor(0xFFFFFFFF);
+		paint.setTextSize(DensityUtil.dip2px(context, 14));
 		
-		weekSet = 0x1;
+		weekSet = 0x0;
+		textBound = new Rect();
 	}
 	
 	public void setWeekSet(int weekSet){
 		this.weekSet = weekSet;
+	}
+	
+	public int getWeekSet(){
+		return weekSet;
 	}
 	
 	@Override
@@ -62,7 +76,6 @@ public class WeekSelector extends View {
 			if(event.getY() >= 0 && event.getY() <= height){
 				int tc = 6 - (int) Math.floor(event.getX() / blockWidth);
 				movementSet = 0x1 << tc;
-				WLog.print(TAG, Integer.toBinaryString(movementSet));
 			}else{
 				movementSet = 0x0;
 			}
@@ -94,14 +107,37 @@ public class WeekSelector extends View {
 		super.onDraw(canvas);
 		
 		int i = 0;
+		Drawable drawable;
+		String text;
+		String idString;
+		String weekIdString = context.getString(R.string.week_0);
+		paint.getTextBounds(weekIdString, 0, weekIdString.length(), textBound);
+		int textHeight = textBound.height();
 		do{
+			idString = context.getPackageName() + ":drawable/weekselector_";
+			weekIdString = context.getPackageName() + ":string/week_" + i;
+			if(i == 0){
+				idString += "left_";
+			}else if(i == 6){
+				idString += "right_";
+			}else{
+				idString += "middle_";
+			}
 			int left = i * blockWidth;
 			if(((weekSet | movementSet) & (0x1 << (6 - i))) > 0){
-				paint.setColor(0xFF000000);
+				paint.setColor(0x99FFFFFF);
+				idString += "pressed";
 			}else{
+				idString += "normal";
 				paint.setColor(0xFFFFFFFF);
 			}
-			canvas.drawRect(left, 0, left + width, height, paint);
+			drawable = context.getResources().getDrawable(context.getResources().getIdentifier(idString, null, null));
+			drawable.setBounds(left, 0, left + blockWidth, height);
+			drawable.draw(canvas);
+			text = context.getString(context.getResources().getIdentifier(weekIdString, null, null));
+			paint.getTextBounds(text, 0, text.length(), textBound);
+			WLog.print(TAG, text + ":" + textBound.width() + ":" + textBound.height() + ":" + height);
+			canvas.drawText(text, left + blockWidth / 2 - textBound.width() / 2, height / 2 + textHeight / 2, paint);
 		}while(++i < 7);
 	}
 }
