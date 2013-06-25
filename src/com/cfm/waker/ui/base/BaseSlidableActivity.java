@@ -56,7 +56,6 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 	private int touchMode;
 	
 	private boolean horizontallyScrollOnly = false;
-    private boolean re = false;
 	
 	protected OnSlideListener mOnSlideListener;
 	
@@ -230,7 +229,6 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 						}
 						touchMode = TOUCHMODE_IDLE;
 						moveX = 0;
-						re = true;
 					}
 					
 					return true;
@@ -246,7 +244,6 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 						}
 						touchMode = TOUCHMODE_IDLE;
 						moveX = 0;
-						re = true;
 					}
 					
 					return true;

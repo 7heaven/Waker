@@ -26,16 +26,16 @@ public class AlarmReceiver extends BroadcastReceiver{
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		final long alarmId = intent.getLongExtra("alarm_id", -1);
-		final boolean isBeforeTime = intent.getBooleanExtra("before_time", false);
-		int flag = intent.getIntExtra("flag", 0);
+		final long alarmId = intent.getLongExtra("com.cfm.waker.alarm_id", -1);
+		final boolean isBeforeTime = intent.getBooleanExtra("com.cfm.waker.before_current_time", false);
+		int flag = intent.getIntExtra("com.cfm.waker.flag", 0);
 		Alarm alarm = WakerDatabaseHelper.getInstance(context).getAlarm(alarmId, DateFormat.is24HourFormat(context));
 		if(null != alarm){
 			if(alarm.isEnabled()){
 				Intent myIntent = new Intent(context, AlarmReceiver.class);
-				myIntent.putExtra("alarm_id", alarmId);
-				myIntent.putExtra("before_time", false);
-				myIntent.putExtra("flag", flag + 1);
+				myIntent.putExtra("com.cfm.waker.alarm_id", alarmId);
+				myIntent.putExtra("com.cfm.waker.before_current_time", false);
+				myIntent.putExtra("com.cfm.waker.flag", flag + 1);
 				
 				AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 				PendingIntent pi = PendingIntent.getBroadcast(context, 0, myIntent, ++flag);

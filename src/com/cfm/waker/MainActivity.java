@@ -23,6 +23,7 @@ import com.cfm.waker.ui.base.BaseSlidableActivity;
 import com.cfm.waker.widget.DialTimePicker;
 import com.cfm.waker.widget.DialTimePicker.OnTimePickListener;
 import com.cfm.waker.widget.FontTextView;
+import com.cfm.waker.widget.WeekSelector;
 
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -41,6 +42,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	private FontTextView timeText;
 	private FontTextView amPm;
 	private DialTimePicker dialTimePicker;
+	private WeekSelector weekSelector;
 	
 	private TimeRunnable tRunnable;
 	private Handler timeHandler;
@@ -69,6 +71,8 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		
 		timeText = (FontTextView) findViewById(R.id.time);
 		amPm = (FontTextView) findViewById(R.id.am_pm);
+		
+		weekSelector = (WeekSelector) findViewById(R.id.selector);
 		
 		tRunnable = new TimeRunnable();
 		timeHandler = new Handler();
@@ -214,6 +218,8 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	
 	private Alarm addAlarm(Calendar calendar){
 		Alarm alarm = new Alarm(calendar, mApplication.is24());
+		alarm.setWeek(weekSelector.getWeekSet());
+		
 		WakerDatabaseHelper.getInstance(this).insertAlarm(alarm);
 		
 		updateAlarmsByDatabase();
@@ -266,11 +272,11 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		
 		calendar.set(Calendar.SECOND, 0);
 		
-		intent.putExtra("alarm_id", addAlarm(calendar).getId());
+		intent.putExtra("com.cfm.waker.alarm_id", addAlarm(calendar).getId());
 		//put a boolean into intent to tell AlarmReceiver to stop this alarm and set a new alarm for the next trigger day 
 		//in case the trigger time of this alarm is before the currentTime
-		intent.putExtra("before_time", beforeTime);
-		intent.putExtra("flag", alarmCount + 1);
+		intent.putExtra("com.cfm.waker.before_current_time", beforeTime);
+		intent.putExtra("com.cfm.wakier.flag", alarmCount + 1);
 		
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent, ++alarmCount);
