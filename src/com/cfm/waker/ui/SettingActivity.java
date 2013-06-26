@@ -30,7 +30,7 @@ public class SettingActivity extends BaseSlidableActivity{
 		setContentView(R.layout.activity_settings);
 		
 		seekBar = (SeekBar) findViewById(R.id.volume);
-		seekBar.setProgress(WakerPreferenceManager.getInstance(this).getGlobalAlarmVolume());
+		seekBar.setProgress((int) (WakerPreferenceManager.getInstance(this).getGlobalAlarmVolume() * seekBar.getMax()));
 		seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener(){
 
 			@Override
@@ -41,7 +41,7 @@ public class SettingActivity extends BaseSlidableActivity{
 
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				WakerPreferenceManager.getInstance(SettingActivity.this).setGlobalAlarmVolume(seekBar.getProgress());
+				WakerPreferenceManager.getInstance(SettingActivity.this).setGlobalAlarmVolume(seekBar.getProgress() / seekBar.getMax());
 			}
 			
 		});

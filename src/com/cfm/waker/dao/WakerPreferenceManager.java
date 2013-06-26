@@ -108,11 +108,11 @@ public class WakerPreferenceManager {
 		return getPreference().getString(GLOBAL_RINGTONE, "");
 	}
 	
-	public void setGlobalAlarmVolume(int volume){
-		getPreference().edit().putInt(GLOBAL_ALARM_VOLUME, volume);
+	public void setGlobalAlarmVolume(float volume){
+		getPreference().edit().putFloat(GLOBAL_ALARM_VOLUME, volume);
 	}
 	
-	public int getGlobalAlarmVolume(){
-		return getPreference().getInt(GLOBAL_ALARM_VOLUME, 100);
+	public float getGlobalAlarmVolume(){
+		return getPreference().getFloat(GLOBAL_ALARM_VOLUME, 1F);
 	}
 }

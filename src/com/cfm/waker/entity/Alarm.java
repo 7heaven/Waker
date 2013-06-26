@@ -13,6 +13,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
 
+import com.cfm.waker.log.WLog;
+
 public class Alarm implements Serializable{
 	
 	/**
@@ -44,8 +46,6 @@ public class Alarm implements Serializable{
 	
 	private int week;
 	private String message;
-	
-	private final Integer[] weekTransform = {0, 0x40, 0x20, 0x10, 0x8, 0x4, 0x2, 0x1};
 	
 	public Alarm(Calendar calendar, boolean is24Format){
 		this.is24Format = is24Format;
@@ -142,8 +142,7 @@ public class Alarm implements Serializable{
 		return "Alarm [calendar=" + calendar + ", is24Format=" + is24Format
 				+ ", snoozeTime=" + snoozeTime + ", enabled=" + enabled
 				+ ", vibrate=" + vibrate + ", ringtone=" + ringtone + ", week="
-				+ week + ", message=" + message + ", weekTransform="
-				+ Arrays.toString(weekTransform) + "]";
+				+ week + ", message=" + message;
 	}
 
 	public Calendar getCalendar() {
@@ -180,31 +179,40 @@ public class Alarm implements Serializable{
 	}
 	
 	public boolean isDaySet(int day){
-		return (week & weekTransform[day]) > 0;
+		return (week & getWeekBinary(day)) > 0;
+	}
+	
+	public boolean isBDaySet(int i){
+		return (week & i) > 0;
 	}
 	
 	public int getNextDaySet(int day){
-		int i = weekTransform[day] >> 1;
+		int i = getWeekBinary(day);
 		do{
-			if(isDaySet(day)) return getIndexOfWeek(i);
 			
 			if(i == 0x1){
 				i = 0x40;
 			}else{
-				i >>= 1;
+				i >>>= 1;
 			}
 			
-		}while(i != day);
+			if(isBDaySet(i)) return getIndexOfWeek(i);
+			
+		}while(i != getWeekBinary(day));
 		
 		return day;
 	}
 	
-	private int getIndexOfWeek(int day){
-		int i = 1;
+	private int getIndexOfWeek(int i){
+		int day = 1;
 		do{
-			if(day == weekTransform[i]) return i;
-		}while(++i < weekTransform.length);
+			if(i == getWeekBinary(day)) return day;
+		}while(++day <= 7);
 		
 		return 0;
+	}
+	
+	private int getWeekBinary(int day){
+		return 0x1 << (7 - day);
 	}
 }

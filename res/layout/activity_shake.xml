@@ -11,5 +11,12 @@
         android:layout_height="match_parent"
         waker:rise_range="5.0dip"
         waker:fall_range="2.0dip" />
+    
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="17sp"
+        android:textColor="#FF000000" />
 
 </RelativeLayout>

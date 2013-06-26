@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.Scroller;
 import android.widget.TextView;
 
 /**
@@ -112,6 +113,7 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		mHandler = new Handler();
+		
 		touchMode = TOUCHMODE_DOWN;
 	}
 	
@@ -170,6 +172,7 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 		overScrollDistance = mContent.getMeasuredWidth() * 0.6F;
 		switch(event.getAction() & MotionEvent.ACTION_MASK){
 		case MotionEvent.ACTION_DOWN:
+			stopContentMovement();
 			dx = (int) event.getX();
 			dy = (int) event.getY();
 			touchMode = TOUCHMODE_DOWN;
@@ -297,7 +300,7 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 	private void stopContentMovement(){
 		mHandler.removeCallbacks(mRunnable);
 	}
-	
+
 	private void backToOriginalSpot(){
 		mRunnable = new MyRunnable(mContent.getScrollX(), mContent.getScrollY());
 		mHandler.post(mRunnable);
@@ -313,7 +316,7 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 		@Override
 		public void run(){
 			if((int) moveX != 0 || (int) moveY != 0){
-				moveX += (0 - moveX) * 0.6F;
+				moveX += (0 - moveX) * 0.55F;
 				//moveY += (0 - moveY) * 0.6F;
 				
 				mContent.scrollTo((int) moveX, (int) moveY);

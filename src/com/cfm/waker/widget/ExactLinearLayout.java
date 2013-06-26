@@ -44,6 +44,7 @@ public class ExactLinearLayout extends FrameLayout {
         }
 	}
 	
+	
 	@Override
     protected void measureChild(View child, int parentWidthMeasureSpec, int parentHeightMeasureSpec) {
         ViewGroup.LayoutParams lp = child.getLayoutParams();

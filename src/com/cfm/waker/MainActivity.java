@@ -220,6 +220,8 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		Alarm alarm = new Alarm(calendar, mApplication.is24());
 		alarm.setWeek(weekSelector.getWeekSet());
 		
+		WLog.print(TAG, "weekSelector" + Integer.toBinaryString(weekSelector.getWeekSet()) + "B");
+		
 		WakerDatabaseHelper.getInstance(this).insertAlarm(alarm);
 		
 		updateAlarmsByDatabase();
@@ -266,11 +268,13 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		//it's AlarmReceiver's job to decide whether start a new ShakeActivity to perform a alarm or not.
 		Intent intent = new Intent(MainActivity.this, AlarmReceiver.class);
 		
+		calendar.set(Calendar.SECOND, 0);
+		
 		final boolean beforeTime = calendar.getTimeInMillis() <= System.currentTimeMillis();
 		
 		WLog.print(TAG, "beforeTime:" + beforeTime);
 		
-		calendar.set(Calendar.SECOND, 0);
+		
 		
 		intent.putExtra("com.cfm.waker.alarm_id", addAlarm(calendar).getId());
 		//put a boolean into intent to tell AlarmReceiver to stop this alarm and set a new alarm for the next trigger day 

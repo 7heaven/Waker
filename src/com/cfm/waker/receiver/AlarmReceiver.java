@@ -7,7 +7,9 @@
  */
 package com.cfm.waker.receiver;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 import com.cfm.waker.dao.WakerDatabaseHelper;
 import com.cfm.waker.entity.Alarm;
@@ -23,15 +25,18 @@ import android.text.format.DateFormat;
 import android.widget.Toast;
 
 public class AlarmReceiver extends BroadcastReceiver{
+	
+	private Calendar calendar;
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		calendar = Calendar.getInstance();
 		final long alarmId = intent.getLongExtra("com.cfm.waker.alarm_id", -1);
 		final boolean isBeforeTime = intent.getBooleanExtra("com.cfm.waker.before_current_time", false);
 		int flag = intent.getIntExtra("com.cfm.waker.flag", 0);
 		Alarm alarm = WakerDatabaseHelper.getInstance(context).getAlarm(alarmId, DateFormat.is24HourFormat(context));
 		if(null != alarm){
-			if(alarm.isEnabled()){
+			if(alarm.isEnabled() && alarm.isDaySet(calendar.get(Calendar.DAY_OF_WEEK))){
 				Intent myIntent = new Intent(context, AlarmReceiver.class);
 				myIntent.putExtra("com.cfm.waker.alarm_id", alarmId);
 				myIntent.putExtra("com.cfm.waker.before_current_time", false);
@@ -41,10 +46,15 @@ public class AlarmReceiver extends BroadcastReceiver{
 				PendingIntent pi = PendingIntent.getBroadcast(context, 0, myIntent, ++flag);
 				alarmManager.set(AlarmManager.RTC_WAKEUP, getNextAlarmTime(alarm), pi);
 				
-				WLog.print("RECEIVER", isBeforeTime + ":" + getNextAlarmTime(alarm) + ":" + System.currentTimeMillis());
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTimeInMillis(getNextAlarmTime(alarm));
+				
+				WLog.print("RECEIVER", isBeforeTime + ":" + new SimpleDateFormat("yyyy-MM-dd HH:mm EEEE", Locale.CHINA).format(calendar.getTime()) + ":" + System.currentTimeMillis());
 				if(!isBeforeTime){
 					Toast.makeText(context, "alarm!!", Toast.LENGTH_LONG).show();
 					Intent mIntent = new Intent(context, ShakeActivity.class);
+					mIntent.putExtra("com.cfm.waker.alarm_id", alarmId);
+					mIntent.putExtra("com.cfm.waker.snooze_count", 0);
 					mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					
 					context.startActivity(mIntent);
