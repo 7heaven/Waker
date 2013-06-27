@@ -18,6 +18,7 @@ import com.cfm.waker.dao.WakerDatabaseHelper;
 import com.cfm.waker.entity.Alarm;
 import com.cfm.waker.log.WLog;
 import com.cfm.waker.receiver.AlarmReceiver;
+import com.cfm.waker.service.WakerService;
 import com.cfm.waker.ui.SettingActivity;
 import com.cfm.waker.ui.base.BaseSlidableActivity;
 import com.cfm.waker.widget.DialTimePicker;
@@ -146,6 +147,9 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		};
 		
 		updateAlarmsByDatabase();
+		
+		Intent serviceIntent = new Intent(this, WakerService.class);
+		startService(serviceIntent);
 	}
 	
 	//time tick movement
@@ -312,10 +316,6 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	@Override
 	public void onResume(){
 		super.onResume();
-		if(mApplication.isDatabaseChanged()){
-			updateAlarmsByDatabase();
-			mApplication.setDatabaseChanged(false);
-		}
 	}
 
 }

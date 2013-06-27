@@ -15,11 +15,13 @@ import com.cfm.waker.view.ShakeDetector.OnShakeListener;
 import com.cfm.waker.dao.WakerDatabaseHelper;
 import com.cfm.waker.dao.WakerPreferenceManager;
 import com.cfm.waker.entity.Alarm;
+import com.cfm.waker.log.WLog;
 import com.cfm.waker.ui.base.BaseActivity;
 
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.media.SoundPool.OnLoadCompleteListener;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -31,8 +33,11 @@ public class ShakeActivity extends BaseActivity implements OnShakeListener,
 	private Alarm alarm;
 	private int snoozeCount;
 	
+	private int sampleId;
+	private String musicPath;
+	private int streamId;
+	
 	private SoundPool soundPool;
-	private int hit;
 	
 	private ShakeDetector shakeDetector;
 
@@ -47,28 +52,33 @@ public class ShakeActivity extends BaseActivity implements OnShakeListener,
 		content = (TextView) findViewById(R.id.content);
 		alarm = WakerDatabaseHelper.getInstance(this).getAlarm(getIntent().getLongExtra("com.cfm.waker.alarm_id", 0), mApplication.is24());
 		snoozeCount = getIntent().getIntExtra("com.cfm.waker.snooze_count", 0);
+		sampleId = getIntent().getIntExtra("com.cfm.waker.ringtone", 0);
+		musicPath = getIntent().getStringExtra("com.cfm.waker.ringtone_path");
 		content.setText(alarm.getHour() + ":" + alarm.getMinute() + Integer.toBinaryString(alarm.getWeek()) + "B");
 		
-		soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 100);
-		hit = soundPool.load(this, R.raw.weico_loaded, 1);
-		new Thread(){
+		soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+		soundPool.load(this, R.raw.weico_loaded, 1);
+		
+		soundPool.setOnLoadCompleteListener(new OnLoadCompleteListener(){
+
 			@Override
-			public void run(){
-				try {
-					float volume = WakerPreferenceManager.getInstance(ShakeActivity.this).getGlobalAlarmVolume();
-					Thread.sleep(100);
-					soundPool.play(hit, volume, volume, 0, 0, 1);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
+			public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+				float volume = WakerPreferenceManager.getInstance(ShakeActivity.this).getGlobalAlarmVolume();
+				streamId = soundPool.play(sampleId, volume, volume, 0, -1, 1);
+				WLog.print("S", streamId + "");
 			}
-		}.start();
+			
+		});
 		
 		shakeDetector = new ShakeDetector(this);
 		shakeDetector.registerOnShakeListener(this);
-		shakeDetector.start();
+		//shakeDetector.start();
+	}
+	
+	@Override
+	public void onStop(){
+		super.onStop();
+		soundPool.stop(streamId);
 	}
 
 	@Override

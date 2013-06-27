@@ -52,4 +52,8 @@ public class WakerApplication extends Application{
 		this.isDatabaseChanged = isDatabaseChanged;
 	}
 	
+	public void notifyDatabaseChanged(){
+		
+	}
+	
 }
