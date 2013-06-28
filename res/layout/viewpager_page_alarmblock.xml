@@ -8,7 +8,7 @@
         android:id="@+id/alarm0"
         android:layout_width="80.0dip"
         android:layout_height="80.0dip"
-        waker:typeface="fonts/swiss_ht.ttf"
+        waker:font="fonts/swiss_ht.ttf"
         waker:color="#FFF99661"
         android:visibility="gone" />
     
@@ -17,7 +17,7 @@
         android:layout_width="80.0dip"
         android:layout_height="80.0dip"
         android:layout_toRightOf="@+id/alarm0"
-        waker:typeface="fonts/swiss_ht.ttf"
+        waker:font="fonts/swiss_ht.ttf"
         waker:color="#FF0099CC"
         android:visibility="gone" />
     
@@ -26,7 +26,7 @@
         android:layout_width="80.0dip"
         android:layout_height="80.0dip"
         android:layout_toRightOf="@+id/alarm1"
-        waker:typeface="fonts/swiss_ht.ttf"
+        waker:font="fonts/swiss_ht.ttf"
         waker:color="#FF8BCA09"
         android:visibility="gone" />
     
@@ -35,7 +35,7 @@
         android:layout_width="80.0dip"
         android:layout_height="80.0dip"
         android:layout_toRightOf="@+id/alarm2"
-        waker:typeface="fonts/swiss_ht.ttf"
+        waker:font="fonts/swiss_ht.ttf"
         waker:color="#FFFFFFFF"
         android:visibility="gone" />
 

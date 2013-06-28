@@ -3,5 +3,14 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    
+    <!-- DialTimePicker -->
+    <dimen name="dialtimepicker_default_circlewidth">5dip</dimen>
+    <dimen name="dialtimepicker_default_thumbpressrange">60dip</dimen>
+    <dimen name="dialtimepicker_default_arcdrawoffset">2dip</dimen>
+    
+    <!-- DebossFontText -->
+    <dimen name="debossfonttext_default_offset">1dip</dimen>
+    <dimen name="debossfonttext_default_textsize">20sp</dimen>
 
 </resources>

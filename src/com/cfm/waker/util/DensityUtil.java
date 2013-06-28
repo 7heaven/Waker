@@ -13,16 +13,16 @@ import android.content.Context;
 
 public class DensityUtil {
 
-	public static int dip2px(Context context, float dipValue) {
+	public static float dip2px(Context context, float dipValue) {
 		final float scale = WakerPreferenceManager.getInstance(context).getScreenDensity();
 
-		return (int) (dipValue * scale + 0.5F);
+		return dipValue * scale;
 	}
 
-	public static int px2dip(Context context, float pxValue) {
+	public static float px2dip(Context context, float pxValue) {
 		final float scale = WakerPreferenceManager.getInstance(context).getScreenDensity();
 
-		return (int) (pxValue / scale + 0.5F);
+		return pxValue / scale;
 	}
 
 }

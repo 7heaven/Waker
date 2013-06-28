@@ -78,8 +78,8 @@ public class AlarmClockBlock extends BaseSlideWidget {
 		textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
 		
 		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.AlarmClockBlock);
-		if(null != ta.getString(R.styleable.AlarmClockBlock_typeface) && !isInEditMode()){
-			Typeface typeface = Typeface.createFromAsset(context.getAssets(), ta.getString(R.styleable.AlarmClockBlock_typeface));
+		if(null != ta.getString(R.styleable.AlarmClockBlock_font) && !isInEditMode()){
+			Typeface typeface = Typeface.createFromAsset(context.getAssets(), ta.getString(R.styleable.AlarmClockBlock_font));
 			textPaint.setTypeface(typeface);
 		}
 		

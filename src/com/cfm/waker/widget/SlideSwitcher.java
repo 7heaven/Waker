@@ -55,9 +55,9 @@ public class SlideSwitcher extends BaseSlideWidget {
 		paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		paint.setColor(0xFF000000);
 		textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-		textPaint.setTextSize(ta.getDimension(R.styleable.SlideSwitcher_text_size, DensityUtil.dip2px(context, 16)));
+		textPaint.setTextSize(ta.getDimension(R.styleable.SlideSwitcher_textSize, DensityUtil.dip2px(context, 16)));
 		space = (int) textPaint.getTextSize();
-		textPaint.setColor(ta.getColor(R.styleable.SlideSwitcher_text_color, 0xFFFFFFFF));
+		textPaint.setColor(ta.getColor(R.styleable.SlideSwitcher_textColor, 0xFFFFFFFF));
 		
 		ta.recycle();
 		
@@ -109,7 +109,7 @@ public class SlideSwitcher extends BaseSlideWidget {
 	public void onDraw(Canvas canvas){
 		super.onDraw(canvas);
 		
-		int round = DensityUtil.dip2px(context, 3);
+		int round = 3;
 		background.top = getTop();
 		background.left = getLeft();
 		background.right = getMeasuredWidth();

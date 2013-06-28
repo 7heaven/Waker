@@ -21,6 +21,7 @@ import com.cfm.waker.receiver.AlarmReceiver;
 import com.cfm.waker.service.WakerService;
 import com.cfm.waker.ui.SettingActivity;
 import com.cfm.waker.ui.base.BaseSlidableActivity;
+import com.cfm.waker.widget.DebossFontText;
 import com.cfm.waker.widget.DialTimePicker;
 import com.cfm.waker.widget.DialTimePicker.OnTimePickListener;
 import com.cfm.waker.widget.FontTextView;
@@ -40,8 +41,8 @@ import android.widget.FrameLayout;
 
 public class MainActivity extends BaseSlidableActivity implements OnTimePickListener{
 	
-	private FontTextView timeText;
-	private FontTextView amPm;
+	private DebossFontText timeText;
+	private DebossFontText amPm;
 	private DialTimePicker dialTimePicker;
 	private WeekSelector weekSelector;
 	
@@ -70,8 +71,8 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		dialTimePicker = (DialTimePicker) findViewById(R.id.time_pick);
 		dialTimePicker.setOnTimePickListener(this);
 		
-		timeText = (FontTextView) findViewById(R.id.time);
-		amPm = (FontTextView) findViewById(R.id.am_pm);
+		timeText = (DebossFontText) findViewById(R.id.time);
+		amPm = (DebossFontText) findViewById(R.id.am_pm);
 		
 		weekSelector = (WeekSelector) findViewById(R.id.selector);
 		

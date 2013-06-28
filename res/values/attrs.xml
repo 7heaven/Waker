@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
-    <declare-styleable name="FontTextView" >
-        <attr name="font" format="string" />
-    </declare-styleable>
+    <attr name="font" format="string" />
+    <attr name="color" format="color" />
     
-    <declare-styleable name="DialTimePicker" >
-        <attr name="outer_circle" format="dimension" />
-        <attr name="inner_circle" format="dimension" />
+    <attr name="text" format="string" />
+    <attr name="textColor" format="color" />
+    <attr name="textSize" format="dimension" />
+    
+    <declare-styleable name="FontTextView" >
+        <attr name="font" />
     </declare-styleable>
     
     <declare-styleable name="RiseView" >
@@ -16,12 +18,21 @@
     </declare-styleable>
     
     <declare-styleable name="AlarmClockBlock" >
-        <attr name="typeface" format="string" />
-        <attr name="color" format="color" />
+        <attr name="font" />
+        <attr name="color" />
     </declare-styleable>
     
     <declare-styleable name="SlideSwitcher">
-        <attr name="text_size" format="dimension" />
-        <attr name="text_color" format="color" />
+        <attr name="textSize" />
+        <attr name="textColor" />
     </declare-styleable>
+    
+    <declare-styleable name="DebossFontText">
+        <attr name="font" />
+        <attr name="text" />
+        <attr name="textColor" />
+        <attr name="textSize" />
+        <attr name="textPaddingOffset" format="dimension" />
+    </declare-styleable>
+    
 </resources>
