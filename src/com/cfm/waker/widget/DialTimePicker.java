@@ -183,7 +183,7 @@ public class DialTimePicker extends View{
 	//perform a dial action ever there's no touch event input
 	public void performDial(int angel){
 		
-		int angelOffset = 5;
+		int angelOffset = 89;
 		
 		if(drawDegree > 360 - angelOffset && angel < angelOffset || angel > 360 - angelOffset && drawDegree < angelOffset){
 			convert = !convert;

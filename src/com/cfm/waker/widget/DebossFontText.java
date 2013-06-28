@@ -87,6 +87,7 @@ public class DebossFontText extends View {
 	
 	public void setText(String text){
 		this.text = text;
+		invalidate();
 	}
 	
 	@Override

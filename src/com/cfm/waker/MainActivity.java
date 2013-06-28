@@ -24,7 +24,6 @@ import com.cfm.waker.ui.base.BaseSlidableActivity;
 import com.cfm.waker.widget.DebossFontText;
 import com.cfm.waker.widget.DialTimePicker;
 import com.cfm.waker.widget.DialTimePicker.OnTimePickListener;
-import com.cfm.waker.widget.FontTextView;
 import com.cfm.waker.widget.WeekSelector;
 
 import android.app.Activity;
