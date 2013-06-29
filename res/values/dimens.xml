@@ -5,7 +5,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     
     <!-- DialTimePicker -->
-    <dimen name="dialtimepicker_default_circlewidth">5dip</dimen>
+    <dimen name="dialtimepicker_default_circlewidth">45dip</dimen>
     <dimen name="dialtimepicker_default_thumbpressrange">60dip</dimen>
     <dimen name="dialtimepicker_default_arcdrawoffset">2dip</dimen>
     

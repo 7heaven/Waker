@@ -13,8 +13,10 @@ import com.cfm.waker.util.DensityUtil;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
@@ -30,6 +32,7 @@ public class DebossFontText extends View {
 	private String text;
 	
 	private Paint paint;
+	private Shader shader;
 	private Rect textBound;
 	
 	private int centerX,centerY;
@@ -108,18 +111,22 @@ public class DebossFontText extends View {
 		height = getMeasuredHeight();
 		centerX = width / 2;
 		centerY = height / 2;
+		
+		shader = new LinearGradient(0, 0, 0, height, new int[]{colorOffsetBright, colorOffsetDark}, null, Shader.TileMode.REPEAT);
 	}
 	
 	@Override
 	public void onDraw(Canvas canvas){
 		super.onDraw(canvas);
 		
+		paint.setShader(null);
 		paint.setColor(colorOffsetDark);
 		canvas.drawText(text, 0, centerY + (textBound.height() / 2) - (offset * 2), paint);
 		paint.setColor(colorOffsetBright);
 		canvas.drawText(text, 0, centerY + (textBound.height() / 2), paint);
 		
 		paint.setColor(textColor);
+		paint.setShader(shader);
 		canvas.drawText(text, 0, centerY + (textBound.height() / 2) - offset, paint);
 		
 	}

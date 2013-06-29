@@ -8,11 +8,8 @@
 package com.cfm.waker.widget;
 
 import com.cfm.waker.R;
-import com.cfm.waker.log.WLog;
-import com.cfm.waker.util.DensityUtil;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -42,8 +39,10 @@ public class DialTimePicker extends View{
 	private Point drawPoint;
 	
 	private Drawable backgroundDrawable;
+	private Drawable backgroundPressedDrawable;
+	private Drawable seekerDrawable;
 	private int backgroundRange;
-	private int arcDrawOffset;
+	//private int arcDrawOffset;
 	private int drawDegree;
 	
 	private Integer increment;
@@ -55,6 +54,7 @@ public class DialTimePicker extends View{
 	private OnTimePickListener mOnTimePickListener;
 	
 	private boolean convert;
+	private boolean centerPressed;
 	
 	public interface OnTimePickListener{
 		
@@ -85,7 +85,9 @@ public class DialTimePicker extends View{
 		drawPoint = new Point();
 		
 		backgroundDrawable = context.getResources().getDrawable(R.drawable.background_dialtimepicker);
-		arcDrawOffset = (int) context.getResources().getDimension(R.dimen.dialtimepicker_default_arcdrawoffset);
+		backgroundPressedDrawable =context.getResources().getDrawable(R.drawable.background_dialtimepicker_pressed);
+		seekerDrawable = context.getResources().getDrawable(R.drawable.seeker_dialtimepicker);
+		//arcDrawOffset = (int) context.getResources().getDimension(R.dimen.dialtimepicker_default_arcdrawoffset);
 		
 		paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		
@@ -210,6 +212,7 @@ public class DialTimePicker extends View{
 	public void onDraw(Canvas canvas){
 		super.onDraw(canvas);
 		
+		//progressBar
 		if(isDrawPressPoint){
 			paint.setColor(0xFF5CA4E5);
 			if(convert){
@@ -220,14 +223,26 @@ public class DialTimePicker extends View{
 			
 		}
 		
-		backgroundDrawable.setBounds(0, 0, getMeasuredWidth(), getMeasuredHeight());
-		backgroundDrawable.draw(canvas);
+		//background
+		if(centerPressed){
+			backgroundPressedDrawable.setBounds(0, 0, getMeasuredWidth(), getMeasuredHeight());
+			backgroundPressedDrawable.draw(canvas);
+		}else{
+			backgroundDrawable.setBounds(0, 0, getMeasuredWidth(), getMeasuredHeight());
+			backgroundDrawable.draw(canvas);
+		}
 		
+		//seeker
 		if(isDrawPressPoint){
+			
+			seekerDrawable.setBounds(drawPoint.x - circleWidth / 2, drawPoint.y - circleWidth / 2, drawPoint.x + circleWidth / 2, drawPoint.y + circleWidth / 2);
+			seekerDrawable.draw(canvas);
+			/*
 			paint.setColor(0x44FFFFFF);
 			canvas.drawCircle(drawPoint.x, drawPoint.y, circleWidth * 3, paint);
 			paint.setColor(0x99FFFFFF);
 			canvas.drawCircle(drawPoint.x, drawPoint.y, circleWidth * 2, paint);
+			 */
 		}
 	}
 	
