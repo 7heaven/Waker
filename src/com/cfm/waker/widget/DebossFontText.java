@@ -8,7 +8,6 @@
 package com.cfm.waker.widget;
 
 import com.cfm.waker.R;
-import com.cfm.waker.util.DensityUtil;
 
 import android.content.Context;
 import android.content.res.TypedArray;

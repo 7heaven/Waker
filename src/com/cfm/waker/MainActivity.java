@@ -37,6 +37,7 @@ import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 public class MainActivity extends BaseSlidableActivity implements OnTimePickListener{
 	
@@ -44,11 +45,14 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	private DebossFontText amPm;
 	private DialTimePicker dialTimePicker;
 	private WeekSelector weekSelector;
+	private RelativeLayout dialLayout;
 	
 	private TimeRunnable tRunnable;
 	private Handler timeHandler;
 	
 	private ViewMoveRunnable vmRunnable;
+	private ViewMoveRunnable weekRunnable;
+	private ViewMoveRunnable mContentRunnable;
 	private Handler vmHandler;
 	
 	private Calendar calendar;
@@ -69,6 +73,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		setContentView(R.layout.activity_main);
 		dialTimePicker = (DialTimePicker) findViewById(R.id.time_pick);
 		dialTimePicker.setOnTimePickListener(this);
+		dialLayout = (RelativeLayout) findViewById(R.id.dial_layout);
 		
 		timeText = (DebossFontText) findViewById(R.id.time);
 		amPm = (DebossFontText) findViewById(R.id.am_pm);
@@ -102,10 +107,10 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		alarmCount = 0;
 		
 		mOnSlideListener = new OnSlideListener(){
-			int y;
+			int vy,dy;
 			
 			@Override
-			public void onHorizontallySlidePressed(){viewPagerShow(false);}
+			public void onHorizontallySlidePressed(){}
 			
 			@Override
 			public void onHorizontallySlide(int distance){}
@@ -115,41 +120,61 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 			
 			@Override
 			public void onVerticallySlidePressed(){
-				y = viewPagerLayout.getScrollY();
-				vmHandler.removeCallbacks(vmRunnable);
 				viewPagerLayout.setVisibility(View.VISIBLE);
+				vy = viewPagerLayout.getScrollY();
+				dy = dialLayout.getScrollY();
+				vmHandler.removeCallbacks(vmRunnable);
+				vmHandler.removeCallbacks(weekRunnable);
+				vmHandler.removeCallbacks(mContentRunnable);
 			}
 			
 			@Override
 			public void onVerticallySlide(int distance){
-				int dis = y - distance;
-				
-				if(dis <= 0 ){
-					dis = 0;
+				if(dialTimePicker.getMode() != DialTimePicker.MODE_CONFIRM){
+					int disV = vy - distance;
+					int disD = dy - distance;
+					
+					if(disD <= -viewPagerLayout.getMeasuredHeight() / 2 ){
+						disV = 0;
+						disD = -viewPagerLayout.getMeasuredHeight() / 2;
+					}
+					
+					if(disD >= 0){
+						disV = viewPagerLayout.getMeasuredHeight() / 2;
+						disD = 0;
+					}
+					
+					viewPagerLayout.scrollTo(0, disV);
+					dialLayout.scrollTo(0, disD);
 				}
-				
-				if(dis >= viewPagerLayout.getMeasuredHeight()){
-					dis = viewPagerLayout.getMeasuredHeight();
-				}
-				
-				viewPagerLayout.scrollTo(0, dis);
 			}
 			
 			@Override
 			public void onVerticallySlideReleased(){
 				WLog.print(TAG, viewPagerLayout.getMeasuredHeight() + "");
-				if(viewPagerLayout.getScrollY() > viewPagerLayout.getMeasuredHeight() / 4){
-					viewPagerShow(false);
-				}else{
-					viewPagerShow(true);
+				int yPosition = dialLayout.getScrollY();
+				if(yPosition < -viewPagerLayout.getMeasuredHeight() / 4){
+					contentMovement(0);
 				}
+				if(yPosition >= -viewPagerLayout.getMeasuredHeight() / 4 && yPosition < weekSelector.getMeasuredHeight() / 2){
+					contentMovement(1);
+				}
+				
+				getContentView().requestLayout();
 			}
 		};
 		
 		updateAlarmsByDatabase();
 		
+		preLayout();
+		
 		Intent serviceIntent = new Intent(this, WakerService.class);
 		startService(serviceIntent);
+	}
+	
+	private void preLayout(){
+		viewPagerLayout.scrollTo(0, viewPager.getMeasuredHeight() / 2);
+		weekSelector.scrollTo(0,-weekSelector.getMeasuredHeight());
 	}
 	
 	//time tick movement
@@ -195,7 +220,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 				
 				WLog.print(TAG, "runnable run");
 				
-				vmHandler.postDelayed(vmRunnable, 20);
+				vmHandler.postDelayed(this, 20);
 			}else{
 				if(hide){
 					WLog.print(TAG, "runnable gone");
@@ -207,17 +232,28 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		
 	}
 	
-	//show or hide the viewPager in a smooth way
-	//scroll viewPagerLayout here because if we scroll viewPager itself, viewPager will become unstable
-	//don't know why, still looking for an answer :P
-	private void viewPagerShow(boolean isShow){
-		if(isShow){
+	private void contentMovement(int position){
+		switch(position){
+		case 0:
 			vmRunnable = new ViewMoveRunnable(viewPagerLayout, 0, 0, false);
-		}else{
+			weekRunnable = new ViewMoveRunnable(weekSelector, 0, -weekSelector.getMeasuredHeight(), true);
+			mContentRunnable = new ViewMoveRunnable(dialLayout, 0, -viewPagerLayout.getMeasuredHeight() / 2, false);
+			break;
+		case 1:
 			vmRunnable = new ViewMoveRunnable(viewPagerLayout, 0, viewPagerLayout.getMeasuredHeight() / 2, true);
+			weekRunnable = new ViewMoveRunnable(weekSelector, 0, -weekSelector.getMeasuredHeight(), true);
+			mContentRunnable = new ViewMoveRunnable(dialLayout, 0, 0, false);
+			break;
+		case 2:
+			vmRunnable = new ViewMoveRunnable(viewPagerLayout, 0, viewPagerLayout.getMeasuredHeight() / 2, true);
+			weekRunnable = new ViewMoveRunnable(weekSelector, 0, 0, false);
+			mContentRunnable = new ViewMoveRunnable(dialLayout, 0, weekSelector.getMeasuredHeight(), false);
+			break;
 		}
 		
 		vmHandler.post(vmRunnable);
+		vmHandler.post(weekRunnable);
+		vmHandler.post(mContentRunnable);
 	}
 	
 	private Alarm addAlarm(Calendar calendar){
@@ -266,7 +302,15 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	
 	@Override
 	public void onStopPick(){
-		pickingTime = false;
+		dialTimePicker.setMode(DialTimePicker.MODE_CONFIRM);
+		
+		contentMovement(2);
+	}
+	
+	
+	@Override
+	public void onCenterClick(){
+        pickingTime = false;
 		
 		//to setup a alarm and when the alarm being triggered start a AlarmReceiver anyway
 		//it's AlarmReceiver's job to decide whether start a new ShakeActivity to perform a alarm or not.
@@ -289,6 +333,9 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent, ++alarmCount);
 		alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+		
+		contentMovement(1);
+		dialTimePicker.setMode(DialTimePicker.MODE_PICK);
 		
 		timeHandler.post(tRunnable);
 	}

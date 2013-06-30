@@ -8,6 +8,7 @@
 package com.cfm.waker.widget;
 
 import com.cfm.waker.R;
+import com.cfm.waker.log.WLog;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -23,6 +24,11 @@ public class DialTimePicker extends View{
 	
 	private static final String TAG = "DialTimePicker";
 	
+	public static final int MODE_PICK = 0;
+	public static final int MODE_CONFIRM = 1;
+	
+	private int mode = MODE_PICK;
+	
 	private int mediumCircleRange;
 	
 	private int thumbPressRange;
@@ -34,8 +40,6 @@ public class DialTimePicker extends View{
 	
 	private Point centerPoint;
 	
-	private boolean isDrawPressPoint;
-	private boolean isCirclePressed;
 	private Point drawPoint;
 	
 	private Drawable backgroundDrawable;
@@ -54,13 +58,19 @@ public class DialTimePicker extends View{
 	private OnTimePickListener mOnTimePickListener;
 	
 	private boolean convert;
-	private boolean centerPressed;
+	
+	private boolean isCenterPressed;
+	private boolean isCirclePressed;
+	private boolean isDrawPressPoint;
+	private boolean isDrawCenterButtonPressed;
 	
 	public interface OnTimePickListener{
 		
 		public void onStartPick();
 		public void onPick(int value, int increment);
 		public void onStopPick();
+		
+		public void onCenterClick();
 	}
 
 	public DialTimePicker(Context context){
@@ -78,9 +88,6 @@ public class DialTimePicker extends View{
 		
 		thumbPressRange = (int) context.getResources().getDimension(R.dimen.dialtimepicker_default_thumbpressrange);
 		
-		isDrawPressPoint = false;
-		isCirclePressed = false;
-		
 		centerPoint = new Point();
 		drawPoint = new Point();
 		
@@ -94,6 +101,11 @@ public class DialTimePicker extends View{
 		arcBound = new RectF();
 		
 		convert = false;
+		
+		isCenterPressed = false;
+		isCirclePressed = false;
+		isDrawPressPoint = false;
+		isDrawCenterButtonPressed = false;
 	}
 	
 	public void setOnTimePickListener(OnTimePickListener mOnTimePickListener){
@@ -129,57 +141,98 @@ public class DialTimePicker extends View{
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event){
-		final int action = event.getAction();
+		final int action = event.getAction() & MotionEvent.ACTION_MASK;
 		
 		switch(action){
 		case MotionEvent.ACTION_DOWN:
 			float x = event.getX() - centerPoint.x;
 			float y = event.getY() - centerPoint.y;
 			int pressedRange = (int) Math.sqrt(x * x + y * y);
+			
 			//calculate the pressedRange to make sure it's in the clickable circle
-			if(outerPressRange > pressedRange && pressedRange > innerPressRange){
-				isDrawPressPoint = true;
-				isCirclePressed = true;
-				increment = null;
-				if(null != mOnTimePickListener) mOnTimePickListener.onStartPick();
+			switch(mode){
+			case MODE_CONFIRM:
+				if(pressedRange <= innerPressRange){
+					isDrawCenterButtonPressed = true;
+					isCenterPressed = true;
+				}
+			case MODE_PICK:
+				if(outerPressRange > pressedRange){
+					isDrawPressPoint = true;
+					increment = null;
+					invalidate();
+					if(pressedRange > innerPressRange){
+						isCirclePressed = true;
+						if(null != mOnTimePickListener) mOnTimePickListener.onStartPick();
+					}
+				}
+				break;
 			}
+			
 			break;
 		case MotionEvent.ACTION_MOVE:
+			double dx = event.getX() - centerPoint.x;
+			double dy = event.getY() - centerPoint.y;
 			if(isDrawPressPoint){
 				getParent().requestDisallowInterceptTouchEvent(true);
-				double dx = event.getX() - centerPoint.x;
-				double dy = event.getY() - centerPoint.y;
-				double degree = Math.atan2(dy, dx);
-				drawPoint = centerRadiusPoint(centerPoint, degree, mediumCircleRange);
-				performDial(get360Angel(degree));
-				
-				int tDegree = (int) Math.toDegrees(degree);
-				tDegree = tDegree < 0 ? 180 + (180 + tDegree) : tDegree;
-				
-				int incrementValue = 0;
-				if(null == increment){
+				if(isCirclePressed){
+					double degree = Math.atan2(dy, dx);
+					drawPoint = centerRadiusPoint(centerPoint, degree, mediumCircleRange);
+					performDial(get360Angel(degree));
+					
+					int tDegree = (int) Math.toDegrees(degree);
+					tDegree = tDegree < 0 ? 180 + (180 + tDegree) : tDegree;
+					
+					int incrementValue = 0;
+					if(null == increment){
+						increment = tDegree;
+					}else{
+						incrementValue = tDegree - increment;
+						int positiveIncrement = Math.abs(incrementValue);
+						if(positiveIncrement > 180)
+							incrementValue = -(incrementValue / positiveIncrement) * (360 - positiveIncrement);
+					}
+					if(null != mOnTimePickListener) mOnTimePickListener.onPick(tDegree, incrementValue);
 					increment = tDegree;
-				}else{
-					incrementValue = tDegree - increment;
-					int positiveIncrement = Math.abs(incrementValue);
-					if(positiveIncrement > 180)
-						incrementValue = -(incrementValue / positiveIncrement) * (360 - positiveIncrement);
+					invalidate();
 				}
-				if(null != mOnTimePickListener) mOnTimePickListener.onPick(tDegree, incrementValue);
-				increment = tDegree;
+			}
+			
+			if(isCenterPressed){
+				if(Math.sqrt(dx * dx + dy * dy) <= innerPressRange){
+					isDrawCenterButtonPressed = true;
+				}else{
+					isDrawCenterButtonPressed = false;
+				}
 				invalidate();
 			}
 			break;
 		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_CANCEL:
-			isDrawPressPoint = false;
+			if(null != mOnTimePickListener){
+				mOnTimePickListener.onStopPick();
+				if(isDrawCenterButtonPressed) mOnTimePickListener.onCenterClick();
+			}
+			
+			if(mode == MODE_PICK) isDrawPressPoint = false;
+			isDrawCenterButtonPressed = false;
 			isCirclePressed = false;
-			if(null != mOnTimePickListener) mOnTimePickListener.onStopPick();
+			isCenterPressed = false;
+			
 			invalidate();
+			
 			break;
 		}
 		
-		return isCirclePressed;
+		return isCirclePressed || isCenterPressed;
+	}
+	
+	public void setMode(int mode){
+		this.mode = mode;
+	}
+	
+	public int getMode(){
+		return mode;
 	}
 	
 	//perform a dial action ever there's no touch event input
@@ -223,8 +276,13 @@ public class DialTimePicker extends View{
 			
 		}
 		
+		WLog.print(TAG, "isDrawPressPoint:" + isDrawPressPoint +
+				        ",isDrawCenterButtonPressed:" + isDrawCenterButtonPressed +
+				        ",isCenterPressed:" + isCenterPressed +
+				        ",isCirclePressed:" + isCirclePressed);
+		
 		//background
-		if(centerPressed){
+		if(isDrawCenterButtonPressed){
 			backgroundPressedDrawable.setBounds(0, 0, getMeasuredWidth(), getMeasuredHeight());
 			backgroundPressedDrawable.draw(canvas);
 		}else{
@@ -237,12 +295,6 @@ public class DialTimePicker extends View{
 			
 			seekerDrawable.setBounds(drawPoint.x - circleWidth / 2, drawPoint.y - circleWidth / 2, drawPoint.x + circleWidth / 2, drawPoint.y + circleWidth / 2);
 			seekerDrawable.draw(canvas);
-			/*
-			paint.setColor(0x44FFFFFF);
-			canvas.drawCircle(drawPoint.x, drawPoint.y, circleWidth * 3, paint);
-			paint.setColor(0x99FFFFFF);
-			canvas.drawCircle(drawPoint.x, drawPoint.y, circleWidth * 2, paint);
-			 */
 		}
 	}
 	

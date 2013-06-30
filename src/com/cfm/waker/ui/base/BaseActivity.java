@@ -8,6 +8,7 @@
 package com.cfm.waker.ui.base;
 
 import com.cfm.waker.WakerApplication;
+import com.cfm.waker.dao.WakerPreferenceManager;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -17,11 +18,17 @@ public class BaseActivity extends Activity{
 
 	protected WakerApplication mApplication;
 	
+	protected int screenWidth;
+	protected int screenHeight;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		
 		mApplication = (WakerApplication) getApplication();
+		
+		screenWidth = WakerPreferenceManager.getInstance(this).getScreenWidth();
+		screenHeight = WakerPreferenceManager.getInstance(this).getScreenHeight();
 	}
 }
