@@ -7,6 +7,7 @@
  */
 package com.cfm.waker;
 
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -21,6 +22,7 @@ import com.cfm.waker.receiver.AlarmReceiver;
 import com.cfm.waker.service.WakerService;
 import com.cfm.waker.ui.SettingActivity;
 import com.cfm.waker.ui.base.BaseSlidableActivity;
+import com.cfm.waker.view.WakerViewPager;
 import com.cfm.waker.widget.DebossFontText;
 import com.cfm.waker.widget.DialTimePicker;
 import com.cfm.waker.widget.DialTimePicker.OnTimePickListener;
@@ -60,7 +62,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	private boolean pickingTime;
 	
 	private FrameLayout viewPagerLayout;
-	private ViewPager viewPager;
+	private WakerViewPager viewPager;
 	private ArrayList<Alarm> alarmList;
 	private AlarmListAdapter alarmListAdapter;
 	
@@ -96,7 +98,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		
 		viewPagerLayout = (FrameLayout) findViewById(R.id.viewpager_layout);
 		
-		viewPager = (ViewPager) findViewById(R.id.alarm_list);
+		viewPager = (WakerViewPager) findViewById(R.id.alarm_list);
 		alarmList = new ArrayList<Alarm>();
 		alarmListAdapter = new AlarmListAdapter(this, alarmList);
 		viewPager.setAdapter(alarmListAdapter);

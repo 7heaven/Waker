@@ -57,7 +57,7 @@
         android:layout_width="match_parent"
         android:layout_height="160.0dip" >
         
-        <android.support.v4.view.ViewPager
+        <com.cfm.waker.view.WakerViewPager
             android:id="@+id/alarm_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
