@@ -48,12 +48,11 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	private RelativeLayout dialLayout;
 	
 	private TimeRunnable tRunnable;
-	private Handler timeHandler;
 	
 	private ViewMoveRunnable vmRunnable;
 	private ViewMoveRunnable weekRunnable;
 	private ViewMoveRunnable mContentRunnable;
-	private Handler vmHandler;
+	private Handler handler;
 	
 	private Calendar calendar;
 	private SimpleDateFormat dateFormat;
@@ -81,10 +80,8 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		weekSelector = (WeekSelector) findViewById(R.id.selector);
 		
 		tRunnable = new TimeRunnable();
-		timeHandler = new Handler();
-		timeHandler.post(tRunnable);
-		
-		vmHandler = new Handler();
+		handler = new Handler();
+		handler.post(tRunnable);
 		
 		if(mApplication.is24()){
 			dateFormat = new SimpleDateFormat("HH:mm", Locale.CHINA);
@@ -123,9 +120,9 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 				viewPagerLayout.setVisibility(View.VISIBLE);
 				vy = viewPagerLayout.getScrollY();
 				dy = dialLayout.getScrollY();
-				vmHandler.removeCallbacks(vmRunnable);
-				vmHandler.removeCallbacks(weekRunnable);
-				vmHandler.removeCallbacks(mContentRunnable);
+				handler.removeCallbacks(vmRunnable);
+				handler.removeCallbacks(weekRunnable);
+				handler.removeCallbacks(mContentRunnable);
 			}
 			
 			@Override
@@ -166,15 +163,10 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		
 		updateAlarmsByDatabase();
 		
-		preLayout();
+		contentMovement(1);
 		
 		Intent serviceIntent = new Intent(this, WakerService.class);
 		startService(serviceIntent);
-	}
-	
-	private void preLayout(){
-		viewPagerLayout.scrollTo(0, viewPager.getMeasuredHeight() / 2);
-		weekSelector.scrollTo(0,-weekSelector.getMeasuredHeight());
 	}
 	
 	//time tick movement
@@ -189,7 +181,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 				timeText.setText(dateFormat.format(calendar.getTime()));
 				if(!mApplication.is24()) amPm.setText(new SimpleDateFormat("a", Locale.CHINA).format(calendar.getTime()));
 				
-				timeHandler.postDelayed(tRunnable, 500);
+				handler.postDelayed(tRunnable, 500);
 				
 			}
 			
@@ -220,7 +212,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 				
 				WLog.print(TAG, "runnable run");
 				
-				vmHandler.postDelayed(this, 20);
+				handler.postDelayed(this, 20);
 			}else{
 				if(hide){
 					WLog.print(TAG, "runnable gone");
@@ -251,9 +243,9 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 			break;
 		}
 		
-		vmHandler.post(vmRunnable);
-		vmHandler.post(weekRunnable);
-		vmHandler.post(mContentRunnable);
+		handler.post(vmRunnable);
+		handler.post(weekRunnable);
+		handler.post(mContentRunnable);
 	}
 	
 	private Alarm addAlarm(Calendar calendar){
@@ -337,7 +329,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		contentMovement(1);
 		dialTimePicker.setMode(DialTimePicker.MODE_PICK);
 		
-		timeHandler.post(tRunnable);
+		handler.post(tRunnable);
 	}
 
 	@Override

@@ -8,9 +8,9 @@
 package com.cfm.waker.widget;
 
 import com.cfm.waker.R;
-import com.cfm.waker.log.WLog;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -97,6 +97,9 @@ public class DialTimePicker extends View{
 		//arcDrawOffset = (int) context.getResources().getDimension(R.dimen.dialtimepicker_default_arcdrawoffset);
 		
 		paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.DialTimePicker);
+		paint.setColor(ta.getColor(R.styleable.DialTimePicker_color, 0xFF5CA4E5));
+		ta.recycle();
 		
 		arcBound = new RectF();
 		
@@ -235,6 +238,14 @@ public class DialTimePicker extends View{
 		return mode;
 	}
 	
+	public void setThemeColor(int color){
+		paint.setColor(color);
+	}
+	
+	public int getThemeColor(){
+		return paint.getColor();
+	}
+	
 	//perform a dial action ever there's no touch event input
 	public void performDial(int angel){
 		
@@ -267,7 +278,6 @@ public class DialTimePicker extends View{
 		
 		//progressBar
 		if(isDrawPressPoint){
-			paint.setColor(0xFF5CA4E5);
 			if(convert){
 				canvas.drawArc(arcBound, drawDegree - 90, 360 - drawDegree, true, paint);
 			}else{
@@ -275,11 +285,6 @@ public class DialTimePicker extends View{
 			}
 			
 		}
-		
-		WLog.print(TAG, "isDrawPressPoint:" + isDrawPressPoint +
-				        ",isDrawCenterButtonPressed:" + isDrawCenterButtonPressed +
-				        ",isCenterPressed:" + isCenterPressed +
-				        ",isCirclePressed:" + isCirclePressed);
 		
 		//background
 		if(isDrawCenterButtonPressed){
@@ -292,6 +297,8 @@ public class DialTimePicker extends View{
 		
 		//seeker
 		if(isDrawPressPoint){
+			
+			canvas.drawCircle(drawPoint.x, drawPoint.y, circleWidth / 5, paint);
 			
 			seekerDrawable.setBounds(drawPoint.x - circleWidth / 2, drawPoint.y - circleWidth / 2, drawPoint.x + circleWidth / 2, drawPoint.y + circleWidth / 2);
 			seekerDrawable.draw(canvas);

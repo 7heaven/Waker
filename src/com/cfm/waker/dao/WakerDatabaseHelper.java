@@ -104,7 +104,6 @@ public class WakerDatabaseHelper extends SQLiteOpenHelper {
 			
 		}
 		
-		
 		cursor.close();
 		return alarms;
 	}

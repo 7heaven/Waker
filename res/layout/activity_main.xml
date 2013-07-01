@@ -20,7 +20,9 @@
                 android:id="@+id/time_pick"
                 android:layout_width="320.0dip"
                 android:layout_height="320.0dip"
-                android:layout_centerInParent="true" />
+                android:layout_centerInParent="true"
+                waker:color="#FF5CA4E5" />
+                <!-- #14d0e6 -->
             
             <com.cfm.waker.widget.DebossFontText
                 android:id="@+id/time"
