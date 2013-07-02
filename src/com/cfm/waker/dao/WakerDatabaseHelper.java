@@ -164,6 +164,16 @@ public class WakerDatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL(sql, bindArgs);
 	}
 	
+	public int getDBCount(){
+		SQLiteDatabase db = getReadableDatabase();
+		
+		String sql = "SELECT COUNT(*) FROM " + TABLE_NAME;
+		Cursor cursor = db.rawQuery(sql, null);
+		cursor.moveToFirst();
+		
+		return cursor.getInt(0);
+	}
+	
 	public ContentValues createContentValues(Alarm alarm){
 		ContentValues cv = new ContentValues();
 		cv.put(Alarm.Columns.ID, alarm.getCalendar().getTimeInMillis());

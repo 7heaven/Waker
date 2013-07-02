@@ -65,12 +65,14 @@ public class WakerService extends Service {
 	}
 	
 	private void setAlarms(){
-		CursorableList<Alarm> alarms = new CursorableList<Alarm>();
-		alarms.addAll(WakerDatabaseHelper.getInstance(context).getAlarms(((WakerApplication) getApplication()).is24()));
-		if(alarms.moveToFirst()){
-			do{
-				setAlarm(alarms.get());
-			}while(alarms.moveToNext());
+		if(WakerDatabaseHelper.getInstance(context).getDBCount() > 0){
+			CursorableList<Alarm> alarms = new CursorableList<Alarm>();
+			alarms.addAll(WakerDatabaseHelper.getInstance(context).getAlarms(((WakerApplication) getApplication()).is24()));
+			if(alarms.moveToFirst()){
+				do{
+					setAlarm(alarms.get());
+				}while(alarms.moveToNext());
+			}
 		}
 	}
 	
