@@ -17,8 +17,8 @@ import com.cfm.waker.adapter.AlarmListAdapter;
 import com.cfm.waker.dao.WakerDatabaseHelper;
 import com.cfm.waker.entity.Alarm;
 import com.cfm.waker.log.WLog;
-import com.cfm.waker.receiver.AlarmReceiver;
 import com.cfm.waker.service.WakerService;
+import com.cfm.waker.service.WakerService.LocalBinder;
 import com.cfm.waker.ui.SettingActivity;
 import com.cfm.waker.ui.base.BaseSlidableActivity;
 import com.cfm.waker.view.WakerViewPager;
@@ -28,13 +28,14 @@ import com.cfm.waker.widget.DialTimePicker.OnTimePickListener;
 import com.cfm.waker.widget.WeekSelector;
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
@@ -64,7 +65,25 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	private ArrayList<Alarm> alarmList;
 	private AlarmListAdapter alarmListAdapter;
 	
-	private int alarmCount;
+	private WakerService wakerService;
+	
+	private boolean isBinded;
+	
+	private ServiceConnection serviceConnection = new ServiceConnection(){
+
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			LocalBinder binder = (LocalBinder) service;
+			wakerService = binder.getService();
+			isBinded = true;
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			isBinded = false;
+		}
+		
+	};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -100,8 +119,6 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		alarmList = new ArrayList<Alarm>();
 		alarmListAdapter = new AlarmListAdapter(this, alarmList);
 		viewPager.setAdapter(alarmListAdapter);
-		
-		alarmCount = 0;
 		
 		mOnSlideListener = new OnSlideListener(){
 			int vy,dy;
@@ -177,6 +194,22 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		
 		Intent serviceIntent = new Intent(this, WakerService.class);
 		startService(serviceIntent);
+	}
+	
+	@Override
+	public void onStart(){
+		super.onStart();
+		Intent intent = new Intent(this, WakerService.class);
+		bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+	}
+	
+	@Override
+	public void onStop(){
+		super.onStop();
+		if(isBinded){
+			unbindService(serviceConnection);
+			isBinded = false;
+		}
 	}
 	
 	//time tick movement
@@ -314,6 +347,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	}
 	
 	
+	/*
 	@Override
 	public void onCenterClick(){
         pickingTime = false;
@@ -339,6 +373,21 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent, ++alarmCount);
 		alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+		
+		contentMovement(1);
+		dialTimePicker.setMode(DialTimePicker.MODE_PICK);
+		
+		handler.post(tRunnable);
+	}
+	 */
+	
+	@Override
+	public void onCenterClick(){
+		pickingTime = false;
+		
+		calendar.set(Calendar.SECOND, 0);
+		
+		wakerService.setAlarm(addAlarm(calendar));
 		
 		contentMovement(1);
 		dialTimePicker.setMode(DialTimePicker.MODE_PICK);

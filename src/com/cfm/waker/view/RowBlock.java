@@ -11,6 +11,7 @@ import com.cfm.waker.R;
 import com.cfm.waker.widget.AlarmClockBlock;
 
 import android.content.Context;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,33 @@ public class RowBlock extends RelativeLayout {
 	private AlarmClockBlock alarm1;
 	private AlarmClockBlock alarm2;
 	private AlarmClockBlock alarm3;
+	
+	private int visiblePosition = -1;
+	
+	private Handler handler;
+	private AlarmRunnable runnable;
+	
+	private class AlarmRunnable implements Runnable{
+		private AlarmClockBlock alarm;
+		private int y;
+		
+		public AlarmRunnable(AlarmClockBlock alarm){
+			this.alarm = alarm;
+			y = alarm.getMeasuredHeight();
+		}
+		
+		public AlarmClockBlock getAlarmClockBlock(){
+			return alarm;
+		}
+		
+		@Override
+		public void run(){
+			y += (0 - y) * 0.51F;
+			alarm.scrollTo(0, y);
+			
+			if(y != 0) handler.postDelayed(runnable, 20);
+		}
+	}
 
 	public RowBlock(Context context){
 		super(context);
@@ -66,4 +94,19 @@ public class RowBlock extends RelativeLayout {
 		return null;
 	}
 	
+	public void setAlarmVisible(int position){
+		getAlarmBlock(position).setVisibility(View.VISIBLE);
+		if(visiblePosition < position) visiblePosition = position;
+	}
+	
+	public void performLastAlarmInit(){
+		runnable = new AlarmRunnable(getAlarmBlock(visiblePosition));
+		
+		handler.post(runnable);
+	}
+	
+	public void cancelAlarmInitperforment(){
+		runnable.getAlarmClockBlock().scrollTo(0, 0);
+		handler.removeCallbacks(runnable);
+	}
 }

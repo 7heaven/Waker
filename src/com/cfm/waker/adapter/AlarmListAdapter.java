@@ -92,7 +92,7 @@ public class AlarmListAdapter extends PagerAdapter{
 			
 			do{
 				
-				rowBlock.getAlarmBlock(i).setVisibility(View.VISIBLE);
+				rowBlock.setAlarmVisible(i);
 				rowBlock.getAlarmBlock(i).setAlarm(alarmList.get(position * 4 + i));
 				
 			}while(++i < bdg);

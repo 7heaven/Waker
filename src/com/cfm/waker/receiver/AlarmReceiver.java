@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.text.format.DateFormat;
 import android.widget.Toast;
 
+@Deprecated
 public class AlarmReceiver extends BroadcastReceiver{
 	
 	private Calendar calendar;
