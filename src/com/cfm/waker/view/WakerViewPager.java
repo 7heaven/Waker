@@ -1,6 +1,11 @@
+/*
+ * Waker project 2013
+ * 
+ * folks studio
+ * 
+ * by caifangmao8@gmail.com
+ */
 package com.cfm.waker.view;
-
-import com.cfm.waker.log.WLog;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;
@@ -11,6 +16,7 @@ public class WakerViewPager extends ViewPager {
 	
 	private static final String TAG = "WakerViewPager";
 	
+	/*
 	private float dx,dy;
 	
 	private static final int MODE_EDGE_DRAG = 0;
@@ -18,6 +24,7 @@ public class WakerViewPager extends ViewPager {
 	private static final int MODE_DISPATCH = 2;
 	
 	private int mode = MODE_DISPATCH;
+	 */
 
 	public WakerViewPager(Context context){
 		super(context);
@@ -27,6 +34,17 @@ public class WakerViewPager extends ViewPager {
 		super(context, attrs);
 	}
 	
+	@Override
+	public boolean onTouchEvent(MotionEvent event){
+		if((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_DOWN && event.getY() > getMeasuredHeight() / 2){
+			return false;
+		}
+		
+		return super.onTouchEvent(event);
+	}
+	
+	//when viewPager scroll to the end, the continually scroll from same direction will disable viewpager touch event
+	/*
 	@Override
 	public boolean onTouchEvent(MotionEvent event){
 		
@@ -46,6 +64,8 @@ public class WakerViewPager extends ViewPager {
 					hisX = (int) event.getHistoricalX(event.getHistorySize() - 1);
 					hisY = (int) event.getHistoricalY(event.getHistorySize() - 1);
 				}catch(ArrayIndexOutOfBoundsException e){
+					
+				}catch(IllegalArgumentException e){
 					
 				}
 				dx = event.getX() - hisX;
@@ -82,4 +102,5 @@ public class WakerViewPager extends ViewPager {
 		
 		return  super.onTouchEvent(event);
 	}
+	 */
 }

@@ -7,7 +7,6 @@
  */
 package com.cfm.waker;
 
-import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -36,7 +35,6 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
@@ -165,7 +163,17 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		
 		updateAlarmsByDatabase();
 		
-		contentMovement(1);
+		new Thread(){
+			@Override
+			public void run(){
+				try{
+					Thread.sleep(300);
+				}catch(Exception e){
+					
+				}
+				contentMovement(1);
+			}
+		}.start();
 		
 		Intent serviceIntent = new Intent(this, WakerService.class);
 		startService(serviceIntent);
@@ -227,6 +235,10 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	}
 	
 	private void contentMovement(int position){
+		handler.removeCallbacks(vmRunnable);
+		handler.removeCallbacks(weekRunnable);
+		handler.removeCallbacks(mContentRunnable);
+		
 		switch(position){
 		case 0:
 			vmRunnable = new ViewMoveRunnable(viewPagerLayout, 0, 0, false);
@@ -352,11 +364,6 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	@Override
 	protected Drawable getRightDrawable(){
 		return getResources().getDrawable(R.drawable.icon_settings);
-	}
-	
-	@Override
-	public void onResume(){
-		super.onResume();
 	}
 
 }

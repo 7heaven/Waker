@@ -7,6 +7,11 @@
  */
 package com.cfm.waker.service;
 
+import java.util.List;
+
+import com.cfm.waker.WakerApplication;
+import com.cfm.waker.dao.WakerDatabaseHelper;
+import com.cfm.waker.entity.Alarm;
 import com.cfm.waker.log.WLog;
 
 import android.app.Service;
@@ -23,7 +28,13 @@ public class WakerService extends Service {
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId){
-		return super.onStartCommand(intent, flags, startId);
+		int returnValue = super.onStartCommand(intent, flags, startId);
+		long currentTime = System.currentTimeMillis();
+		
+		List<Alarm> alarms = WakerDatabaseHelper.getInstance(this.getBaseContext()).getAlarms(((WakerApplication) getApplication()).is24());
+		
+		
+		return returnValue;
 	}
 
 	@Override
