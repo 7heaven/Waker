@@ -346,41 +346,6 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		contentMovement(2);
 	}
 	
-	
-	/*
-	@Override
-	public void onCenterClick(){
-        pickingTime = false;
-		
-		//to setup a alarm and when the alarm being triggered start a AlarmReceiver anyway
-		//it's AlarmReceiver's job to decide whether start a new ShakeActivity to perform a alarm or not.
-		Intent intent = new Intent(MainActivity.this, AlarmReceiver.class);
-		
-		calendar.set(Calendar.SECOND, 0);
-		
-		final boolean beforeTime = calendar.getTimeInMillis() <= System.currentTimeMillis();
-		
-		WLog.print(TAG, "beforeTime:" + beforeTime);
-		
-		
-		
-		intent.putExtra("com.cfm.waker.alarm_id", addAlarm(calendar).getId());
-		//put a boolean into intent to tell AlarmReceiver to stop this alarm and set a new alarm for the next trigger day 
-		//in case the trigger time of this alarm is before the currentTime
-		intent.putExtra("com.cfm.waker.before_current_time", beforeTime);
-		intent.putExtra("com.cfm.wakier.flag", alarmCount + 1);
-		
-		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent, ++alarmCount);
-		alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-		
-		contentMovement(1);
-		dialTimePicker.setMode(DialTimePicker.MODE_PICK);
-		
-		handler.post(tRunnable);
-	}
-	 */
-	
 	@Override
 	public void onCenterClick(){
 		pickingTime = false;

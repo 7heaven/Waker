@@ -15,6 +15,7 @@ import com.cfm.waker.entity.Alarm;
 import com.cfm.waker.log.WLog;
 import com.cfm.waker.ui.ShakeActivity;
 import com.cfm.waker.util.CursorableList;
+import com.cfm.waker.util.Constants;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -82,6 +83,9 @@ public class WakerService extends Service {
 		long time = alarm.getCalendar().getTimeInMillis();
 		if(currentTime < time && alarm.isEnabled() && isDaySet(alarm)){
 			Intent alarmIntent = new Intent(this, ShakeActivity.class);
+			alarmIntent.putExtra(Constants.ALARM_ID, alarm.getId());
+			alarmIntent.putExtra(Constants.ALARM_SNOOZE_COUNT, 0);
+			alarmIntent.putExtra(Constants.ALARM_FLAG_COUNT, alarmId);
 			PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, alarmIntent, ++alarmId);
 			alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent);
 		}

@@ -66,7 +66,7 @@ public class Alarm implements Serializable{
 		calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(TimeInMillis);
 		
-		snoozeTime = 3000;
+		snoozeTime = 300000;
 		enabled = true;
 		vibrate = true;
 		
@@ -101,10 +101,10 @@ public class Alarm implements Serializable{
 	}
 	
 	public int getSnoozeTime() {
-		return snoozeTime / 60 / 1000;
+		return snoozeTime;
 	}
 	public void setSnoozeTime(int snoozeTime) {
-		this.snoozeTime = snoozeTime * 60 * 1000;
+		this.snoozeTime = snoozeTime;
 	}
 	public boolean isEnabled() {
 		return enabled;
