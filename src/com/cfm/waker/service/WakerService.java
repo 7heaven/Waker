@@ -52,6 +52,7 @@ public class WakerService extends Service {
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId){
+		WLog.print("SERVICE", "onStartCommand");
 		alarmId = 0;
 		
 		Intent serviceIntent = new Intent(this, WakerService.class);
@@ -77,7 +78,6 @@ public class WakerService extends Service {
 	}
 	
 	public void setAlarm(Alarm alarm){
-		WLog.print("SERVICE", "activity message sent:" + alarm.getHour() + ":" + alarm.getMinute());
 		long currentTime = System.currentTimeMillis();
 		long time = alarm.getCalendar().getTimeInMillis();
 		if(currentTime < time && alarm.isEnabled() && isDaySet(alarm)){

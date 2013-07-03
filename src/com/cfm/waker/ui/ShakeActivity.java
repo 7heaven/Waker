@@ -92,9 +92,7 @@ public class ShakeActivity extends BaseActivity implements OnShakeListener,
 	}
 
 	@Override
-	public void onUnderBottom() {
-		
-	}
+	public void onUnderBottom() { }
 
 	@Override
 	public void onExceedTop() {
