@@ -67,6 +67,7 @@ public class ShakeActivity extends BaseActivity implements OnShakeListener,
 		
 		alarm = WakerDatabaseHelper.getInstance(this).getAlarm(getIntent().getLongExtra(Constants.ALARM_ID, 0), mApplication.is24());
 		snoozeCount = getIntent().getIntExtra(Constants.ALARM_SNOOZE_COUNT, 0);
+		WLog.print(TAG, snoozeCount + "");
 		flagCount = getIntent().getIntExtra(Constants.ALARM_FLAG_COUNT, 0);
 		
 		content.setText(alarm.getHour() + ":" + alarm.getMinute() + Integer.toBinaryString(alarm.getWeek()) + "B");
@@ -80,7 +81,6 @@ public class ShakeActivity extends BaseActivity implements OnShakeListener,
 			public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
 				float volume = WakerPreferenceManager.getInstance(ShakeActivity.this).getGlobalAlarmVolume();
 				streamId = soundPool.play(sampleId, volume, volume, 0, -1, 1);
-				WLog.print("S", streamId + "");
 			}
 			
 		});
@@ -132,9 +132,12 @@ public class ShakeActivity extends BaseActivity implements OnShakeListener,
 			Intent alarmIntent = new Intent(this, ShakeActivity.class);
 			alarmIntent.putExtra(Constants.ALARM_ID, alarm.getId());
 			alarmIntent.putExtra(Constants.ALARM_SNOOZE_COUNT, snoozeCount);
+			alarmIntent.putExtra(Constants.ALARM_FLAG_COUNT, flagCount);
 			PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, alarmIntent, flagCount * 10 + snoozeCount);
 			AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 			alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + alarm.getSnoozeTime(), pendingIntent);
+			
+			WLog.print(TAG, snoozeCount + "<--");
 			
 			ShakeActivity.this.finish();
 		}

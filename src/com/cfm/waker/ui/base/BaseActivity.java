@@ -15,6 +15,8 @@ import android.os.Bundle;
 import android.view.Window;
 
 public class BaseActivity extends Activity{
+	
+	protected static final String TAG = "BaseActivity";
 
 	protected WakerApplication mApplication;
 	
