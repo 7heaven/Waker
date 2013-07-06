@@ -17,7 +17,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <receiver 
-            android:name="com.cfm.waker.receiver.AlarmReceiver"
+            android:name="com.cfm.waker.receiver.SetNextDayReceiver"
             android:process=":remote" />
         <activity
             android:name="com.cfm.waker.MainActivity"

@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="10.0dip"
         android:text="@string/setting_page_alarm_style"
-        android:textColor="#FFFFFF"
+        android:textColor="#555555"
         android:gravity="center" />
     
     <LinearLayout
@@ -60,7 +60,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1.0"
             android:text="@string/setting_page_shake_level"
-            android:textColor="#FFFFFF"
+            android:textColor="#555555"
             android:textSize="16.0dip"
             android:gravity="center|left" />
         
@@ -83,7 +83,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1.0"
             android:text="@string/setting_page_snooze_time"
-            android:textColor="#FFFFFF"
+            android:textColor="#555555"
             android:textSize="16.0dip"
             android:gravity="center|left" />
         
@@ -106,7 +106,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1.0"
             android:text="@string/setting_page_alarm_volume"
-            android:textColor="#FFFFFF"
+            android:textColor="#555555"
             android:textSize="16.0dip"
             android:gravity="center|left" />
         

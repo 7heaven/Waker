@@ -7,12 +7,16 @@
  */
 package com.cfm.waker.service;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import com.cfm.waker.WakerApplication;
 import com.cfm.waker.dao.WakerDatabaseHelper;
 import com.cfm.waker.entity.Alarm;
 import com.cfm.waker.log.WLog;
+import com.cfm.waker.receiver.SetNextDayReceiver;
 import com.cfm.waker.ui.ShakeActivity;
 import com.cfm.waker.util.CursorableList;
 import com.cfm.waker.util.Constants;
@@ -24,6 +28,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.widget.Toast;
 
 public class WakerService extends Service {
 	
@@ -54,11 +59,13 @@ public class WakerService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId){
 		WLog.print("SERVICE", "onStartCommand");
-		alarmId = 0;
 		
-		Intent serviceIntent = new Intent(this, WakerService.class);
-		PendingIntent pendingIntent = PendingIntent.getService(context, 0, serviceIntent, alarmId);
+        alarmId = 0;
+		
+		Intent nextDaySetIntent = new Intent(context, SetNextDayReceiver.class);
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, nextDaySetIntent, alarmId);
 		alarmManager.set(AlarmManager.RTC_WAKEUP, getNextZero(), pendingIntent);
+		WLog.print("SERVICE", new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA).format(new Date(getNextZero())));
 		
 		setAlarms();
 		
@@ -79,6 +86,8 @@ public class WakerService extends Service {
 	}
 	
 	public void setAlarm(Alarm alarm){
+		alarmId++;
+		
 		long currentTime = System.currentTimeMillis();
 		long time = alarm.getCalendar().getTimeInMillis();
 		if(currentTime < time && alarm.isEnabled() && isDaySet(alarm)){
@@ -86,7 +95,7 @@ public class WakerService extends Service {
 			alarmIntent.putExtra(Constants.ALARM_ID, alarm.getId());
 			alarmIntent.putExtra(Constants.ALARM_SNOOZE_COUNT, 0);
 			alarmIntent.putExtra(Constants.ALARM_FLAG_COUNT, alarmId);
-			PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, alarmIntent, ++alarmId);
+			PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, alarmIntent, alarmId);
 			alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent);
 		}
 	}
@@ -104,7 +113,9 @@ public class WakerService extends Service {
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.SECOND, 0);
 		
-		return calendar.getTimeInMillis() + 86400000L;
+		calendar.setTimeInMillis(calendar.getTimeInMillis() + 86400000L);
+		
+		return calendar.getTimeInMillis();
 	}
 	
 	@Override
@@ -118,4 +129,5 @@ public class WakerService extends Service {
 		Intent intent = new Intent(this, WakerService.class);
 		context.startService(intent);
 	}
+
 }

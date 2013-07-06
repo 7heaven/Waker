@@ -67,6 +67,7 @@ public class ShakeActivity extends BaseActivity implements OnShakeListener,
 		
 		alarm = WakerDatabaseHelper.getInstance(this).getAlarm(getIntent().getLongExtra(Constants.ALARM_ID, 0), mApplication.is24());
 		snoozeCount = getIntent().getIntExtra(Constants.ALARM_SNOOZE_COUNT, 0);
+		if(snoozeCount >= 3) button.setVisibility(View.GONE);
 		WLog.print(TAG, snoozeCount + "");
 		flagCount = getIntent().getIntExtra(Constants.ALARM_FLAG_COUNT, 0);
 		
@@ -87,7 +88,7 @@ public class ShakeActivity extends BaseActivity implements OnShakeListener,
 		
 		shakeDetector = new ShakeDetector(this);
 		shakeDetector.registerOnShakeListener(this);
-		//shakeDetector.start();
+		shakeDetector.start();
 	}
 	
 	@Override
@@ -127,20 +128,19 @@ public class ShakeActivity extends BaseActivity implements OnShakeListener,
 
 	@Override
 	public void onClick(View v) {
-		if(snoozeCount < 3){
-			snoozeCount++;
-			Intent alarmIntent = new Intent(this, ShakeActivity.class);
-			alarmIntent.putExtra(Constants.ALARM_ID, alarm.getId());
-			alarmIntent.putExtra(Constants.ALARM_SNOOZE_COUNT, snoozeCount);
-			alarmIntent.putExtra(Constants.ALARM_FLAG_COUNT, flagCount);
-			PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, alarmIntent, flagCount * 10 + snoozeCount);
-			AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-			alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + alarm.getSnoozeTime(), pendingIntent);
-			
-			WLog.print(TAG, snoozeCount + "<--");
-			
-			ShakeActivity.this.finish();
-		}
+		snoozeCount++;
+		Intent alarmIntent = new Intent(this, ShakeActivity.class);
+		alarmIntent.putExtra(Constants.ALARM_ID, alarm.getId());
+		alarmIntent.putExtra(Constants.ALARM_SNOOZE_COUNT, snoozeCount);
+		alarmIntent.putExtra(Constants.ALARM_FLAG_COUNT, flagCount);
+		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, alarmIntent, flagCount * 10 + snoozeCount);
+		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + alarm.getSnoozeTime(), pendingIntent);
+		
+		WLog.print(TAG, snoozeCount + "<--");
+		
+		ShakeActivity.this.finish();	
+		
 	}
 
 }

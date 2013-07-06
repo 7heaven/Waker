@@ -1,3 +1,10 @@
+/*
+ * Waker project 2013
+ * 
+ * folks studio
+ * 
+ * by caifangmao8@gmail.com
+ */
 package com.cfm.waker.widget;
 
 import com.cfm.waker.R;
@@ -15,8 +22,6 @@ import android.text.TextPaint;
 import android.util.AttributeSet;
 
 public class SlideSwitcher extends BaseSlideWidget {
-	
-	private Context context;
 	
 	private String[] contents;
 	private String[] drawProcedure;
@@ -47,8 +52,6 @@ public class SlideSwitcher extends BaseSlideWidget {
 	
 	public SlideSwitcher(Context context, AttributeSet attrs, int defStyle){
 		super(context, attrs, defStyle);
-		
-		this.context = context;
 		
 		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.SlideSwitcher);
 		

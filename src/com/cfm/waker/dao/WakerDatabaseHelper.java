@@ -171,7 +171,11 @@ public class WakerDatabaseHelper extends SQLiteOpenHelper {
 		Cursor cursor = db.rawQuery(sql, null);
 		cursor.moveToFirst();
 		
-		return cursor.getInt(0);
+		int returnValue = cursor.getInt(0);
+		
+		if(!cursor.isClosed()) cursor.close();
+		
+		return returnValue;
 	}
 	
 	public ContentValues createContentValues(Alarm alarm){
