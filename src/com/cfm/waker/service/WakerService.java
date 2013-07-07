@@ -20,6 +20,7 @@ import com.cfm.waker.receiver.SetNextDayReceiver;
 import com.cfm.waker.ui.ShakeActivity;
 import com.cfm.waker.util.CursorableList;
 import com.cfm.waker.util.Constants;
+import com.cfm.waker.widget.WakerToast;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -59,6 +60,8 @@ public class WakerService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId){
 		WLog.print("SERVICE", "onStartCommand");
+		
+		WakerToast.makePositiveText(context, "onStartCommand", Toast.LENGTH_LONG).show();
 		
         alarmId = 0;
 		
