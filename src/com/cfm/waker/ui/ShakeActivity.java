@@ -61,16 +61,15 @@ public class ShakeActivity extends BaseActivity implements OnShakeListener,
 		
 		@Override
 		public void onCallStateChanged(int state, String incomingNumber){
-			switch(state){
-			case TelephonyManager.CALL_STATE_IDLE:
-				if(streamId != 0) soundPool.resume(streamId);
-				break;
-			case TelephonyManager.CALL_STATE_RINGING:
-				if(streamId != 0) soundPool.pause(streamId);
-				break;
+			super.onCallStateChanged(state, incomingNumber);
+			if(streamId != 0){
+				if(state != TelephonyManager.CALL_STATE_IDLE){
+					soundPool.pause(streamId);
+				}else{
+					soundPool.resume(streamId);
+				}
 			}
 			
-			super.onCallStateChanged(state, incomingNumber);
 		}
 	};
 
