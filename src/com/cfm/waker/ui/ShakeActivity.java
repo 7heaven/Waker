@@ -27,6 +27,8 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.media.SoundPool.OnLoadCompleteListener;
 import android.os.Bundle;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -52,6 +54,25 @@ public class ShakeActivity extends BaseActivity implements OnShakeListener,
 	private SoundPool soundPool;
 	
 	private ShakeDetector shakeDetector;
+	
+	private TelephonyManager telephonyManager;
+	
+	private PhoneStateListener phoneStateListener = new PhoneStateListener(){
+		
+		@Override
+		public void onCallStateChanged(int state, String incomingNumber){
+			switch(state){
+			case TelephonyManager.CALL_STATE_IDLE:
+				if(streamId != 0) soundPool.resume(streamId);
+				break;
+			case TelephonyManager.CALL_STATE_RINGING:
+				if(streamId != 0) soundPool.pause(streamId);
+				break;
+			}
+			
+			super.onCallStateChanged(state, incomingNumber);
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +106,8 @@ public class ShakeActivity extends BaseActivity implements OnShakeListener,
 			}
 			
 		});
+		telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+		telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
 		
 		shakeDetector = new ShakeDetector(this);
 		shakeDetector.registerOnShakeListener(this);
@@ -95,6 +118,12 @@ public class ShakeActivity extends BaseActivity implements OnShakeListener,
 	public void onStop(){
 		super.onStop();
 		soundPool.stop(streamId);
+	}
+	
+	@Override
+	public void onDestroy(){
+		super.onDestroy();
+		telephonyManager.listen(phoneStateListener, 0);
 	}
 
 	@Override

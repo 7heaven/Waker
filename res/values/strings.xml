@@ -25,5 +25,8 @@
     <string name="week_4">Th</string>
     <string name="week_5">F</string>
     <string name="week_6">S</string>
+    
+    <!-- Toast content -->
+    <string name="alarm_set">alarm %s set</string>
 
 </resources>

@@ -24,6 +24,7 @@ import com.cfm.waker.ui.base.BaseSlidableActivity;
 import com.cfm.waker.view.WakerViewPager;
 import com.cfm.waker.widget.DebossFontText;
 import com.cfm.waker.widget.DialTimePicker;
+import com.cfm.waker.widget.WakerToast;
 import com.cfm.waker.widget.DialTimePicker.OnTimePickListener;
 import com.cfm.waker.widget.WeekSelector;
 
@@ -39,6 +40,7 @@ import android.os.IBinder;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 public class MainActivity extends BaseSlidableActivity implements OnTimePickListener{
 	
@@ -352,7 +354,11 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		
 		calendar.set(Calendar.SECOND, 0);
 		
-		wakerService.setAlarm(addAlarm(calendar));
+		Alarm alarm = addAlarm(calendar);
+		
+		wakerService.setAlarm(alarm);
+		
+		WakerToast.makePositiveText(this, getString(R.string.alarm_set, alarm.getFormatedTime()), Toast.LENGTH_LONG).show();
 		
 		contentMovement(1);
 		dialTimePicker.setMode(DialTimePicker.MODE_PICK);
