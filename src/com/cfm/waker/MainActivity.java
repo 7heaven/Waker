@@ -350,20 +350,24 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	
 	@Override
 	public void onCenterClick(){
-		pickingTime = false;
-		
-		calendar.set(Calendar.SECOND, 0);
-		
-		Alarm alarm = addAlarm(calendar);
-		
-		wakerService.setAlarm(alarm);
-		
-		WakerToast.makePositiveText(this, getString(R.string.alarm_set, alarm.getFormatedTime()), Toast.LENGTH_LONG).show();
-		
-		contentMovement(1);
-		dialTimePicker.setMode(DialTimePicker.MODE_PICK);
-		
-		handler.post(tRunnable);
+		if(weekSelector.getWeekSet() == 0){
+			WakerToast.makeNegativeText(this, getString(R.string.must_select_week_of_day), Toast.LENGTH_LONG).show();
+		}else{
+			pickingTime = false;
+			
+			calendar.set(Calendar.SECOND, 0);
+			
+			Alarm alarm = addAlarm(calendar);
+			
+			wakerService.setAlarm(alarm);
+			
+			WakerToast.makePositiveText(this, getString(R.string.alarm_set, alarm.getFormatedTime()), Toast.LENGTH_LONG).show();
+			
+			contentMovement(1);
+			dialTimePicker.setMode(DialTimePicker.MODE_PICK);
+			
+			handler.post(tRunnable);
+		}
 	}
 
 	@Override

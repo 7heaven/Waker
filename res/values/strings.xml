@@ -28,5 +28,6 @@
     
     <!-- Toast content -->
     <string name="alarm_set">alarm %s set</string>
+    <string name="must_select_week_of_day">didn\'t select day of week!</string>
 
 </resources>

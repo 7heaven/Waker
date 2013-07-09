@@ -26,4 +26,8 @@
     <string name="week_5">五</string>
     <string name="week_6">六</string>
     
+    <!-- Toast content -->
+    <string name="alarm_set">闹钟%s设置成功</string>
+    <string name="must_select_week_of_day">没有选择星期</string>
+    
 </resources>
