@@ -66,10 +66,12 @@ public class DialTimePicker extends View{
 	
 	public interface OnTimePickListener{
 		
+		//on circle pressed
 		public void onStartPick();
 		public void onPick(int value, int increment);
 		public void onStopPick();
 		
+		//on center button pressed
 		public void onCenterClick();
 	}
 
@@ -247,6 +249,10 @@ public class DialTimePicker extends View{
 	}
 	
 	//perform a dial action ever there's no touch event input
+	/**
+	 * angel in degrees
+	 * @param angel
+	 */
 	public void performDial(int angel){
 		
 		int angelOffset = 89;
@@ -313,6 +319,11 @@ public class DialTimePicker extends View{
 		return p;
 	}
 	
+	/**
+	 * angel in radians
+	 * @param angel
+	 * @return
+	 */
 	private int get360Angel(double angel){
 		angel = Math.toDegrees(angel);
 		return (int) (angel <= -90 && angel >= -180 ? 450 + angel : angel + 90);

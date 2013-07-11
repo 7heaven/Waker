@@ -178,7 +178,7 @@ public class WakerDatabaseHelper extends SQLiteOpenHelper {
 		return returnValue;
 	}
 	
-	public ContentValues createContentValues(Alarm alarm){
+	private ContentValues createContentValues(Alarm alarm){
 		ContentValues cv = new ContentValues();
 		cv.put(Alarm.Columns.ID, alarm.getCalendar().getTimeInMillis());
 		cv.put(Alarm.Columns.HOUR, alarm.getHour());

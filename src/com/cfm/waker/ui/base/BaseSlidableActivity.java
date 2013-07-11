@@ -63,9 +63,9 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 	private Handler mHandler;
 	
 	/**
-	 * Must Override this class to return a left enter view(Activity) for a right Fling movement </br></br>
+	 * Must Override this class to return a left enter view(Activity) for a right Fling movement </br>
 	 * 
-	 * Any class< ? extends Activity > return itself will trigger finish()  </br></br>
+	 * Any class< ? extends Activity > return itself will trigger finish()  </br>
 	 * 
 	 * You can return null when you don't want any action for a right Fling movement
 	 * @return Class<? extends Activity>
@@ -73,9 +73,9 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 	protected abstract Class<? extends Activity> getLeftActivityClass();
 	
 	/**
-	 * Must Override this class to return a left enter view(Activity) for a left Fling movement </br></br>
+	 * Must Override this class to return a left enter view(Activity) for a left Fling movement </br>
 	 * 
-	 * Any class< ? extends Activity > return itself will trigger finish()  </br></br>
+	 * Any class< ? extends Activity > return itself will trigger finish()  </br>
 	 * 
 	 * You can return null when you don't want any action for a left Fling movement
 	 * @return Class<? extends Activity>
@@ -96,7 +96,6 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 	
 	/**
 	 * this Listener provide a interface for customize slide action
-	 * @author 7heaven
 	 *
 	 */
 	public interface OnSlideListener{
