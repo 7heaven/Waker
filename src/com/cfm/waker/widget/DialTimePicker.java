@@ -8,6 +8,7 @@
 package com.cfm.waker.widget;
 
 import com.cfm.waker.R;
+import com.cfm.waker.theme.ThemeEnable;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -20,7 +21,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-public class DialTimePicker extends View{
+public class DialTimePicker extends View implements ThemeEnable{
 	
 	private static final String TAG = "DialTimePicker";
 	
@@ -240,14 +241,6 @@ public class DialTimePicker extends View{
 		return mode;
 	}
 	
-	public void setThemeColor(int color){
-		paint.setColor(color);
-	}
-	
-	public int getThemeColor(){
-		return paint.getColor();
-	}
-	
 	//perform a dial action ever there's no touch event input
 	/**
 	 * angel in degrees
@@ -328,4 +321,21 @@ public class DialTimePicker extends View{
 		angel = Math.toDegrees(angel);
 		return (int) (angel <= -90 && angel >= -180 ? 450 + angel : angel + 90);
 	}
+	
+	//for Theme management
+	
+	@Override
+	public void setThemeColor(int color){
+		paint.setColor(color);
+	}
+
+	@Override
+	public void setThemeBackground(Drawable drawable) {}
+
+	@Override
+	public void setThemeResources(String path) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

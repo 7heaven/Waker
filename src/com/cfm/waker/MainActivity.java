@@ -19,6 +19,7 @@ import com.cfm.waker.entity.Alarm;
 import com.cfm.waker.log.WLog;
 import com.cfm.waker.service.WakerService;
 import com.cfm.waker.service.WakerService.LocalBinder;
+import com.cfm.waker.theme.ThemeManager;
 import com.cfm.waker.ui.SettingActivity;
 import com.cfm.waker.ui.base.BaseSlidableActivity;
 import com.cfm.waker.view.WakerViewPager;
@@ -43,6 +44,8 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 public class MainActivity extends BaseSlidableActivity implements OnTimePickListener{
+	
+	private ThemeManager theme;
 	
 	private DebossFontText timeText;
 	private DebossFontText amPm;
@@ -112,6 +115,8 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 			amPm.setVisibility(View.VISIBLE);
 		}
 		
+		theme = ThemeManager.getInstance(this);
+		theme.registerThemeObject(dialTimePicker);
 		
 		pickingTime = false;
 		

@@ -12,7 +12,6 @@ import com.cfm.waker.R;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.View;
 
 import com.cfm.waker.ui.base.BaseSlidableActivity;
 

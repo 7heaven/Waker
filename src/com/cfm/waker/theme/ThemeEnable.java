@@ -15,12 +15,12 @@ import android.graphics.drawable.Drawable;
  */
 public interface ThemeEnable {
 	
+	//main Theme color
 	public void setThemeColor(int color);
-	public int getThemeColor();
 	
-	public void setBackground(Drawable drawable);
-	public Drawable getBackground();
+	//main Theme background
+	public void setThemeBackground(Drawable drawable);
 	
+	//set other resources if requires
 	public void setThemeResources(String path);
-	public String getThemeResources();
 }
