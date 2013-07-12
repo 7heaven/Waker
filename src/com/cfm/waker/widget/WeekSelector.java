@@ -2,7 +2,6 @@ package com.cfm.waker.widget;
 
 import com.cfm.waker.R;
 import com.cfm.waker.log.WLog;
-import com.cfm.waker.util.DensityUtil;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -42,7 +41,7 @@ public class WeekSelector extends View {
 		this.context = context;
 		paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		paint.setColor(0xFFFFFFFF);
-		paint.setTextSize(DensityUtil.dip2px(context, 14));
+		paint.setTextSize(context.getResources().getDimension(R.dimen.weekselector_textsize));
 		
 		weekSet = 0x0;
 		textBound = new Rect();

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:background="#FF3B3B43" >
+    android:background="@color/global_background_color" >
     
     <RelativeLayout
         android:id="@+id/dial_layout"
@@ -21,7 +21,7 @@
                 android:layout_width="320.0dip"
                 android:layout_height="320.0dip"
                 android:layout_centerInParent="true"
-                waker:color="#FF5CA4E5" />
+                waker:color="@color/global_hint_color" />
                 <!-- #14d0e6 -->
             
             <com.cfm.waker.widget.DebossFontText

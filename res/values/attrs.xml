@@ -2,19 +2,19 @@
 <resources>
     
     <attr name="font" format="string" />
-    <attr name="color" format="color" />
+    <attr name="color" format="color|reference" />
     
     <attr name="text" format="string" />
-    <attr name="textColor" format="color" />
-    <attr name="textSize" format="dimension" />
+    <attr name="textColor" format="color|reference" />
+    <attr name="textSize" format="dimension|reference" />
     
     <declare-styleable name="FontTextView" >
         <attr name="font" />
     </declare-styleable>
     
     <declare-styleable name="RiseView" >
-        <attr name="rise_range" format="dimension" />
-        <attr name="fall_range" format="dimension" />
+        <attr name="rise_range" format="dimension|reference" />
+        <attr name="fall_range" format="dimension|reference" />
     </declare-styleable>
     
     <declare-styleable name="AlarmClockBlock" >

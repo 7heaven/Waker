@@ -12,5 +12,8 @@
     <!-- DebossFontText -->
     <dimen name="debossfonttext_default_offset">1dip</dimen>
     <dimen name="debossfonttext_default_textsize">20sp</dimen>
+    
+    <!-- WeekSelector -->
+    <dimen name="weekselector_textsize">14dip</dimen>
 
 </resources>

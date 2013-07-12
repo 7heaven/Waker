@@ -66,13 +66,13 @@ public class RiseView extends View {
 	}
 	
 	@Override
-	public void onLayout(boolean changed, int left, int top, int right, int bottom){
-		super.onLayout(changed, left, top, right, bottom);
-		rect.left = getLeft();
-		rect.top = getBottom();
-		rect.right = getRight();
-		rect.bottom = getBottom();
-		WLog.print(TAG, rect.toString());
+	public void onMeasure(int widthMeasureSpec, int heightMeasureSpec){
+		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+		
+		rect.left = 0;
+		rect.top = 0;
+		rect.right = getMeasuredWidth();
+		rect.bottom = getMeasuredHeight();
 	}
 	
 	public void setColor(int color){

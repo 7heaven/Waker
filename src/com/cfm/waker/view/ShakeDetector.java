@@ -19,18 +19,17 @@ import android.hardware.SensorManager;
 
 public class ShakeDetector implements SensorEventListener {
 	
-	private static final String TAG = ShakeDetector.class.getSimpleName();
-
-	static final int UPDATE_INTERVAL = 100;
+	private static final String TAG = "ShakeDetector";
 	
-	long mLastUpdateTime;
+	private long mLastUpdateTime;
 	
-	float mLastX, mLastY, mLastZ;
-	Context mContext;
-	SensorManager mSensorManager;
-	ArrayList<OnShakeListener> mListeners;
+	private float mLastX, mLastY, mLastZ;
+	private Context mContext;
+	private SensorManager mSensorManager;
+	private ArrayList<OnShakeListener> mListeners;
 	
 	private static final int SHAKE_THRESHOLD = 800;
+	
 	public ShakeDetector(Context context){
 		mContext = context;
 		mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
