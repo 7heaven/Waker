@@ -31,34 +31,39 @@ public class DialTimePicker extends View implements ThemeEnable{
 	private int mode = MODE_PICK;
 	
 	private int mediumCircleRange;
+	protected float exactRangeRatio = 0.675F;
 	
 	private int thumbPressRange;
 	
 	private int outerPressRange;
 	private int innerPressRange;
 	
+	private int maxDegreeRange;
+	private int minDegreeRange;
+	
 	private int circleWidth;
 	
 	private Point centerPoint;
 	
-	private Point drawPoint;
+	protected Point drawPoint;
 	
 	private Drawable backgroundDrawable;
 	private Drawable backgroundPressedDrawable;
 	private Drawable seekerDrawable;
-	private int backgroundRange;
+	protected int backgroundRange;
 	//private int arcDrawOffset;
-	private int drawDegree;
+	protected int drawDegree;
 	
 	private Integer increment;
 	
-	private Paint paint;
+	protected Paint paint;
 	
 	private RectF arcBound;
 	
 	private OnTimePickListener mOnTimePickListener;
 	
 	private boolean convert;
+	private boolean isKnotMode;
 	
 	private boolean isCenterPressed;
 	private boolean isCirclePressed;
@@ -101,12 +106,17 @@ public class DialTimePicker extends View implements ThemeEnable{
 		
 		paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.DialTimePicker);
+		
 		paint.setColor(ta.getColor(R.styleable.DialTimePicker_color, 0xFF5CA4E5));
+		maxDegreeRange = ta.getInt(R.styleable.DialTimePicker_degreeRange_max, -1);
+		minDegreeRange = ta.getInt(R.styleable.DialTimePicker_degreeRange_min, -1);
+		
 		ta.recycle();
 		
 		arcBound = new RectF();
 		
 		convert = false;
+		isKnotMode = false;
 		
 		isCenterPressed = false;
 		isCirclePressed = false;
@@ -134,15 +144,24 @@ public class DialTimePicker extends View implements ThemeEnable{
 		int arcWidth = (int) (backgroundRange * 0.7F) / 2;
 		int arcHeight = (int) (backgroundRange * 0.7F) / 2;
 		
-		mediumCircleRange = (int) (backgroundRange * 0.675F) / 2;
+		mediumCircleRange = (int) (backgroundRange * exactRangeRatio) / 2;
 		
 		outerPressRange = mediumCircleRange + thumbPressRange / 2;
-		innerPressRange = mediumCircleRange - thumbPressRange / 2;
+		setToKnotMode(isKnotMode);
 		
 		arcBound.top = centerPoint.y - arcHeight;
 		arcBound.left = centerPoint.x - arcWidth;
 		arcBound.right = centerPoint.x + arcWidth;
 		arcBound.bottom = centerPoint.y + arcHeight;
+	}
+	
+	public void setToKnotMode(boolean isKnotMode){
+		this.isKnotMode = isKnotMode;
+		if(isKnotMode){
+			innerPressRange = 0;
+		}else{
+			innerPressRange = mediumCircleRange - thumbPressRange / 2;
+		}
 	}
 	
 	@Override
@@ -183,11 +202,8 @@ public class DialTimePicker extends View implements ThemeEnable{
 				getParent().requestDisallowInterceptTouchEvent(true);
 				if(isCirclePressed){
 					double degree = Math.atan2(dy, dx);
-					drawPoint = centerRadiusPoint(centerPoint, degree, mediumCircleRange);
-					performDial(get360Angel(degree));
-					
-					int tDegree = (int) Math.toDegrees(degree);
-					tDegree = tDegree < 0 ? 180 + (180 + tDegree) : tDegree;
+					int tDegree = get360Angel(degree);
+					performDial(tDegree);
 					
 					int incrementValue = 0;
 					if(null == increment){
@@ -241,12 +257,26 @@ public class DialTimePicker extends View implements ThemeEnable{
 		return mode;
 	}
 	
+	public void setDegreeRange(int min, int max){
+		minDegreeRange = min;
+		maxDegreeRange = max;
+	}
+	
 	//perform a dial action ever there's no touch event input
 	/**
 	 * angel in degrees
 	 * @param angel
 	 */
 	public void performDial(int angel){
+		
+		if(maxDegreeRange != -1 && minDegreeRange != -1){
+			int offsetMinus = (360 - (maxDegreeRange - minDegreeRange)) / 2;
+			int offsetPlus = (maxDegreeRange - minDegreeRange) / 2;
+			
+			if(isInRange(maxDegreeRange, offsetMinus, angel) && isInRange(maxDegreeRange, offsetPlus, drawDegree)) angel = maxDegreeRange;
+			
+			if(isInRange(minDegreeRange, offsetMinus, angel) && isInRange(minDegreeRange, offsetPlus, drawDegree)) angel = minDegreeRange;
+		}
 		
 		int angelOffset = 89;
 		
@@ -256,13 +286,15 @@ public class DialTimePicker extends View implements ThemeEnable{
 		
 		drawDegree = angel;
 		
-		double realAngle = angel - 90;
-		if(realAngle >= 180 && realAngle < 270){
-			realAngle = angel - (360 + 90);
+		double realAngel = angel - 90;
+		if(realAngel >= 180 && realAngel < 270){
+			realAngel = angel - (360 + 90);
 		}
-		realAngle = Math.toRadians(realAngle);
+		
+		realAngel = Math.toRadians(realAngel);
+		
 		isDrawPressPoint = true;
-		drawPoint = centerRadiusPoint(centerPoint, realAngle, mediumCircleRange);
+		drawPoint = centerRadiusPoint(centerPoint, realAngel, mediumCircleRange);
 		invalidate();
 	}
 	
@@ -304,7 +336,7 @@ public class DialTimePicker extends View implements ThemeEnable{
 		}
 	}
 	
-	private Point centerRadiusPoint(Point center, double angle, double radius){
+	protected Point centerRadiusPoint(Point center, double angle, double radius){
 		Point p = new Point();
 		p.x = (int) (radius * Math.cos(angle)) + center.x;
 		p.y = (int) (radius * Math.sin(angle)) + center.y;
@@ -317,9 +349,41 @@ public class DialTimePicker extends View implements ThemeEnable{
 	 * @param angel
 	 * @return
 	 */
-	private int get360Angel(double angel){
+	protected int get360Angel(double angel){
 		angel = Math.toDegrees(angel);
 		return (int) (angel <= -90 && angel >= -180 ? 450 + angel : angel + 90);
+	}
+	
+	protected int angelMinus(int left, int right){
+		if(left - right < 0){
+			return 360 + (left - right);
+		}else{
+			return left - right;
+		}
+	}
+	
+	protected int angelPlus(int left, int right){
+		if(left + right >= 360){
+			return (left + right) - 360;
+		}else{
+			return left + right;
+		}
+	}
+	
+	protected boolean isInRange(int start, int range, int des){
+		if(start + range < 0){
+			return (des >= 0 && des <= start) || (des >= angelMinus(start, -range) && des <= 360);
+		}
+		
+		if(start + range > 360){
+			return (des >= start && des <= 360) || (des >= 0 && des <= angelPlus(start, range));
+		}
+		
+		if(range > 0){
+			return des >= start && des <= start + range;
+		}else{
+			return des >= start + range && des <= start;
+		}
 	}
 	
 	//for Theme management

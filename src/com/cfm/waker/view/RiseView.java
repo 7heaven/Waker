@@ -54,6 +54,11 @@ public class RiseView extends View {
 		ta.recycle();
 		
 		rect = new RectF();
+		rect.left = 0;
+		rect.top = getMeasuredHeight();
+		rect.right = 0;
+		rect.bottom = getMeasuredHeight();
+		
 		paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 	}
 	
@@ -63,16 +68,6 @@ public class RiseView extends View {
 	
 	public OnStateChangeListener getOnStateChangeListener(){
 		return mOnStateChangeListener;
-	}
-	
-	@Override
-	public void onMeasure(int widthMeasureSpec, int heightMeasureSpec){
-		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-		
-		rect.left = 0;
-		rect.top = 0;
-		rect.right = getMeasuredWidth();
-		rect.bottom = getMeasuredHeight();
 	}
 	
 	public void setColor(int color){

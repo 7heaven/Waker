@@ -37,6 +37,8 @@
     
     <declare-styleable name="DialTimePicker">
         <attr name="color" />
+        <attr name="degreeRange_max" format="integer" />
+        <attr name="degreeRange_min" format="integer" />
     </declare-styleable>
     
 </resources>

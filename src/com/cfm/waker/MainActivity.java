@@ -117,7 +117,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		
 		theme = ThemeManager.getInstance(this);
 		theme.registerThemeObject(dialTimePicker);
-		
+
 		pickingTime = false;
 		
 		viewPagerLayout = (FrameLayout) findViewById(R.id.viewpager_layout);

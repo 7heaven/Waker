@@ -31,6 +31,8 @@ import android.os.IBinder;
 
 public class WakerService extends Service {
 	
+	private static final String TAG = "WakerService";
+	
 	private Context context;
 	
 	private int alarmId;
@@ -48,7 +50,7 @@ public class WakerService extends Service {
 	@Override
 	public void onCreate(){
 		super.onCreate();
-		WLog.print("SERVICE", "service started");
+		WLog.print(TAG, "service started");
 		context = getBaseContext();
 		
 		alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -57,14 +59,14 @@ public class WakerService extends Service {
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId){
-		WLog.print("SERVICE", "onStartCommand");
+		WLog.print(TAG, "onStartCommand");
 		
         alarmId = 0;
 		
 		Intent nextDaySetIntent = new Intent(context, SetNextDayReceiver.class);
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, nextDaySetIntent, alarmId);
 		alarmManager.set(AlarmManager.RTC_WAKEUP, getNextZero(), pendingIntent);
-		WLog.print("SERVICE", new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA).format(new Date(getNextZero())));
+		WLog.print(TAG, new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA).format(new Date(getNextZero())));
 		
 		setAlarms();
 		
@@ -87,9 +89,21 @@ public class WakerService extends Service {
 	public void setAlarm(Alarm alarm){
 		alarmId++;
 		
-		long currentTime = System.currentTimeMillis();
-		long time = alarm.getCalendar().getTimeInMillis();
-		if(currentTime < time && alarm.isEnabled() && isDaySet(alarm)){
+		Calendar calendar = Calendar.getInstance();
+		Calendar alarmCalendar = alarm.getCalendar();
+		
+		boolean isHourBefore = calendar.get(Calendar.HOUR_OF_DAY) < alarmCalendar.get(Calendar.HOUR_OF_DAY);
+		boolean isHourAfter = calendar.get(Calendar.HOUR_OF_DAY) == alarmCalendar.get(Calendar.HOUR_OF_DAY); 
+		boolean isMinuteBefore = calendar.get(Calendar.MINUTE) < alarmCalendar.get(Calendar.MINUTE); 
+		
+		WLog.print(TAG, ((Boolean) (isHourBefore && isMinuteBefore)).toString());
+		if((isHourBefore || (isMinuteBefore && isHourAfter)) && alarm.isEnabled() && isDaySet(alarm)){
+			calendar.set(Calendar.HOUR_OF_DAY, alarmCalendar.get(Calendar.HOUR_OF_DAY));
+			calendar.set(Calendar.MINUTE, alarmCalendar.get(Calendar.MINUTE));
+			
+			long time = calendar.getTimeInMillis();
+			
+			WLog.print(TAG, "setting today's alarm");
 			Intent alarmIntent = new Intent(this, ShakeActivity.class);
 			alarmIntent.putExtra(Constants.ALARM_ID, alarm.getId());
 			alarmIntent.putExtra(Constants.ALARM_SNOOZE_COUNT, 0);
