@@ -123,8 +123,8 @@
         android:layout_width="250.0dip"
         android:layout_height="250.0dip"
         android:layout_gravity="center"
-        waker:degreeRange_min="1"
-        waker:degreeRange_max="180"
+        waker:degreeRange_min="300"
+        waker:degreeRange_max="60"
         waker:color="@color/global_hint_color" />
     
 </LinearLayout>

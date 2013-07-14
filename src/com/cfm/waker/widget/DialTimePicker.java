@@ -30,20 +30,17 @@ public class DialTimePicker extends View implements ThemeEnable{
 	
 	private int mode = MODE_PICK;
 	
-	private int mediumCircleRange;
+	protected int mediumCircleRange;
 	protected float exactRangeRatio = 0.675F;
 	
-	private int thumbPressRange;
+	protected int thumbPressRange;
 	
 	private int outerPressRange;
 	private int innerPressRange;
 	
-	private int maxDegreeRange;
-	private int minDegreeRange;
-	
 	private int circleWidth;
 	
-	private Point centerPoint;
+	protected Point centerPoint;
 	
 	protected Point drawPoint;
 	
@@ -52,7 +49,7 @@ public class DialTimePicker extends View implements ThemeEnable{
 	private Drawable seekerDrawable;
 	protected int backgroundRange;
 	//private int arcDrawOffset;
-	protected int drawDegree;
+	protected int drawDegree = 0;
 	
 	private Integer increment;
 	
@@ -65,10 +62,10 @@ public class DialTimePicker extends View implements ThemeEnable{
 	private boolean convert;
 	private boolean isKnotMode;
 	
-	private boolean isCenterPressed;
-	private boolean isCirclePressed;
-	private boolean isDrawPressPoint;
-	private boolean isDrawCenterButtonPressed;
+	protected boolean isCenterPressed;
+	protected boolean isCirclePressed;
+	protected boolean isDrawPressPoint;
+	protected boolean isDrawCenterButtonPressed;
 	
 	public interface OnTimePickListener{
 		
@@ -108,8 +105,6 @@ public class DialTimePicker extends View implements ThemeEnable{
 		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.DialTimePicker);
 		
 		paint.setColor(ta.getColor(R.styleable.DialTimePicker_color, 0xFF5CA4E5));
-		maxDegreeRange = ta.getInt(R.styleable.DialTimePicker_degreeRange_max, -1);
-		minDegreeRange = ta.getInt(R.styleable.DialTimePicker_degreeRange_min, -1);
 		
 		ta.recycle();
 		
@@ -153,6 +148,8 @@ public class DialTimePicker extends View implements ThemeEnable{
 		arcBound.left = centerPoint.x - arcWidth;
 		arcBound.right = centerPoint.x + arcWidth;
 		arcBound.bottom = centerPoint.y + arcHeight;
+		
+		performDial(drawDegree);
 	}
 	
 	public void setToKnotMode(boolean isKnotMode){
@@ -257,10 +254,6 @@ public class DialTimePicker extends View implements ThemeEnable{
 		return mode;
 	}
 	
-	public void setDegreeRange(int min, int max){
-		minDegreeRange = min;
-		maxDegreeRange = max;
-	}
 	
 	//perform a dial action ever there's no touch event input
 	/**
@@ -268,15 +261,6 @@ public class DialTimePicker extends View implements ThemeEnable{
 	 * @param angel
 	 */
 	public void performDial(int angel){
-		
-		if(maxDegreeRange != -1 && minDegreeRange != -1){
-			int offsetMinus = (360 - (maxDegreeRange - minDegreeRange)) / 2;
-			int offsetPlus = (maxDegreeRange - minDegreeRange) / 2;
-			
-			if(isInRange(maxDegreeRange, offsetMinus, angel) && isInRange(maxDegreeRange, offsetPlus, drawDegree)) angel = maxDegreeRange;
-			
-			if(isInRange(minDegreeRange, offsetMinus, angel) && isInRange(minDegreeRange, offsetPlus, drawDegree)) angel = minDegreeRange;
-		}
 		
 		int angelOffset = 89;
 		

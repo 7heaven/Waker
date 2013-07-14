@@ -1,16 +1,26 @@
 package com.cfm.waker.widget;
 
 import com.cfm.waker.R;
+import com.cfm.waker.log.WLog;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 
 public class Knob extends DialTimePicker{
 	
+	private static final String TAG = "Knob";
+	
 	private Drawable backgroundDrawable;
 	private Drawable dotDrawable;
+	
+	private int maxDegreeRange;
+	private int minDegreeRange;
+	
+	private int offset;
 	
 	private float dotRangeRatio = 0.05F;
 
@@ -30,7 +40,14 @@ public class Knob extends DialTimePicker{
 		backgroundDrawable = context.getResources().getDrawable(R.drawable.background_knob);
 		dotDrawable = context.getResources().getDrawable(R.drawable.dot_knob);
 		
-		exactRangeRatio = 0.75F;
+		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.Knob);
+		maxDegreeRange = ta.getInt(R.styleable.Knob_degreeRange_max, -1);
+		minDegreeRange = ta.getInt(R.styleable.Knob_degreeRange_min, -1);
+		ta.recycle();
+		
+		if(minDegreeRange != 0) drawDegree = minDegreeRange;
+		
+		exactRangeRatio = 0.65F;
 	}
 	
 	@Override
@@ -44,5 +61,50 @@ public class Knob extends DialTimePicker{
 		canvas.drawCircle(drawPoint.x, drawPoint.y, dotRange * 0.45F, paint);
 		dotDrawable.setBounds(drawPoint.x - halfDotRange, drawPoint.y - halfDotRange, drawPoint.x + halfDotRange, drawPoint.y + halfDotRange);
 		dotDrawable.draw(canvas);
+	}
+	
+	@Override
+	public boolean onTouchEvent(MotionEvent event){
+		if((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_DOWN){
+			double dx = event.getX() - centerPoint.x;
+			double dy = event.getY() - centerPoint.y;
+			offset = angelMinus(get360Angel(Math.atan2(dy, dx)), drawDegree);
+		}
+		
+		return super.onTouchEvent(event);
+	}
+	
+	@Override
+	public void performDial(int angel){
+		int r = angelMinus(angel, offset);
+		if(maxDegreeRange != -1 && minDegreeRange != -1){
+			//when move ACW & drawDegree exceed minDegreeRange;
+			if(angelMinus(drawDegree, r) < 179 && angelMinus(minDegreeRange, r) < 179){
+				WLog.print(TAG, "min");
+				offset = angelMinus(angel, drawDegree);
+				drawDegree = minDegreeRange;
+			//when move CW & drawDegree exceed maxDegreeRange;
+			}else if(angelMinus(r, drawDegree) < 179 && angelMinus(r, maxDegreeRange) < 179){
+				WLog.print(TAG, "max");
+				offset = angelMinus(angel, drawDegree);
+				drawDegree = maxDegreeRange;
+			}else{
+				drawDegree = r;
+			}
+		}else{
+		    drawDegree = r;
+		}
+		
+		double realAngel = drawDegree - 90;
+		if(realAngel >= 180 && realAngel < 270){
+			realAngel = drawDegree - (360 + 90);
+		}
+		
+        realAngel = Math.toRadians(realAngel);
+		
+		isDrawPressPoint = true;
+		drawPoint = centerRadiusPoint(centerPoint, realAngel, mediumCircleRange * 1.1F);
+		
+		invalidate();
 	}
 }
