@@ -21,9 +21,9 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-public class DialTimePicker extends View implements ThemeEnable{
+public class DialPicker extends View implements ThemeEnable{
 	
-	private static final String TAG = "DialTimePicker";
+	private static final String TAG = "DialPicker";
 	
 	public static final int MODE_PICK = 0;
 	public static final int MODE_CONFIRM = 1;
@@ -78,15 +78,15 @@ public class DialTimePicker extends View implements ThemeEnable{
 		public void onCenterClick();
 	}
 
-	public DialTimePicker(Context context){
+	public DialPicker(Context context){
 		this(context, null);
 	}
 	
-	public DialTimePicker(Context context, AttributeSet attrs){
+	public DialPicker(Context context, AttributeSet attrs){
 		this(context, attrs, 0);
 	}
 	
-	public DialTimePicker(Context context, AttributeSet attrs, int defStyle){
+	public DialPicker(Context context, AttributeSet attrs, int defStyle){
 		super(context, attrs, defStyle);
 		
 		circleWidth = (int) context.getResources().getDimension(R.dimen.dialtimepicker_default_circlewidth);
@@ -102,9 +102,9 @@ public class DialTimePicker extends View implements ThemeEnable{
 		//arcDrawOffset = (int) context.getResources().getDimension(R.dimen.dialtimepicker_default_arcdrawoffset);
 		
 		paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.DialTimePicker);
+		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.DialPicker);
 		
-		paint.setColor(ta.getColor(R.styleable.DialTimePicker_color, 0xFF5CA4E5));
+		paint.setColor(ta.getColor(R.styleable.DialPicker_color, 0xFF5CA4E5));
 		
 		ta.recycle();
 		
@@ -381,9 +381,6 @@ public class DialTimePicker extends View implements ThemeEnable{
 	public void setThemeBackground(Drawable drawable) {}
 
 	@Override
-	public void setThemeResources(String path) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void setThemeResources(String path) {}
 
 }

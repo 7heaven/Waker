@@ -35,7 +35,7 @@
         <attr name="textPaddingOffset" format="dimension" />
     </declare-styleable>
     
-    <declare-styleable name="DialTimePicker">
+    <declare-styleable name="DialPicker">
         <attr name="color" />
     </declare-styleable>
     

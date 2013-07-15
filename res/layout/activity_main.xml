@@ -16,7 +16,7 @@
             android:layout_height="320.0dip"
             android:layout_centerInParent="true" >
             
-            <com.cfm.waker.widget.DialTimePicker
+            <com.cfm.waker.widget.DialPicker
                 android:id="@+id/time_pick"
                 android:layout_width="320.0dip"
                 android:layout_height="320.0dip"

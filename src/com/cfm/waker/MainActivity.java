@@ -24,9 +24,9 @@ import com.cfm.waker.ui.SettingActivity;
 import com.cfm.waker.ui.base.BaseSlidableActivity;
 import com.cfm.waker.view.WakerViewPager;
 import com.cfm.waker.widget.DebossFontText;
-import com.cfm.waker.widget.DialTimePicker;
+import com.cfm.waker.widget.DialPicker;
 import com.cfm.waker.widget.WakerToast;
-import com.cfm.waker.widget.DialTimePicker.OnTimePickListener;
+import com.cfm.waker.widget.DialPicker.OnTimePickListener;
 import com.cfm.waker.widget.WeekSelector;
 
 import android.app.Activity;
@@ -49,7 +49,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	
 	private DebossFontText timeText;
 	private DebossFontText amPm;
-	private DialTimePicker dialTimePicker;
+	private DialPicker dialPicker;
 	private WeekSelector weekSelector;
 	private RelativeLayout dialLayout;
 	
@@ -94,8 +94,8 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		dialTimePicker = (DialTimePicker) findViewById(R.id.time_pick);
-		dialTimePicker.setOnTimePickListener(this);
+		dialPicker = (DialPicker) findViewById(R.id.time_pick);
+		dialPicker.setOnTimePickListener(this);
 		dialLayout = (RelativeLayout) findViewById(R.id.dial_layout);
 		
 		timeText = (DebossFontText) findViewById(R.id.time);
@@ -116,7 +116,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		}
 		
 		theme = ThemeManager.getInstance(this);
-		theme.registerThemeObject(dialTimePicker);
+		theme.registerThemeObject(dialPicker);
 
 		pickingTime = false;
 		
@@ -151,7 +151,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 			
 			@Override
 			public void onVerticallySlide(int distance){
-				if(dialTimePicker.getMode() != DialTimePicker.MODE_CONFIRM){
+				if(dialPicker.getMode() != DialPicker.MODE_CONFIRM){
 					int disV = vy - distance;
 					int disD = dy - distance;
 					
@@ -227,7 +227,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 			if(!pickingTime){
 				calendar = Calendar.getInstance();
 				
-				dialTimePicker.performDial(6 * calendar.get(Calendar.SECOND));
+				dialPicker.performDial(6 * calendar.get(Calendar.SECOND));
 				timeText.setText(dateFormat.format(calendar.getTime()));
 				if(!mApplication.is24()) amPm.setText(new SimpleDateFormat("a", Locale.CHINA).format(calendar.getTime()));
 				
@@ -348,7 +348,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	
 	@Override
 	public void onStopPick(){
-		dialTimePicker.setMode(DialTimePicker.MODE_CONFIRM);
+		dialPicker.setMode(DialPicker.MODE_CONFIRM);
 		
 		contentMovement(2);
 	}
@@ -369,7 +369,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 			WakerToast.makePositiveText(this, getString(R.string.alarm_set, alarm.getFormatedTime()), Toast.LENGTH_LONG).show();
 			
 			contentMovement(1);
-			dialTimePicker.setMode(DialTimePicker.MODE_PICK);
+			dialPicker.setMode(DialPicker.MODE_PICK);
 			
 			handler.post(tRunnable);
 		}

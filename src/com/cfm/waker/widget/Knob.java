@@ -10,7 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-public class Knob extends DialTimePicker{
+public class Knob extends DialPicker{
 	
 	private static final String TAG = "Knob";
 	
@@ -77,6 +77,8 @@ public class Knob extends DialTimePicker{
 	@Override
 	public void performDial(int angel){
 		int r = angelMinus(angel, offset);
+		
+		//to prevent drawDegree exceed Range
 		if(maxDegreeRange != -1 && minDegreeRange != -1){
 			//when move ACW & drawDegree exceed minDegreeRange;
 			if(angelMinus(drawDegree, r) < 179 && angelMinus(minDegreeRange, r) < 179){

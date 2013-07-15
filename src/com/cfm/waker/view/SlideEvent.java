@@ -29,9 +29,9 @@ public class SlideEvent {
 	public static final int    TOUCHMODE_DIRECTION_VERTICAL = 0x00000020;
 	
 	//this mask is use to ignore direction when trying to detect a dragging action
-	public static final int         TOUCHMODE_DRAGGING_MASK = 0x0000000F;
+	public static final int            ACTION_DRAGGING_MASK = 0x0000000F;
 	//this mask is use to ignore a dragging action that whether it just started or dragging is on going when trying to detect dragging direction 
-	public static final int        TOUCHMODE_DIRECTION_MASK = 0x000000F0;
+	public static final int           ACTION_DIRECTION_MASK = 0x000000F0;
 	
 	private int touchMode;
 	private int previouslyMode;

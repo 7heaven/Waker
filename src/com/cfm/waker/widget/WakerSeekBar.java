@@ -28,6 +28,10 @@ public class WakerSeekBar extends BaseSlideWidget{
 	@Override
 	public boolean onSlideEvent(SlideEvent event) {
 		
+		switch(event.getAction() & SlideEvent.ACTION_DRAGGING_MASK){
+		
+		}
+		
 		return false;
 	}
 }
