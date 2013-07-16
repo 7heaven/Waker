@@ -2,129 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:waker="http://schemas.android.com/apk/res/com.cfm.waker"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="6.0dip"
-    android:paddingRight="6.0dip"
-    android:paddingTop="6.0dip"
-    android:paddingBottom="6.0dip"
-    android:orientation="vertical" >
-    
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="10.0dip"
-        android:text="@string/setting_page_alarm_style"
-        android:textColor="#555555"
-        android:gravity="center" />
-    
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="100.0dip"
-        android:paddingTop="6.0dip"
-        android:orientation="horizontal" >
-        
-        <Button
-            android:id="@+id/slap_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1.0"
-            android:text="123" />
-        
-        <Button
-            android:id="@+id/shake_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1.0"
-            android:text="321" />
-        
-        <Button
-            android:id="@+id/swipe_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1.0"
-            android:text="312" />
-        
-    </LinearLayout>
-    
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="6.0dip"
-        android:paddingRight="6.0dip"
-        android:paddingTop="6.0dip"
-        android:orientation="horizontal" >
-        
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1.0"
-            android:text="@string/setting_page_shake_level"
-            android:textColor="#555555"
-            android:textSize="16.0dip"
-            android:gravity="center|left" />
-        
-        <com.cfm.waker.widget.SlideSwitcher
-            android:layout_width="40.0dip"
-            android:layout_height="40.0dip" />
-        
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="6.0dip"
-        android:paddingRight="6.0dip"
-        android:paddingTop="6.0dip"
-        android:orientation="horizontal" >
-        
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1.0"
-            android:text="@string/setting_page_snooze_time"
-            android:textColor="#555555"
-            android:textSize="16.0dip"
-            android:gravity="center|left" />
-        
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        
-    </LinearLayout>
-    
-    <LinearLayout 
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="6.0dip"
-        android:paddingRight="6.0dip"
-        android:paddingTop="6.0dip"
-        android:orientation="horizontal" >
-        
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1.0"
-            android:text="@string/setting_page_alarm_volume"
-            android:textColor="#555555"
-            android:textSize="16.0dip"
-            android:gravity="center|left" />
-        
-        <SeekBar 
-            android:id="@+id/volume"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.0"/>
-        
-    </LinearLayout>
+    android:layout_height="match_parent" >
     
     <com.cfm.waker.widget.Knob
         android:id="@+id/volume_picker"
         android:layout_width="250.0dip"
         android:layout_height="250.0dip"
-        android:layout_gravity="center"
-        waker:degreeRange_min="300"
-        waker:degreeRange_max="60"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="170.0dip"
+        waker:degreeRange_min="210"
+        waker:degreeRange_max="330"
         waker:color="@color/global_hint_color" />
     
 </LinearLayout>

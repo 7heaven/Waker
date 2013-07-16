@@ -74,6 +74,22 @@ public class Knob extends DialPicker{
 		return super.onTouchEvent(event);
 	}
 	
+	public float getValue(){
+		float returnValue = 1F - (float) angelMinus(maxDegreeRange, drawDegree) / (float) angelMinus(maxDegreeRange,minDegreeRange);
+		WLog.print(getClass(), returnValue + "");
+		return returnValue;
+	}
+	
+	public void setValue(float value){
+		int degree = (int) (angelMinus(maxDegreeRange, minDegreeRange) * value);
+		
+		WLog.print(getClass(), degree + ":" + value);
+		
+		offset = 0;
+		drawDegree = angelPlus(minDegreeRange, degree);
+		performDial(drawDegree);
+	}
+	
 	@Override
 	public void performDial(int angel){
 		int r = angelMinus(angel, offset);

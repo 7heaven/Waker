@@ -8,6 +8,10 @@ public class WLog {
 		Log.d(c.getSimpleName(), content);
 	}
 	
+	public static void print(Object object, String content){
+		Log.d(object.getClass().getSimpleName(), content);
+	}
+	
 	public static void print(String tag, String content){
 		Log.d(tag, content);
 	}

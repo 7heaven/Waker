@@ -56,6 +56,7 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 	private int touchMode;
 	
 	private boolean horizontallyScrollOnly = false;
+	private boolean disallowVerticallyScroll = false;
 	
 	protected OnSlideListener mOnSlideListener;
 	
@@ -160,6 +161,10 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 	
 	public void setIsHorizontallyOnly(boolean arg){
 		horizontallyScrollOnly = arg;
+	}
+	
+	public void disallowVerticallyScroll(boolean arg){
+		disallowVerticallyScroll = arg;
 	}
 	
 	//all those reduplicated and seems unnecessary codes are wrote to prevent TouchEvent being intercept by child view if any child view have it's own onTouchEvent

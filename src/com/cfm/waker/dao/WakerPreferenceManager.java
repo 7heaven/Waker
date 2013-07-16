@@ -23,6 +23,7 @@ public class WakerPreferenceManager {
 	private static final String SCREEN_DENSITY = "screen_density";
 	private static final String SCREEN_WIDTH = "screen_width";
 	private static final String SCREEN_HEIGHT = "screen_height";
+	private static final String STATUSBAR_HEIGHT = "statusbar_height";
 	
 	//settings
 	private static final String GLOBAL_SHAKE_LEVEL = "global_shakelevel";
@@ -84,6 +85,14 @@ public class WakerPreferenceManager {
 		return getPreference().getInt(SCREEN_HEIGHT, 800);
 	}
 	
+	public void setStatusBarHeight(int height){
+		getPreference().edit().putInt(STATUSBAR_HEIGHT, height).commit();
+	}
+	
+	public int getStatusBarHeight(){
+		return getPreference().getInt(STATUSBAR_HEIGHT, 0);
+	}
+	
 	public void setGlobalShakeLevel(int level){
 		getPreference().edit().putInt(GLOBAL_SHAKE_LEVEL, level).commit();
 	}
@@ -109,7 +118,7 @@ public class WakerPreferenceManager {
 	}
 	
 	public void setGlobalAlarmVolume(float volume){
-		getPreference().edit().putFloat(GLOBAL_ALARM_VOLUME, volume);
+		getPreference().edit().putFloat(GLOBAL_ALARM_VOLUME, volume).commit();
 	}
 	
 	public float getGlobalAlarmVolume(){
