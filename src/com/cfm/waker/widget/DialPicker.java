@@ -15,6 +15,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -47,7 +48,6 @@ public class DialPicker extends View implements ThemeEnable{
 	private Drawable backgroundDrawable;
 	private Drawable backgroundPressedDrawable;
 	private Drawable seekerDrawable;
-	protected int backgroundRange;
 	//private int arcDrawOffset;
 	protected int drawDegree = 0;
 	
@@ -56,6 +56,7 @@ public class DialPicker extends View implements ThemeEnable{
 	protected Paint paint;
 	
 	private RectF arcBound;
+	protected Rect backgroundBound;
 	
 	private OnTimePickListener mOnTimePickListener;
 	
@@ -89,16 +90,16 @@ public class DialPicker extends View implements ThemeEnable{
 	public DialPicker(Context context, AttributeSet attrs, int defStyle){
 		super(context, attrs, defStyle);
 		
-		circleWidth = (int) context.getResources().getDimension(R.dimen.dialtimepicker_default_circlewidth);
+		circleWidth = (int) context.getResources().getDimension(R.dimen.dialpicker_default_circlewidth);
 		
-		thumbPressRange = (int) context.getResources().getDimension(R.dimen.dialtimepicker_default_thumbpressrange);
+		thumbPressRange = (int) context.getResources().getDimension(R.dimen.dialpicker_default_thumbpressrange);
 		
 		centerPoint = new Point();
 		drawPoint = new Point();
 		
-		backgroundDrawable = context.getResources().getDrawable(R.drawable.background_dialtimepicker);
-		backgroundPressedDrawable =context.getResources().getDrawable(R.drawable.background_dialtimepicker_pressed);
-		seekerDrawable = context.getResources().getDrawable(R.drawable.seeker_dialtimepicker);
+		backgroundDrawable = context.getResources().getDrawable(R.drawable.background_dialpicker);
+		backgroundPressedDrawable =context.getResources().getDrawable(R.drawable.background_dialpicker_pressed);
+		seekerDrawable = context.getResources().getDrawable(R.drawable.seeker_dialpicker);
 		//arcDrawOffset = (int) context.getResources().getDimension(R.dimen.dialtimepicker_default_arcdrawoffset);
 		
 		paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -109,6 +110,7 @@ public class DialPicker extends View implements ThemeEnable{
 		ta.recycle();
 		
 		arcBound = new RectF();
+		backgroundBound = new Rect();
 		
 		convert = false;
 		isKnotMode = false;
@@ -134,20 +136,25 @@ public class DialPicker extends View implements ThemeEnable{
 		centerPoint.x = getMeasuredWidth() / 2;
 		centerPoint.y = getMeasuredHeight() / 2;
 		
-		backgroundRange = getMeasuredWidth() > getMeasuredHeight() ? getMeasuredHeight() : getMeasuredWidth();
+		int backgroundRange = getMeasuredWidth() > getMeasuredHeight() ? getMeasuredHeight() : getMeasuredWidth();
+		int halfBackgroundRange = backgroundRange / 2;
 		
-		int arcWidth = (int) (backgroundRange * 0.7F) / 2;
-		int arcHeight = (int) (backgroundRange * 0.7F) / 2;
+		backgroundBound.top = centerPoint.y - halfBackgroundRange;
+		backgroundBound.left = centerPoint.x - halfBackgroundRange;
+		backgroundBound.right = centerPoint.x + halfBackgroundRange;
+		backgroundBound.bottom = centerPoint.y + halfBackgroundRange;
+		
+		int arcRange = (int) (backgroundRange * 0.7F) / 2;
 		
 		mediumCircleRange = (int) (backgroundRange * exactRangeRatio) / 2;
 		
 		outerPressRange = mediumCircleRange + thumbPressRange / 2;
 		setToKnotMode(isKnotMode);
 		
-		arcBound.top = centerPoint.y - arcHeight;
-		arcBound.left = centerPoint.x - arcWidth;
-		arcBound.right = centerPoint.x + arcWidth;
-		arcBound.bottom = centerPoint.y + arcHeight;
+		arcBound.top = centerPoint.y - arcRange;
+		arcBound.left = centerPoint.x - arcRange;
+		arcBound.right = centerPoint.x + arcRange;
+		arcBound.bottom = centerPoint.y + arcRange;
 		
 		performDial(drawDegree);
 	}
@@ -186,6 +193,7 @@ public class DialPicker extends View implements ThemeEnable{
 					if(pressedRange > innerPressRange){
 						isCirclePressed = true;
 						if(null != mOnTimePickListener) mOnTimePickListener.onStartPick();
+						performDial(get360Angle(Math.atan2(y, x)));
 					}
 				}
 				break;
@@ -193,13 +201,12 @@ public class DialPicker extends View implements ThemeEnable{
 			
 			break;
 		case MotionEvent.ACTION_MOVE:
-			double dx = event.getX() - centerPoint.x;
-			double dy = event.getY() - centerPoint.y;
+			float dx = event.getX() - centerPoint.x;
+			float dy = event.getY() - centerPoint.y;
 			if(isDrawPressPoint){
 				getParent().requestDisallowInterceptTouchEvent(true);
 				if(isCirclePressed){
-					double degree = Math.atan2(dy, dx);
-					int tDegree = get360Angel(degree);
+					int tDegree = get360Angle(Math.atan2(dy, dx));
 					performDial(tDegree);
 					
 					int incrementValue = 0;
@@ -257,28 +264,28 @@ public class DialPicker extends View implements ThemeEnable{
 	
 	//perform a dial action ever there's no touch event input
 	/**
-	 * angel in degrees
-	 * @param angel
+	 * angle in degrees
+	 * @param angle
 	 */
-	public void performDial(int angel){
+	public void performDial(int angle){
 		
-		int angelOffset = 89;
+		int angleOffset = 89;
 		
-		if(drawDegree > 360 - angelOffset && angel < angelOffset || angel > 360 - angelOffset && drawDegree < angelOffset){
+		if(drawDegree > 360 - angleOffset && angle < angleOffset || angle > 360 - angleOffset && drawDegree < angleOffset){
 			convert = !convert;
 		}
 		
-		drawDegree = angel;
+		drawDegree = angle;
 		
-		double realAngel = angel - 90;
-		if(realAngel >= 180 && realAngel < 270){
-			realAngel = angel - (360 + 90);
+		double realAngle = angle - 90;
+		if(realAngle >= 180 && realAngle < 270){
+			realAngle = angle - (360 + 90);
 		}
 		
-		realAngel = Math.toRadians(realAngel);
+		realAngle = Math.toRadians(realAngle);
 		
 		isDrawPressPoint = true;
-		drawPoint = centerRadiusPoint(centerPoint, realAngel, mediumCircleRange);
+		drawPoint = centerRadiusPoint(centerPoint, realAngle, mediumCircleRange);
 		invalidate();
 	}
 	
@@ -303,10 +310,10 @@ public class DialPicker extends View implements ThemeEnable{
 		
 		//background
 		if(isDrawCenterButtonPressed){
-			backgroundPressedDrawable.setBounds(0, 0, getMeasuredWidth(), getMeasuredHeight());
+			backgroundPressedDrawable.setBounds(backgroundBound);
 			backgroundPressedDrawable.draw(canvas);
 		}else{
-			backgroundDrawable.setBounds(0, 0, getMeasuredWidth(), getMeasuredHeight());
+			backgroundDrawable.setBounds(backgroundBound);
 			backgroundDrawable.draw(canvas);
 		}
 		
@@ -329,16 +336,16 @@ public class DialPicker extends View implements ThemeEnable{
 	}
 	
 	/**
-	 * angel in radians
+	 * angle in radians
 	 * @param angel
 	 * @return
 	 */
-	protected int get360Angel(double angel){
-		angel = Math.toDegrees(angel);
-		return (int) (angel <= -90 && angel >= -180 ? 450 + angel : angel + 90);
+	protected int get360Angle(double angle){
+		angle = Math.toDegrees(angle);
+		return (int) (angle <= -90 && angle >= -180 ? 450 + angle : angle + 90);
 	}
 	
-	protected int angelMinus(int left, int right){
+	protected int angleMinus(int left, int right){
 		if(left - right < 0){
 			return 360 + (left - right);
 		}else{
@@ -346,7 +353,7 @@ public class DialPicker extends View implements ThemeEnable{
 		}
 	}
 	
-	protected int angelPlus(int left, int right){
+	protected int anglePlus(int left, int right){
 		if(left + right >= 360){
 			return (left + right) - 360;
 		}else{
@@ -356,11 +363,11 @@ public class DialPicker extends View implements ThemeEnable{
 	
 	protected boolean isInRange(int start, int range, int des){
 		if(start + range < 0){
-			return (des >= 0 && des <= start) || (des >= angelMinus(start, -range) && des <= 360);
+			return (des >= 0 && des <= start) || (des >= angleMinus(start, -range) && des <= 360);
 		}
 		
 		if(start + range > 360){
-			return (des >= start && des <= 360) || (des >= 0 && des <= angelPlus(start, range));
+			return (des >= start && des <= 360) || (des >= 0 && des <= anglePlus(start, range));
 		}
 		
 		if(range > 0){

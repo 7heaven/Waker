@@ -12,8 +12,6 @@ import com.cfm.waker.R;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 
 import com.cfm.waker.dao.WakerPreferenceManager;
 import com.cfm.waker.log.WLog;
@@ -32,6 +30,7 @@ public class SettingActivity extends BaseSlidableActivity{
 		setContentView(R.layout.activity_settings);
 		
 		knob = (Knob) findViewById(R.id.volume_picker);
+		theme.registerThemeObject(knob);
 		
 		knob.setOnTimePickListener(new OnTimePickListener(){
 
@@ -70,7 +69,7 @@ public class SettingActivity extends BaseSlidableActivity{
 		});
 		 */
 		
-		mOnSlideListener = new OnSlideListener(){
+		setOnSlideListener(new OnSlideListener(){
 			int y;
 			int screenHeight = WakerPreferenceManager.getInstance(SettingActivity.this).getScreenHeight() - 
 					           WakerPreferenceManager.getInstance(SettingActivity.this).getStatusBarHeight();
@@ -110,7 +109,7 @@ public class SettingActivity extends BaseSlidableActivity{
 			@Override
 			public void onVerticallySlideReleased() {}
 			
-		};
+		});
 	}
 	
 	@Override
@@ -121,25 +120,21 @@ public class SettingActivity extends BaseSlidableActivity{
 	
 	@Override
 	protected Class<? extends Activity> getLeftActivityClass() {
-		// TODO Auto-generated method stub
 		return this.getClass();
 	}
 
 	@Override
 	protected Class<? extends Activity> getRightActivityClass() {
-		// TODO Auto-generated method stub
 		return AboutActivity.class;
 	}
 
 	@Override
 	protected Drawable getLeftDrawable() {
-		// TODO Auto-generated method stub
 		return getResources().getDrawable(R.drawable.icon_mainpage);
 	}
 
 	@Override
 	protected Drawable getRightDrawable() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

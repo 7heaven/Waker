@@ -23,6 +23,7 @@ public class WakerApplication extends Application{
 	private WakerPreferenceManager preferenceManager;
 	
 	private boolean isDatabaseChanged;
+	private boolean isThemeChanged;
 	
 	@Override
 	public void onCreate(){
@@ -68,6 +69,14 @@ public class WakerApplication extends Application{
 	
 	public void setDatabaseChanged(boolean isDatabaseChanged){
 		this.isDatabaseChanged = isDatabaseChanged;
+	}
+	
+	public boolean isThemeChanged(){
+		return isThemeChanged;
+	}
+	
+	public void setThemeChanged(boolean isThemeChanged){
+		this.isThemeChanged = isThemeChanged;
 	}
 	
 	public void notifyDatabaseChanged(){

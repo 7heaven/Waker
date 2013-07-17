@@ -4,10 +4,10 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     
-    <!-- DialTimePicker -->
-    <dimen name="dialtimepicker_default_circlewidth">45dip</dimen>
-    <dimen name="dialtimepicker_default_thumbpressrange">60dip</dimen>
-    <dimen name="dialtimepicker_default_arcdrawoffset">2dip</dimen>
+    <!-- DialPicker -->
+    <dimen name="dialpicker_default_circlewidth">45dip</dimen>
+    <dimen name="dialpicker_default_thumbpressrange">60dip</dimen>
+    <dimen name="dialpicker_default_arcdrawoffset">2dip</dimen>
     
     <!-- DebossFontText -->
     <dimen name="debossfonttext_default_offset">1dip</dimen>

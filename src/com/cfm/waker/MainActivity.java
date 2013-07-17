@@ -19,7 +19,6 @@ import com.cfm.waker.entity.Alarm;
 import com.cfm.waker.log.WLog;
 import com.cfm.waker.service.WakerService;
 import com.cfm.waker.service.WakerService.LocalBinder;
-import com.cfm.waker.theme.ThemeManager;
 import com.cfm.waker.ui.SettingActivity;
 import com.cfm.waker.ui.base.BaseSlidableActivity;
 import com.cfm.waker.view.WakerViewPager;
@@ -44,8 +43,6 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 public class MainActivity extends BaseSlidableActivity implements OnTimePickListener{
-	
-	private ThemeManager theme;
 	
 	private DebossFontText timeText;
 	private DebossFontText amPm;
@@ -114,9 +111,6 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 			dateFormat = new SimpleDateFormat("hh:mm", Locale.CHINA);
 			amPm.setVisibility(View.VISIBLE);
 		}
-		
-		theme = ThemeManager.getInstance(this);
-		theme.registerThemeObject(dialPicker);
 
 		pickingTime = false;
 		
@@ -127,7 +121,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		alarmListAdapter = new AlarmListAdapter(this, alarmList);
 		viewPager.setAdapter(alarmListAdapter);
 		
-		mOnSlideListener = new OnSlideListener(){
+		setOnSlideListener(new OnSlideListener(){
 			int vy,dy;
 			
 			@Override
@@ -141,7 +135,6 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 			
 			@Override
 			public void onVerticallySlidePressed(){
-				viewPagerLayout.setVisibility(View.VISIBLE);
 				vy = viewPagerLayout.getScrollY();
 				dy = dialLayout.getScrollY();
 				handler.removeCallbacks(vmRunnable);
@@ -183,7 +176,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 				
 				getContentView().requestLayout();
 			}
-		};
+		});
 		
 		updateAlarmsByDatabase();
 		
@@ -201,6 +194,9 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		
 		Intent serviceIntent = new Intent(this, WakerService.class);
 		startService(serviceIntent);
+		
+		theme.registerThemeObject(dialPicker);
+		theme.setThemeColor(0xFF8BCA09);
 	}
 	
 	@Override
@@ -255,7 +251,6 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		@Override
 		public void run() {
 			if((int) moveX != destinationX || (int) moveY != destinationY){
-				if(view.getVisibility() == View.INVISIBLE) view.setVisibility(View.VISIBLE);
 				moveX += (destinationX - moveX) * 0.51F;
 				moveY += (destinationY - moveY) * 0.51F;
 				view.scrollTo((int) moveX, (int) moveY);
@@ -263,12 +258,13 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 				WLog.print(TAG, "runnable run");
 				
 				handler.postDelayed(this, 20);
-			}else{
+			}/*
+			else{
 				if(hide){
 					WLog.print(TAG, "runnable gone");
 					view.setVisibility(View.INVISIBLE);
 				}
-			}
+			}*/
 			
 		}
 		

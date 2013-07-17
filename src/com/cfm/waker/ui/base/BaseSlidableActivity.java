@@ -56,9 +56,8 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 	private int touchMode;
 	
 	private boolean horizontallyScrollOnly = false;
-	private boolean disallowVerticallyScroll = false;
 	
-	protected OnSlideListener mOnSlideListener;
+	private OnSlideListener mOnSlideListener;
 	
 	private MyRunnable mRunnable;
 	private Handler mHandler;
@@ -163,8 +162,12 @@ public abstract class BaseSlidableActivity extends BaseActivity {
 		horizontallyScrollOnly = arg;
 	}
 	
-	public void disallowVerticallyScroll(boolean arg){
-		disallowVerticallyScroll = arg;
+	public void setOnSlideListener(OnSlideListener onSlideListener){
+		mOnSlideListener = onSlideListener;
+	}
+	
+	public OnSlideListener getOnSlideListener(){
+		return mOnSlideListener;
 	}
 	
 	//all those reduplicated and seems unnecessary codes are wrote to prevent TouchEvent being intercept by child view if any child view have it's own onTouchEvent

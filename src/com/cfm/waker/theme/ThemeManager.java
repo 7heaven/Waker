@@ -17,6 +17,10 @@ public class ThemeManager{
 	private Context context;
 	private static ThemeManager instance;
 	
+	private int currentColor = -1;
+	private Drawable currentBackground;
+	private String currentResourcesPath;
+	
 	private ArrayList<ThemeEnable> themeObjectList;
 	
     public ThemeManager(Context context){
@@ -35,6 +39,8 @@ public class ThemeManager{
     //register ThemeEnable object so that the ThemeManager can manage theme of the ThemeEnable object
     public void registerThemeObject(ThemeEnable themeEnable){
     	themeObjectList.add(themeEnable);
+    	
+    	setCurrent(themeEnable);
     }
     
     //remove ThemeEnable object if theme managements of this object are no longer required;
@@ -43,6 +49,7 @@ public class ThemeManager{
     }
     
     public void setThemeColor(int color){
+    	currentColor = color;
     	if(themeObjectList.size() > 0){
     		int i = 0;
     		do{
@@ -52,6 +59,7 @@ public class ThemeManager{
     }
     
     public void setThemeBackground(Drawable background){
+    	currentBackground = background;
     	if(themeObjectList.size() > 0){
     		int i = 0;
     		do{
@@ -61,11 +69,24 @@ public class ThemeManager{
     }
     
     public void setThemeResources(String path){
+    	currentResourcesPath = path;
     	if(themeObjectList.size() > 0){
     		int i = 0;
     		do{
     			themeObjectList.get(i).setThemeResources(path);
     		}while(++i < themeObjectList.size());
     	}
+    }
+    
+    public void setCurrent(ThemeEnable themeEnable){
+    	if(currentColor != -1) themeEnable.setThemeColor(currentColor);
+    	if(null != currentBackground) themeEnable.setThemeBackground(currentBackground);
+    	if(null != currentResourcesPath) themeEnable.setThemeResources(currentResourcesPath);
+    }
+    
+    public void setCurrent(){
+    	if(currentColor != -1) setThemeColor(currentColor);
+    	if(null != currentBackground) setThemeBackground(currentBackground);
+    	if(null != currentResourcesPath) setThemeResources(currentResourcesPath);
     }
 }

@@ -53,10 +53,10 @@ public class Knob extends DialPicker{
 	@Override
 	public void onDraw(Canvas canvas){
 		
-		backgroundDrawable.setBounds(0, 0, getMeasuredWidth(), getMeasuredHeight());
+		backgroundDrawable.setBounds(backgroundBound);
 		backgroundDrawable.draw(canvas);
 		
-		float dotRange = backgroundRange * dotRangeRatio;
+		float dotRange = backgroundBound.width() * dotRangeRatio;
 		int halfDotRange = (int) (dotRange / 2);
 		canvas.drawCircle(drawPoint.x, drawPoint.y, dotRange * 0.45F, paint);
 		dotDrawable.setBounds(drawPoint.x - halfDotRange, drawPoint.y - halfDotRange, drawPoint.x + halfDotRange, drawPoint.y + halfDotRange);
@@ -68,43 +68,38 @@ public class Knob extends DialPicker{
 		if((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_DOWN){
 			double dx = event.getX() - centerPoint.x;
 			double dy = event.getY() - centerPoint.y;
-			offset = angelMinus(get360Angel(Math.atan2(dy, dx)), drawDegree);
+			offset = angleMinus(get360Angle(Math.atan2(dy, dx)), drawDegree);
 		}
 		
 		return super.onTouchEvent(event);
 	}
 	
 	public float getValue(){
-		float returnValue = 1F - (float) angelMinus(maxDegreeRange, drawDegree) / (float) angelMinus(maxDegreeRange,minDegreeRange);
-		WLog.print(getClass(), returnValue + "");
+		float returnValue = 1F - (float) angleMinus(maxDegreeRange, drawDegree) / (float) angleMinus(maxDegreeRange,minDegreeRange);
 		return returnValue;
 	}
 	
 	public void setValue(float value){
-		int degree = (int) (angelMinus(maxDegreeRange, minDegreeRange) * value);
-		
-		WLog.print(getClass(), degree + ":" + value);
+		int degree = (int) (angleMinus(maxDegreeRange, minDegreeRange) * value);
 		
 		offset = 0;
-		drawDegree = angelPlus(minDegreeRange, degree);
+		drawDegree = anglePlus(minDegreeRange, degree);
 		performDial(drawDegree);
 	}
 	
 	@Override
-	public void performDial(int angel){
-		int r = angelMinus(angel, offset);
+	public void performDial(int angle){
+		int r = angleMinus(angle, offset);
 		
 		//to prevent drawDegree exceed Range
 		if(maxDegreeRange != -1 && minDegreeRange != -1){
 			//when move ACW & drawDegree exceed minDegreeRange;
-			if(angelMinus(drawDegree, r) < 179 && angelMinus(minDegreeRange, r) < 179){
-				WLog.print(TAG, "min");
-				offset = angelMinus(angel, drawDegree);
+			if(angleMinus(drawDegree, r) < 179 && angleMinus(minDegreeRange, r) < 179){
+				//offset = angleMinus(angle, drawDegree);
 				drawDegree = minDegreeRange;
 			//when move CW & drawDegree exceed maxDegreeRange;
-			}else if(angelMinus(r, drawDegree) < 179 && angelMinus(r, maxDegreeRange) < 179){
-				WLog.print(TAG, "max");
-				offset = angelMinus(angel, drawDegree);
+			}else if(angleMinus(r, drawDegree) < 179 && angleMinus(r, maxDegreeRange) < 179){
+				//offset = angleMinus(angle, drawDegree);
 				drawDegree = maxDegreeRange;
 			}else{
 				drawDegree = r;
