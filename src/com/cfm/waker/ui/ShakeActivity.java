@@ -56,6 +56,7 @@ public class ShakeActivity extends BaseActivity implements OnShakeListener,
 	private ShakeDetector shakeDetector;
 	
 	private TelephonyManager telephonyManager;
+	private AudioManager audioManager;
 	
 	private PhoneStateListener phoneStateListener = new PhoneStateListener(){
 		
@@ -100,13 +101,16 @@ public class ShakeActivity extends BaseActivity implements OnShakeListener,
 
 			@Override
 			public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-				float volume = WakerPreferenceManager.getInstance(ShakeActivity.this).getGlobalAlarmVolume();
-				streamId = soundPool.play(sampleId, volume, volume, 0, -1, 1);
+				streamId = soundPool.play(sampleId, 1, 1, 0, -1, 1);
 			}
 			
 		});
 		telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+		
+		audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+		float volume = WakerPreferenceManager.getInstance(ShakeActivity.this).getGlobalAlarmVolume();
+		audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, (int) (audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM) * volume), 0);
 		
 		shakeDetector = new ShakeDetector(this);
 		shakeDetector.registerOnShakeListener(this);

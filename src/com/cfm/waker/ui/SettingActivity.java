@@ -50,25 +50,6 @@ public class SettingActivity extends BaseSlidableActivity{
 			
 		});
 		
-		/*
-		seekBar = (SeekBar) findViewById(R.id.volume);
-		seekBar.setProgress((int) (WakerPreferenceManager.getInstance(this).getGlobalAlarmVolume() * seekBar.getMax()));
-		seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener(){
-
-			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {}
-
-			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {}
-
-			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) {
-				WakerPreferenceManager.getInstance(SettingActivity.this).setGlobalAlarmVolume(seekBar.getProgress() / seekBar.getMax());
-			}
-			
-		});
-		 */
-		
 		setOnSlideListener(new OnSlideListener(){
 			int y;
 			int screenHeight = WakerPreferenceManager.getInstance(SettingActivity.this).getScreenHeight() - 
