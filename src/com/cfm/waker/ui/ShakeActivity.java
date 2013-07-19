@@ -126,6 +126,8 @@ public class ShakeActivity extends BaseActivity implements OnShakeListener,
 		shakeDetector = new ShakeDetector(this);
 		shakeDetector.registerOnShakeListener(this);
 		shakeDetector.start();
+		
+		handler.postDelayed(runnable, 60000);
 	}
 	
 	@Override
