@@ -27,6 +27,7 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.media.SoundPool.OnLoadCompleteListener;
 import android.os.Bundle;
+import android.os.Handler;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
@@ -51,6 +52,9 @@ public class ShakeActivity extends BaseActivity implements OnShakeListener,
 	private String musicPath;
 	private int streamId;
 	
+	private Handler handler;
+	private FinishRunnable runnable;
+	
 	private SoundPool soundPool;
 	
 	private ShakeDetector shakeDetector;
@@ -73,6 +77,13 @@ public class ShakeActivity extends BaseActivity implements OnShakeListener,
 			
 		}
 	};
+	
+	private class FinishRunnable implements Runnable{
+		@Override
+		public void run(){
+			finish();
+		}
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +126,12 @@ public class ShakeActivity extends BaseActivity implements OnShakeListener,
 		shakeDetector = new ShakeDetector(this);
 		shakeDetector.registerOnShakeListener(this);
 		shakeDetector.start();
+	}
+	
+	@Override
+	public void onResume(){
+		super.onResume();
+		if(streamId != 0) soundPool.resume(streamId);
 	}
 	
 	@Override

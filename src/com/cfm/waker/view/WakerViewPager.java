@@ -7,6 +7,8 @@
  */
 package com.cfm.waker.view;
 
+import com.cfm.waker.log.WLog;
+
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
@@ -16,7 +18,6 @@ public class WakerViewPager extends ViewPager {
 	
 	private static final String TAG = "WakerViewPager";
 	
-	/*
 	private float dx,dy;
 	
 	private static final int MODE_EDGE_DRAG = 0;
@@ -24,7 +25,6 @@ public class WakerViewPager extends ViewPager {
 	private static final int MODE_DISPATCH = 2;
 	
 	private int mode = MODE_DISPATCH;
-	 */
 
 	public WakerViewPager(Context context){
 		super(context);
@@ -34,24 +34,17 @@ public class WakerViewPager extends ViewPager {
 		super(context, attrs);
 	}
 	
-	@Override
-	public boolean onTouchEvent(MotionEvent event){
-		if((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_DOWN 
-		    && event.getY() > getMeasuredHeight() / 2)
-			return false;
-		
-		return super.onTouchEvent(event);
-	}
-	
 	//when viewPager scroll to the end, the continually scroll from same direction will disable viewpager touch event
-	/*
 	@Override
 	public boolean onTouchEvent(MotionEvent event){
-		
+		super.onTouchEvent(event);
 		switch(event.getAction() & MotionEvent.ACTION_MASK){
 		case MotionEvent.ACTION_DOWN:
+			dx = event.getX();
+			dy = event.getY();
+			if(event.getY() > getMeasuredHeight() / 2) return false;
+			
 			if(getCurrentItem() == 0 || getCurrentItem() == getAdapter().getCount() - 1){
-			    super.onTouchEvent(event);
 			    return false;
 			}
 			break;
@@ -64,12 +57,10 @@ public class WakerViewPager extends ViewPager {
 					hisX = (int) event.getHistoricalX(event.getHistorySize() - 1);
 					hisY = (int) event.getHistoricalY(event.getHistorySize() - 1);
 				}catch(ArrayIndexOutOfBoundsException e){
-					
 				}catch(IllegalArgumentException e){
-					
 				}
-				dx = event.getX() - hisX;
-				dy = event.getY() - hisY;
+				dx = event.getX() - dx;
+				dy = event.getY() - dy;
 				WLog.print(TAG, "MODE_NORMAL");
 				if(Math.abs(dx) > Math.abs(dy)){
 					WLog.print(TAG, getCurrentItem() + "");
@@ -100,7 +91,6 @@ public class WakerViewPager extends ViewPager {
 			break;
 		}
 		
-		return  super.onTouchEvent(event);
+		return true;
 	}
-	 */
 }

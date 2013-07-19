@@ -196,7 +196,6 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		startService(serviceIntent);
 		
 		theme.registerThemeObject(dialPicker);
-		theme.setThemeColor(0xFF8BCA09);
 	}
 	
 	@Override
