@@ -26,7 +26,8 @@ public class WakerViewPager extends ViewPager {
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event){
-		if((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_DOWN && event.getY() > getMeasuredHeight() / 2) return false;
+		if(event.getY() > getMeasuredHeight() / 2) 
+			return false;
 
         return super.onTouchEvent(event);
 	}

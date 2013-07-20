@@ -95,11 +95,11 @@ public class Knob extends DialPicker{
 		if(maxDegreeRange != -1 && minDegreeRange != -1){
 			//when move ACW & drawDegree exceed minDegreeRange;
 			if(angleMinus(drawDegree, r) < 179 && angleMinus(minDegreeRange, r) < 179){
-				//offset = angleMinus(angle, drawDegree);
+				offset = angleMinus(angle, drawDegree);
 				drawDegree = minDegreeRange;
 			//when move CW & drawDegree exceed maxDegreeRange;
 			}else if(angleMinus(r, drawDegree) < 179 && angleMinus(r, maxDegreeRange) < 179){
-				//offset = angleMinus(angle, drawDegree);
+				offset = angleMinus(angle, drawDegree);
 				drawDegree = maxDegreeRange;
 			}else{
 				drawDegree = r;

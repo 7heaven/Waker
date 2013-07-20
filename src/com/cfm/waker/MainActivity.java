@@ -19,6 +19,7 @@ import com.cfm.waker.entity.Alarm;
 import com.cfm.waker.log.WLog;
 import com.cfm.waker.service.WakerService;
 import com.cfm.waker.service.WakerService.LocalBinder;
+import com.cfm.waker.slidingmenu.SlidingMenu;
 import com.cfm.waker.ui.SettingActivity;
 import com.cfm.waker.ui.base.BaseSlidableActivity;
 import com.cfm.waker.view.WakerViewPager;
@@ -37,12 +38,15 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 public class MainActivity extends BaseSlidableActivity implements OnTimePickListener{
+	
+	private SlidingMenu slidingMenu;
 	
 	private DebossFontText timeText;
 	private DebossFontText amPm;
@@ -88,7 +92,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	};
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		dialPicker = (DialPicker) findViewById(R.id.time_pick);
@@ -174,17 +178,15 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 					contentMovement(1);
 				}
 				
-				getContentView().requestLayout();
+				dialLayout.requestLayout();
 			}
 		});
-		
-		updateAlarmsByDatabase();
 		
 		new Thread(){
 			@Override
 			public void run(){
 				try{
-					Thread.sleep(300);
+					Thread.sleep(400);
 				}catch(Exception e){
 					
 				}
@@ -192,11 +194,26 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 			}
 		}.start();
 		
+		//initSlidingMenu();
+		updateAlarmsByDatabase();
+		
 		Intent serviceIntent = new Intent(this, WakerService.class);
 		startService(serviceIntent);
 		
 		theme.registerThemeObject(dialPicker);
 	}
+	
+	/*
+	private void initSlidingMenu(){
+		setBehindContentView(R.layout.slidingmenu_menu_left);
+
+        slidingMenu = getSlidingMenu();
+        slidingMenu.setMode(SlidingMenu.LEFT);
+        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        slidingMenu.setBehindWidth(300);
+        slidingMenu.setBehindScrollScale(1F);
+	}
+	 */
 	
 	@Override
 	public void onStart(){
@@ -388,6 +405,21 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	@Override
 	protected Drawable getRightDrawable(){
 		return getResources().getDrawable(R.drawable.icon_settings);
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event){
+		if(dialPicker.getMode() == DialPicker.MODE_CONFIRM){
+			pickingTime = false;
+			contentMovement(1);
+			dialPicker.setMode(DialPicker.MODE_PICK);
+			
+			handler.post(tRunnable);
+			
+		    return true;
+		}
+		
+		return super.onKeyDown(keyCode, event);
 	}
 
 }

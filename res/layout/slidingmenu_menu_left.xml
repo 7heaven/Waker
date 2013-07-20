@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:waker="http://schemas.android.com/apk/res/com.cfm.waker"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/global_background_color" >
+    
+    <com.cfm.waker.widget.Knob
+        android:id="@+id/volume_picker"
+        android:layout_width="250.0dip"
+        android:layout_height="250.0dip"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="-100.0dip"
+        waker:degreeRange_max="150"
+        waker:degreeRange_min="30" />
+    
+    <com.cfm.waker.view.ThemeView
+        android:id="@+id/margin_view"
+        android:layout_width="3.0dip"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:background="@color/global_hint_color" />
+    
+</RelativeLayout>
