@@ -19,6 +19,7 @@ import com.cfm.waker.log.WLog;
 import com.cfm.waker.ui.base.BaseActivity;
 import com.cfm.waker.util.Constants;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -79,6 +80,7 @@ public class ShakeActivity extends BaseActivity implements OnShakeListener,
 	};
 	
 	private class FinishRunnable implements Runnable{
+		
 		@Override
 		public void run(){
 			finish();
@@ -127,6 +129,8 @@ public class ShakeActivity extends BaseActivity implements OnShakeListener,
 		shakeDetector.registerOnShakeListener(this);
 		shakeDetector.start();
 		
+		runnable = new FinishRunnable();
+		handler = new Handler();
 		handler.postDelayed(runnable, 60000);
 	}
 	

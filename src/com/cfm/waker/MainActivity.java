@@ -372,8 +372,6 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		}else{
 			pickingTime = false;
 			
-			calendar.set(Calendar.SECOND, 0);
-			
 			Alarm alarm = addAlarm(calendar);
 			
 			wakerService.setAlarm(alarm);

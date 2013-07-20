@@ -100,6 +100,7 @@ public class WakerService extends Service {
 		if((isHourBefore || (isMinuteBefore && isHourAfter)) && alarm.isEnabled() && isDaySet(alarm)){
 			calendar.set(Calendar.HOUR_OF_DAY, alarmCalendar.get(Calendar.HOUR_OF_DAY));
 			calendar.set(Calendar.MINUTE, alarmCalendar.get(Calendar.MINUTE));
+			calendar.set(Calendar.SECOND, 0);
 			
 			long time = calendar.getTimeInMillis();
 			

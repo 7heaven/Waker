@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:waker="http://schemas.android.com/apk/res/com.cfm.waker"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
@@ -7,10 +7,11 @@
     <com.cfm.waker.widget.Knob
         android:id="@+id/volume_picker"
         android:layout_width="match_parent"
-        android:layout_height="200.0dip"
-        android:layout_gravity="center"
+        android:layout_height="400.0dip"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="-240.0dip"
         waker:degreeRange_min="300"
         waker:degreeRange_max="60"
         waker:color="@color/global_hint_color" />
     
-</LinearLayout>
+</RelativeLayout>

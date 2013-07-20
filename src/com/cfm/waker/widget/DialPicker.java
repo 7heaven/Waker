@@ -193,7 +193,7 @@ public class DialPicker extends View implements ThemeEnable{
 					if(pressedRange > innerPressRange){
 						isCirclePressed = true;
 						if(null != mOnTimePickListener) mOnTimePickListener.onStartPick();
-						performDial(get360Angle(Math.atan2(y, x)));
+						performDial(getDegrees(Math.atan2(y, x)));
 					}
 				}
 				break;
@@ -206,7 +206,7 @@ public class DialPicker extends View implements ThemeEnable{
 			if(isDrawPressPoint){
 				getParent().requestDisallowInterceptTouchEvent(true);
 				if(isCirclePressed){
-					int tDegree = get360Angle(Math.atan2(dy, dx));
+					int tDegree = getDegrees(Math.atan2(dy, dx));
 					performDial(tDegree);
 					
 					int incrementValue = 0;
@@ -277,12 +277,7 @@ public class DialPicker extends View implements ThemeEnable{
 		
 		drawDegree = angle;
 		
-		double realAngle = angle - 90;
-		if(realAngle >= 180 && realAngle < 270){
-			realAngle = angle - (360 + 90);
-		}
-		
-		realAngle = Math.toRadians(realAngle);
+		double realAngle = getRadiansForDraw(angle);
 		
 		isDrawPressPoint = true;
 		drawPoint = centerRadiusPoint(centerPoint, realAngle, mediumCircleRange);
@@ -340,9 +335,19 @@ public class DialPicker extends View implements ThemeEnable{
 	 * @param angel
 	 * @return
 	 */
-	protected int get360Angle(double angle){
+	protected int getDegrees(double angle){
 		angle = Math.toDegrees(angle);
 		return (int) (angle <= -90 && angle >= -180 ? 450 + angle : angle + 90);
+	}
+	
+	protected double getRadiansForDraw(int angle){
+		if(angle >= 0 && angle <= 270){
+			angle -= 90;
+		}else{
+			angle -= 450;
+		}
+		
+		return Math.toRadians(angle);
 	}
 	
 	protected int angleMinus(int left, int right){

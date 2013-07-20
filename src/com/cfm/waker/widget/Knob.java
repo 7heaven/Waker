@@ -6,6 +6,7 @@ import com.cfm.waker.log.WLog;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -53,6 +54,16 @@ public class Knob extends DialPicker{
 	@Override
 	public void onDraw(Canvas canvas){
 		
+		if(maxDegreeRange != -1 && minDegreeRange != -1){
+			int range = backgroundBound.width() / 2;
+			Point innerPoint = centerRadiusPoint(centerPoint, getRadiansForDraw(maxDegreeRange), range);
+			Point outerPoint = centerRadiusPoint(centerPoint, getRadiansForDraw(maxDegreeRange), range * 0.95F);
+			canvas.drawLine(innerPoint.x, innerPoint.y, outerPoint.x, outerPoint.y, paint);
+			innerPoint = centerRadiusPoint(centerPoint, getRadiansForDraw(minDegreeRange), range);
+			outerPoint = centerRadiusPoint(centerPoint, getRadiansForDraw(minDegreeRange), range * 0.95F);
+			canvas.drawLine(innerPoint.x, innerPoint.y, outerPoint.x, outerPoint.y, paint);
+		}
+		
 		backgroundDrawable.setBounds(backgroundBound);
 		backgroundDrawable.draw(canvas);
 		
@@ -68,7 +79,7 @@ public class Knob extends DialPicker{
 		if((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_DOWN){
 			double dx = event.getX() - centerPoint.x;
 			double dy = event.getY() - centerPoint.y;
-			offset = angleMinus(get360Angle(Math.atan2(dy, dx)), drawDegree);
+			offset = angleMinus(getDegrees(Math.atan2(dy, dx)), drawDegree);
 		}
 		
 		return super.onTouchEvent(event);
@@ -108,15 +119,10 @@ public class Knob extends DialPicker{
 		    drawDegree = r;
 		}
 		
-		double realAngel = drawDegree - 90;
-		if(realAngel >= 180 && realAngel < 270){
-			realAngel = drawDegree - (360 + 90);
-		}
-		
-        realAngel = Math.toRadians(realAngel);
+		double realAngle = getRadiansForDraw(drawDegree);
 		
 		isDrawPressPoint = true;
-		drawPoint = centerRadiusPoint(centerPoint, realAngel, mediumCircleRange * 1.1F);
+		drawPoint = centerRadiusPoint(centerPoint, realAngle, mediumCircleRange * 1.1F);
 		
 		invalidate();
 	}
