@@ -19,20 +19,24 @@ import com.cfm.waker.ui.base.BaseSlidableActivity;
 import com.cfm.waker.widget.DialPicker.OnTimePickListener;
 import com.cfm.waker.widget.ExactLinearLayout;
 import com.cfm.waker.widget.Knob;
+import com.cfm.waker.widget.TitleIndicator;
 
 public class SettingActivity extends BaseSlidableActivity{
 	
-	private Knob knob;
+	private Knob volumePicker;
+	private TitleIndicator volumeTitle;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
 		
-		knob = (Knob) findViewById(R.id.volume_picker);
-		theme.registerThemeObject(knob);
+		volumePicker = (Knob) findViewById(R.id.volume_picker);
+		volumeTitle = (TitleIndicator) findViewById(R.id.volume_title);
 		
-		knob.setOnTimePickListener(new OnTimePickListener(){
+		theme.registerThemeObject(volumePicker, volumeTitle);
+		
+		volumePicker.setOnTimePickListener(new OnTimePickListener(){
 
 			@Override
 			public void onStartPick() {}
@@ -42,7 +46,7 @@ public class SettingActivity extends BaseSlidableActivity{
 
 			@Override
 			public void onStopPick() {
-				WakerPreferenceManager.getInstance(SettingActivity.this).setGlobalAlarmVolume(knob.getValue());
+				WakerPreferenceManager.getInstance(SettingActivity.this).setGlobalAlarmVolume(volumePicker.getValue());
 			}
 
 			@Override
@@ -96,7 +100,7 @@ public class SettingActivity extends BaseSlidableActivity{
 	@Override
 	public void onResume(){
 		super.onResume();
-		knob.setValue(WakerPreferenceManager.getInstance(this).getGlobalAlarmVolume());
+		volumePicker.setValue(WakerPreferenceManager.getInstance(this).getGlobalAlarmVolume());
 	}
 	
 	@Override

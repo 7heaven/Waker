@@ -7,11 +7,19 @@
     <com.cfm.waker.widget.Knob
         android:id="@+id/volume_picker"
         android:layout_width="match_parent"
-        android:layout_height="400.0dip"
+        android:layout_height="320.0dip"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="-240.0dip"
+        android:layout_marginBottom="-200.0dip"
         waker:degreeRange_min="300"
         waker:degreeRange_max="60"
         waker:color="@color/global_hint_color" />
+    
+    <com.cfm.waker.widget.TitleIndicator
+        android:id="@+id/volume_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/volume_picker"
+        waker:text="@string/setting_page_alarm_volume"
+        waker:textSize="16sp" />
     
 </RelativeLayout>

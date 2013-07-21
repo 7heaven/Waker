@@ -4,7 +4,7 @@
     <attr name="font" format="string" />
     <attr name="color" format="color|reference" />
     
-    <attr name="text" format="string" />
+    <attr name="text" format="string|reference" />
     <attr name="textColor" format="color|reference" />
     <attr name="textSize" format="dimension|reference" />
     
@@ -68,6 +68,12 @@
         <attr name="fadeDegree" format="float" />
         <attr name="selectorEnabled" format="boolean" />
         <attr name="selectorDrawable" format="reference" />
+    </declare-styleable>
+    
+    <declare-styleable name="TitleIndicator">
+        <attr name="text" />
+        <attr name="textSize" />
+        <attr name="color" />
     </declare-styleable>
     
 </resources>

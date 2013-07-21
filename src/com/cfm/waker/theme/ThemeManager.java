@@ -37,15 +37,22 @@ public class ThemeManager{
     }
     
     //register ThemeEnable object so that the ThemeManager can manage theme of the ThemeEnable object
-    public void registerThemeObject(ThemeEnable themeEnable){
-    	themeObjectList.add(themeEnable);
-    	
-    	setCurrent(themeEnable);
+    public void registerThemeObject(ThemeEnable... themeEnable){
+    	int i = 0;
+    	do{
+    		
+    		themeObjectList.add(themeEnable[i]);
+    		setCurrent(themeEnable[i]);
+    		
+    	}while(++i < themeEnable.length);
     }
     
     //remove ThemeEnable object if theme managements of this object are no longer required;
-    public void unregisterThemeObject(ThemeEnable themeEnable){
-    	themeObjectList.remove(themeEnable);
+    public void unregisterThemeObject(ThemeEnable... themeEnable){
+    	int i = 0;
+    	do{
+    		themeObjectList.remove(themeEnable[i]);
+    	}while(++i < themeEnable.length);
     }
     
     public void setThemeColor(int color){

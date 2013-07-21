@@ -19,7 +19,6 @@ import com.cfm.waker.entity.Alarm;
 import com.cfm.waker.log.WLog;
 import com.cfm.waker.service.WakerService;
 import com.cfm.waker.service.WakerService.LocalBinder;
-import com.cfm.waker.slidingmenu.SlidingMenu;
 import com.cfm.waker.ui.SettingActivity;
 import com.cfm.waker.ui.base.BaseSlidableActivity;
 import com.cfm.waker.view.WakerViewPager;
@@ -45,8 +44,6 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 public class MainActivity extends BaseSlidableActivity implements OnTimePickListener{
-	
-	private SlidingMenu slidingMenu;
 	
 	private DebossFontText timeText;
 	private DebossFontText amPm;
@@ -194,7 +191,6 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 			}
 		}.start();
 		
-		//initSlidingMenu();
 		updateAlarmsByDatabase();
 		
 		Intent serviceIntent = new Intent(this, WakerService.class);
@@ -202,18 +198,6 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		
 		theme.registerThemeObject(dialPicker);
 	}
-	
-	/*
-	private void initSlidingMenu(){
-		setBehindContentView(R.layout.slidingmenu_menu_left);
-
-        slidingMenu = getSlidingMenu();
-        slidingMenu.setMode(SlidingMenu.LEFT);
-        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-        slidingMenu.setBehindWidth(300);
-        slidingMenu.setBehindScrollScale(1F);
-	}
-	 */
 	
 	@Override
 	public void onStart(){

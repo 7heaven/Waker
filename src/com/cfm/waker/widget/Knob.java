@@ -6,6 +6,7 @@ import com.cfm.waker.log.WLog;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -54,20 +55,28 @@ public class Knob extends DialPicker{
 	@Override
 	public void onDraw(Canvas canvas){
 		
+		float dotRange = backgroundBound.width() * dotRangeRatio;
+		
 		if(maxDegreeRange != -1 && minDegreeRange != -1){
+			
+			paint.setStyle(Paint.Style.STROKE);
+			paint.setStrokeWidth(dotRange * 0.4F);
+			
 			int range = backgroundBound.width() / 2;
 			Point innerPoint = centerRadiusPoint(centerPoint, getRadiansForDraw(maxDegreeRange), range);
-			Point outerPoint = centerRadiusPoint(centerPoint, getRadiansForDraw(maxDegreeRange), range * 0.95F);
+			Point outerPoint = centerRadiusPoint(centerPoint, getRadiansForDraw(maxDegreeRange), range * 0.92F);
 			canvas.drawLine(innerPoint.x, innerPoint.y, outerPoint.x, outerPoint.y, paint);
 			innerPoint = centerRadiusPoint(centerPoint, getRadiansForDraw(minDegreeRange), range);
-			outerPoint = centerRadiusPoint(centerPoint, getRadiansForDraw(minDegreeRange), range * 0.95F);
+			outerPoint = centerRadiusPoint(centerPoint, getRadiansForDraw(minDegreeRange), range * 0.92F);
 			canvas.drawLine(innerPoint.x, innerPoint.y, outerPoint.x, outerPoint.y, paint);
 		}
+		
+		paint.setStyle(Paint.Style.FILL);
 		
 		backgroundDrawable.setBounds(backgroundBound);
 		backgroundDrawable.draw(canvas);
 		
-		float dotRange = backgroundBound.width() * dotRangeRatio;
+		
 		int halfDotRange = (int) (dotRange / 2);
 		canvas.drawCircle(drawPoint.x, drawPoint.y, dotRange * 0.45F, paint);
 		dotDrawable.setBounds(drawPoint.x - halfDotRange, drawPoint.y - halfDotRange, drawPoint.x + halfDotRange, drawPoint.y + halfDotRange);
