@@ -387,6 +387,7 @@ public class DialPicker extends View implements ThemeEnable{
 	@Override
 	public void setThemeColor(int color){
 		paint.setColor(color);
+		invalidate();
 	}
 
 	@Override

@@ -135,59 +135,6 @@ public class AlarmClockBlock extends BaseSlideWidget {
 		return true;
 	}
 	
-	/*
-	@Override
-	public boolean onTouchEvent(MotionEvent event){
-		switch(event.getAction() & MotionEvent.ACTION_MASK){
-		case MotionEvent.ACTION_DOWN:
-			Log.d(TAG,"MOTIONEVENT_DOWN");
-			dx = centerX - event.getX();
-			dy = centerY - event.getY();
-			
-		    if(event.getY() < height){
-		    	touchMode = TOUCHMODE_DOWN;
-			    return true;
-		    }
-			
-		case MotionEvent.ACTION_MOVE:
-			Log.d(TAG,"MOTIONEVENT_MOVE" + moveY);
-			switch(touchMode){
-			case TOUCHMODE_IDLE:
-				break;
-			case TOUCHMODE_DOWN:
-				if(Math.abs(centerX - dx - event.getX()) < Math.abs(centerY - dy - event.getY())){
-					touchMode = TOUCHMODE_DRAGGING;
-					getParent().requestDisallowInterceptTouchEvent(true);
-				}
-				break;
-			case TOUCHMODE_DRAGGING:
-				moveX = centerX;
-				moveY = dy + event.getY();
-				if(moveY > centerY && moveY <= centerY + DensityUtil.dip2px(context, 80)){
-					invalidate();
-				}else if(moveY > centerY + DensityUtil.dip2px(context, 80)){
-					touchMode = TOUCHMODE_IDLE;
-					enabled = !enabled;
-					alarm.setEnabled(enabled);
-					WakerDatabaseHelper.getInstance(context).updateAlarm(alarm.getId(), alarm);
-					if(null != onStateChangeListener) onStateChangeListener.onStateChanged(alarm.getId(), enabled);
-					returnToOriginalSpot();
-				}
-				
-			}
-			break;
-		case MotionEvent.ACTION_UP:
-		case MotionEvent.ACTION_CANCEL:
-			Log.d(TAG,"MOTIONEVENT_UP & MOTIONEVENT_CANCEL");
-			touchMode = TOUCHMODE_IDLE;
-			returnToOriginalSpot();
-			break;
-		}
-		
-		return true;
-	}
-	 */
-	
 	private void returnToOriginalSpot(SlideEvent event){
 		handler = new Handler();
 		runnable = new MyRunnable(event);

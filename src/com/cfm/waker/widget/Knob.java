@@ -60,7 +60,7 @@ public class Knob extends DialPicker{
 		if(maxDegreeRange != -1 && minDegreeRange != -1){
 			
 			paint.setStyle(Paint.Style.STROKE);
-			paint.setStrokeWidth(dotRange * 0.4F);
+			//paint.setStrokeWidth(dotRange * 0.4F);
 			
 			int range = backgroundBound.width() / 2;
 			Point innerPoint = centerRadiusPoint(centerPoint, getRadiansForDraw(maxDegreeRange), range);

@@ -57,7 +57,7 @@ public abstract class BaseSlideWidget extends View{
 			
 			switch(mSlideEvent.getAction()){
 			case SlideEvent.TOUCHMODE_DOWN:
-				if(Math.abs(mSlideEvent.getDx()) > Math.abs(mSlideEvent.getDy())){
+				if(Math.abs(mSlideEvent.getDx()) >= Math.abs(mSlideEvent.getDy())){
 					mSlideEvent.setAction(SlideEvent.TOUCHMODE_HORIZONTAL_START);
 				}else{
 					mSlideEvent.setAction(SlideEvent.TOUCHMODE_VERTICAL_START);
