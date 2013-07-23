@@ -33,6 +33,7 @@
         <attr name="textColor" />
         <attr name="textSize" />
         <attr name="textPaddingOffset" format="dimension" />
+        <attr name="colorOffset" format="integer" />
     </declare-styleable>
     
     <declare-styleable name="DialPicker">
@@ -73,6 +74,10 @@
     <declare-styleable name="TitleIndicator">
         <attr name="text" />
         <attr name="textSize" />
+        <attr name="color" />
+    </declare-styleable>
+    
+    <declare-styleable name="CurveView">
         <attr name="color" />
     </declare-styleable>
     

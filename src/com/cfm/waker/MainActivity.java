@@ -7,6 +7,7 @@
  */
 package com.cfm.waker;
 
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -21,6 +22,7 @@ import com.cfm.waker.service.WakerService;
 import com.cfm.waker.service.WakerService.LocalBinder;
 import com.cfm.waker.ui.SettingActivity;
 import com.cfm.waker.ui.base.BaseSlidableActivity;
+import com.cfm.waker.view.CurveView;
 import com.cfm.waker.view.WakerViewPager;
 import com.cfm.waker.widget.DebossFontText;
 import com.cfm.waker.widget.DialPicker;
@@ -50,6 +52,8 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	private DialPicker dialPicker;
 	private WeekSelector weekSelector;
 	private RelativeLayout dialLayout;
+	private RelativeLayout featureLayout;
+	private CurveView featureBackground;
 	
 	private TimeRunnable tRunnable;
 	
@@ -95,9 +99,14 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		dialPicker = (DialPicker) findViewById(R.id.time_pick);
 		dialPicker.setOnTimePickListener(this);
 		dialLayout = (RelativeLayout) findViewById(R.id.dial_layout);
+		featureLayout = (RelativeLayout) findViewById(R.id.params_layout);
+		featureBackground = (CurveView) findViewById(R.id.feature_background);
+		featureBackground.setMode(CurveView.MODE_TOP);
 		
 		timeText = (DebossFontText) findViewById(R.id.time);
 		amPm = (DebossFontText) findViewById(R.id.am_pm);
+		timeText.marginShow(false);
+		amPm.marginShow(false);
 		
 		weekSelector = (WeekSelector) findViewById(R.id.selector);
 		
@@ -146,17 +155,17 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 			@Override
 			public void onVerticallySlide(int distance){
 				if(dialPicker.getMode() != DialPicker.MODE_CONFIRM){
-					int disV = vy - distance;
+					int disV = vy - distance * 2;
 					int disD = dy - distance;
 					
-					if(disD <= -viewPagerLayout.getMeasuredHeight() / 2 ){
+					if(disD <= -viewPagerLayout.getMeasuredHeight() / 4 ){
+						disD = -viewPagerLayout.getMeasuredHeight() / 4;
 						disV = 0;
-						disD = -viewPagerLayout.getMeasuredHeight() / 2;
 					}
 					
 					if(disD >= 0){
-						disV = viewPagerLayout.getMeasuredHeight() / 2;
 						disD = 0;
+						disV = viewPagerLayout.getMeasuredHeight() / 2;
 					}
 					
 					viewPagerLayout.scrollTo(0, disV);
@@ -168,10 +177,10 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 			public void onVerticallySlideReleased(){
 				WLog.print(TAG, viewPagerLayout.getMeasuredHeight() + "");
 				int yPosition = dialLayout.getScrollY();
-				if(yPosition < -viewPagerLayout.getMeasuredHeight() / 4){
+				if(yPosition < -viewPagerLayout.getMeasuredHeight() / 8){
 					contentMovement(0);
 				}
-				if(yPosition >= -viewPagerLayout.getMeasuredHeight() / 4 && yPosition < weekSelector.getMeasuredHeight() / 2){
+				if(yPosition >= -viewPagerLayout.getMeasuredHeight() / 8 && yPosition < featureLayout.getMeasuredHeight() / 2){
 					contentMovement(1);
 				}
 				
@@ -239,6 +248,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		private int destinationX, destinationY;
 		private float moveX, moveY;
 		private boolean hide;
+		private Method method;
 
 		public ViewMoveRunnable(View view, int destinationX, int destinationY, boolean hide){
 			this.view = view;
@@ -248,6 +258,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 			this.destinationY = destinationY;
 			this.hide = hide;
 		}
+		
 		@Override
 		public void run() {
 			if((int) moveX != destinationX || (int) moveY != destinationY){
@@ -255,7 +266,9 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 				moveY += (destinationY - moveY) * 0.51F;
 				view.scrollTo((int) moveX, (int) moveY);
 				
-				WLog.print(TAG, "runnable run");
+				WLog.print(TAG, getResources().getResourceName(view.getId()) + ":" + moveY);
+				
+				featureBackground.setOffset(featureLayout.getScrollY() / featureLayout.getMeasuredHeight() * 20);
 				
 				handler.postDelayed(this, 20);
 			}/*
@@ -277,19 +290,19 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		
 		switch(position){
 		case 0:
-			vmRunnable = new ViewMoveRunnable(viewPagerLayout, 0, 0, false);
-			weekRunnable = new ViewMoveRunnable(weekSelector, 0, -weekSelector.getMeasuredHeight(), true);
-			mContentRunnable = new ViewMoveRunnable(dialLayout, 0, -viewPagerLayout.getMeasuredHeight() / 2, false);
+			vmRunnable = new ViewMoveRunnable(viewPagerLayout, 0, 0, true);
+			weekRunnable = new ViewMoveRunnable(featureLayout, 0, -featureLayout.getMeasuredHeight(), true);
+			mContentRunnable = new ViewMoveRunnable(dialLayout, 0, -viewPagerLayout.getMeasuredHeight() / 4, false);
 			break;
 		case 1:
 			vmRunnable = new ViewMoveRunnable(viewPagerLayout, 0, viewPagerLayout.getMeasuredHeight() / 2, true);
-			weekRunnable = new ViewMoveRunnable(weekSelector, 0, -weekSelector.getMeasuredHeight(), true);
+			weekRunnable = new ViewMoveRunnable(featureLayout, 0, -featureLayout.getMeasuredHeight(), true);
 			mContentRunnable = new ViewMoveRunnable(dialLayout, 0, 0, false);
 			break;
 		case 2:
 			vmRunnable = new ViewMoveRunnable(viewPagerLayout, 0, viewPagerLayout.getMeasuredHeight() / 2, true);
-			weekRunnable = new ViewMoveRunnable(weekSelector, 0, 0, false);
-			mContentRunnable = new ViewMoveRunnable(dialLayout, 0, weekSelector.getMeasuredHeight(), false);
+			weekRunnable = new ViewMoveRunnable(featureLayout, 0, 0, false);
+			mContentRunnable = new ViewMoveRunnable(dialLayout, 0, featureLayout.getMeasuredHeight() / 2, false);
 			break;
 		}
 		

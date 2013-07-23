@@ -93,11 +93,11 @@ public class WakerService extends Service {
 		Calendar alarmCalendar = alarm.getCalendar();
 		
 		boolean isHourBefore = calendar.get(Calendar.HOUR_OF_DAY) < alarmCalendar.get(Calendar.HOUR_OF_DAY);
-		boolean isHourAfter = calendar.get(Calendar.HOUR_OF_DAY) == alarmCalendar.get(Calendar.HOUR_OF_DAY); 
+		boolean isHourEqual = calendar.get(Calendar.HOUR_OF_DAY) == alarmCalendar.get(Calendar.HOUR_OF_DAY); 
 		boolean isMinuteBefore = calendar.get(Calendar.MINUTE) < alarmCalendar.get(Calendar.MINUTE); 
 		
 		WLog.print(TAG, ((Boolean) (isHourBefore && isMinuteBefore)).toString());
-		if((isHourBefore || (isMinuteBefore && isHourAfter)) && alarm.isEnabled() && isDaySet(alarm)){
+		if((isHourBefore || (isMinuteBefore && isHourEqual)) && isDaySet(alarm)){
 			calendar.set(Calendar.HOUR_OF_DAY, alarmCalendar.get(Calendar.HOUR_OF_DAY));
 			calendar.set(Calendar.MINUTE, alarmCalendar.get(Calendar.MINUTE));
 			calendar.set(Calendar.SECOND, 0);

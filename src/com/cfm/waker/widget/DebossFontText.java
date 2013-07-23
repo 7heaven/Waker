@@ -37,6 +37,8 @@ public class DebossFontText extends View {
 	private int centerX,centerY;
 	private int width,height;
 	private float offset;
+	
+	private boolean isMarginShow;
 
 	public DebossFontText(Context context){
 		this(context, null);
@@ -55,7 +57,7 @@ public class DebossFontText extends View {
 		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.DebossFontText);
 		
 		String font = ta.getString(R.styleable.DebossFontText_font);
-		if(null != font){
+		if(null != font && !isInEditMode()){
 			tf = Typeface.createFromAsset(context.getAssets(), font);
 			paint.setTypeface(tf);
 		}
@@ -73,8 +75,10 @@ public class DebossFontText extends View {
 		int max = Math.max(r, Math.max(g, b));
 		int min = Math.min(r, Math.min(g, b));
 		
-		int colorIntOffsetDark = 75;
-		int colorIntOffsetBright = 75;
+		int colorOffset = ta.getInt(R.styleable.DebossFontText_colorOffset, 75);
+		
+		int colorIntOffsetDark = colorOffset;
+		int colorIntOffsetBright = colorOffset;
 		
 		if(max + colorIntOffsetBright >= 255) colorIntOffsetBright = 255 - max;
 		if(min - colorIntOffsetDark <= 0) colorIntOffsetDark = min;
@@ -85,6 +89,13 @@ public class DebossFontText extends View {
 		offset = ta.getDimension(R.styleable.DebossFontText_textPaddingOffset, context.getResources().getDimension(R.dimen.debossfonttext_default_offset));
 		
 		ta.recycle();
+		
+		isMarginShow = true;
+	}
+	
+	public void marginShow(boolean isShow){
+		isMarginShow = isShow;
+		invalidate();
 	}
 	
 	public void setText(String text){
@@ -118,11 +129,13 @@ public class DebossFontText extends View {
 	public void onDraw(Canvas canvas){
 		super.onDraw(canvas);
 		
-		paint.setShader(null);
-		paint.setColor(colorOffsetDark);
-		canvas.drawText(text, 0, centerY + (textBound.height() / 2) - (offset * 2), paint);
-		paint.setColor(colorOffsetBright);
-		canvas.drawText(text, 0, centerY + (textBound.height() / 2), paint);
+		if(isMarginShow){
+			paint.setShader(null);
+			paint.setColor(colorOffsetDark);
+			canvas.drawText(text, 0, centerY + (textBound.height() / 2) - (offset * 2), paint);
+			paint.setColor(colorOffsetBright);
+			canvas.drawText(text, 0, centerY + (textBound.height() / 2), paint);
+		}
 		
 		paint.setColor(textColor);
 		paint.setShader(shader);
