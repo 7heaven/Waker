@@ -266,9 +266,8 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 				moveY += (destinationY - moveY) * 0.51F;
 				view.scrollTo((int) moveX, (int) moveY);
 				
-				WLog.print(TAG, getResources().getResourceName(view.getId()) + ":" + moveY);
-				
-				featureBackground.setOffset(featureLayout.getScrollY() / featureLayout.getMeasuredHeight() * 20);
+				featureBackground.setOffset(featureLayout.getMeasuredHeight() - featureLayout.getScrollY());
+				WLog.print(getClass(), "" + featureLayout.getScrollY());
 				
 				handler.postDelayed(this, 20);
 			}/*
@@ -404,7 +403,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event){
-		if(dialPicker.getMode() == DialPicker.MODE_CONFIRM){
+		if(keyCode == KeyEvent.KEYCODE_BACK && dialPicker.getMode() == DialPicker.MODE_CONFIRM){
 			pickingTime = false;
 			contentMovement(1);
 			dialPicker.setMode(DialPicker.MODE_PICK);
