@@ -20,6 +20,7 @@
     <declare-styleable name="AlarmClockBlock" >
         <attr name="font" />
         <attr name="color" />
+        <attr name="textColor" />
     </declare-styleable>
     
     <declare-styleable name="SlideSwitcher">

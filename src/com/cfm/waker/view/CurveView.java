@@ -106,28 +106,6 @@ public class CurveView extends View {
 	    path.quadTo(width, height / 2, bottomRightX, bottomRightY);
 	    path.quadTo(width / 2, height, bottomLeftX, bottomLeftY);
 	    path.close();
-	    /*
-	    if(topLeftX > 0 ){
-	    	path.quadTo(0, height / 2, topLeftX, topLeftY);
-	    }else{
-	    	path.lineTo(topLeftX, topLeftY);
-	    }
-	    if(topRightY > 0){
-	    	path.quadTo(width / 2, 0, topRightX, topRightY);
-	    }else{
-	    	path.lineTo(topRightX, topRightY);
-	    }
-	    if(bottomRightX < width){
-	    	path.quadTo(width, height / 2, bottomRightX, bottomRightY);
-	    }else{
-	    	path.lineTo(bottomRightX, bottomRightY);
-	    }
-	    if(bottomLeftY < height){
-	    	path.quadTo(width / 2, height, bottomLeftX, bottomLeftY);
-	    }else{
-	    	path.lineTo(bottomLeftX, bottomLeftY);
-	    }
-	     */
 	    canvas.drawPath(path, paint);
 	}
 }

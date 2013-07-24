@@ -36,7 +36,7 @@
         android:layout_height="80.0dip"
         android:layout_toRightOf="@+id/alarm2"
         waker:font="fonts/swiss_ht.ttf"
-        waker:color="#FFFFFFFF"
+        waker:color="#FFFCD208"
         android:visibility="gone" />
 
 </RelativeLayout>

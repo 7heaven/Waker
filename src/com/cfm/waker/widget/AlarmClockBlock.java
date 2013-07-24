@@ -46,6 +46,7 @@ public class AlarmClockBlock extends BaseSlideWidget {
 	private TextPaint textPaint;
 	
 	private int color;
+	private int textColor;
 	
 	private Rect bound;
 	private Rect bound2;
@@ -84,10 +85,11 @@ public class AlarmClockBlock extends BaseSlideWidget {
 		}
 		
 		color = ta.getColor(R.styleable.AlarmClockBlock_color, 0xFFFFFFFF);
+		textColor = ta.getColor(R.styleable.AlarmClockBlock_textColor, 0xFFFFFFFF);
 		
 		ta.recycle();
 		
-		textPaint.setColor(0xFFFFFFFF);
+		textPaint.setColor(textColor);
 		
 		bound = new Rect();
 		bound2 = new Rect();

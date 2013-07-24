@@ -7,7 +7,6 @@
  */
 package com.cfm.waker;
 
-import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,7 +21,6 @@ import com.cfm.waker.service.WakerService;
 import com.cfm.waker.service.WakerService.LocalBinder;
 import com.cfm.waker.ui.SettingActivity;
 import com.cfm.waker.ui.base.BaseSlidableActivity;
-import com.cfm.waker.view.CurveView;
 import com.cfm.waker.view.WakerViewPager;
 import com.cfm.waker.widget.DebossFontText;
 import com.cfm.waker.widget.DialPicker;
@@ -53,7 +51,6 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	private WeekSelector weekSelector;
 	private RelativeLayout dialLayout;
 	private RelativeLayout featureLayout;
-	private CurveView featureBackground;
 	
 	private TimeRunnable tRunnable;
 	
@@ -100,8 +97,6 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		dialPicker.setOnTimePickListener(this);
 		dialLayout = (RelativeLayout) findViewById(R.id.dial_layout);
 		featureLayout = (RelativeLayout) findViewById(R.id.params_layout);
-		featureBackground = (CurveView) findViewById(R.id.feature_background);
-		featureBackground.setMode(CurveView.MODE_TOP);
 		
 		timeText = (DebossFontText) findViewById(R.id.time);
 		amPm = (DebossFontText) findViewById(R.id.am_pm);
@@ -247,16 +242,13 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		private View view;
 		private int destinationX, destinationY;
 		private float moveX, moveY;
-		private boolean hide;
-		private Method method;
 
-		public ViewMoveRunnable(View view, int destinationX, int destinationY, boolean hide){
+		public ViewMoveRunnable(View view, int destinationX, int destinationY){
 			this.view = view;
 			moveX = view.getScrollX();
 			moveY = view.getScrollY();
 			this.destinationX = destinationX;
 			this.destinationY = destinationY;
-			this.hide = hide;
 		}
 		
 		@Override
@@ -266,17 +258,8 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 				moveY += (destinationY - moveY) * 0.51F;
 				view.scrollTo((int) moveX, (int) moveY);
 				
-				featureBackground.setOffset(featureLayout.getMeasuredHeight() - featureLayout.getScrollY());
-				WLog.print(getClass(), "" + featureLayout.getScrollY());
-				
 				handler.postDelayed(this, 20);
-			}/*
-			else{
-				if(hide){
-					WLog.print(TAG, "runnable gone");
-					view.setVisibility(View.INVISIBLE);
-				}
-			}*/
+			}
 			
 		}
 		
@@ -289,19 +272,19 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		
 		switch(position){
 		case 0:
-			vmRunnable = new ViewMoveRunnable(viewPagerLayout, 0, 0, true);
-			weekRunnable = new ViewMoveRunnable(featureLayout, 0, -featureLayout.getMeasuredHeight(), true);
-			mContentRunnable = new ViewMoveRunnable(dialLayout, 0, -viewPagerLayout.getMeasuredHeight() / 4, false);
+			vmRunnable = new ViewMoveRunnable(viewPagerLayout, 0, 0);
+			weekRunnable = new ViewMoveRunnable(featureLayout, 0, -featureLayout.getMeasuredHeight());
+			mContentRunnable = new ViewMoveRunnable(dialLayout, 0, -viewPagerLayout.getMeasuredHeight() / 4);
 			break;
 		case 1:
-			vmRunnable = new ViewMoveRunnable(viewPagerLayout, 0, viewPagerLayout.getMeasuredHeight() / 2, true);
-			weekRunnable = new ViewMoveRunnable(featureLayout, 0, -featureLayout.getMeasuredHeight(), true);
-			mContentRunnable = new ViewMoveRunnable(dialLayout, 0, 0, false);
+			vmRunnable = new ViewMoveRunnable(viewPagerLayout, 0, viewPagerLayout.getMeasuredHeight() / 2);
+			weekRunnable = new ViewMoveRunnable(featureLayout, 0, -featureLayout.getMeasuredHeight());
+			mContentRunnable = new ViewMoveRunnable(dialLayout, 0, 0);
 			break;
 		case 2:
-			vmRunnable = new ViewMoveRunnable(viewPagerLayout, 0, viewPagerLayout.getMeasuredHeight() / 2, true);
-			weekRunnable = new ViewMoveRunnable(featureLayout, 0, 0, false);
-			mContentRunnable = new ViewMoveRunnable(dialLayout, 0, featureLayout.getMeasuredHeight() / 2, false);
+			vmRunnable = new ViewMoveRunnable(viewPagerLayout, 0, viewPagerLayout.getMeasuredHeight() / 2);
+			weekRunnable = new ViewMoveRunnable(featureLayout, 0, 0);
+			mContentRunnable = new ViewMoveRunnable(dialLayout, 0, featureLayout.getMeasuredHeight() / 2);
 			break;
 		}
 		
