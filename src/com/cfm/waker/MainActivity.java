@@ -325,7 +325,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 			alarmList.addAll(alarms);
 		}
 		alarmListAdapter.notifyDataSetChanged();
-		if(viewPager.getCurrentItem() == alarmListAdapter.getCount() - 1){
+		if(viewPager.getCurrentItem() == alarmListAdapter.getCount() - 1 && viewPager.getChildCount() > 0){
 			((RowBlock) viewPager.getChildAt(viewPager.getCurrentItem())).performLastAlarmInit();
 		}
 	}

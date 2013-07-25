@@ -113,9 +113,9 @@ public class RowBlock extends RelativeLayout {
 		AlarmInitRunnable alarmInitRunnable3 = new AlarmInitRunnable(getAlarmBlock(3));
 		
 		handler.post(alarmInitRunnable0);
-		handler.postDelayed(alarmInitRunnable1, 250);
-		handler.postDelayed(alarmInitRunnable2, 500);
-		handler.postDelayed(alarmInitRunnable3, 750);
+		handler.postDelayed(alarmInitRunnable1, 150);
+		handler.postDelayed(alarmInitRunnable2, 300);
+		handler.postDelayed(alarmInitRunnable3, 450);
 	}
 	
 }
