@@ -15,6 +15,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.text.TextPaint;
@@ -48,11 +49,16 @@ public class AlarmClockBlock extends BaseSlideWidget {
 	private int color;
 	private int textColor;
 	
+	private boolean isInInitMovement;
+	private float initMovementProcedure;
+	
 	private Rect bound;
 	private Rect bound2;
+	private RectF arcBound;
 	
 	private Handler handler;
 	private MyRunnable runnable;
+	private InitRunnable initRunnable;
 	
 	private OnStateChangeListener onStateChangeListener;
 	
@@ -74,6 +80,7 @@ public class AlarmClockBlock extends BaseSlideWidget {
 		this.context = context;
 		
 		enabled = false;
+		isInInitMovement = false;
 		
 		paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
@@ -94,6 +101,7 @@ public class AlarmClockBlock extends BaseSlideWidget {
 		bound = new Rect();
 		bound2 = new Rect();
 		
+		handler = new Handler();
 	}
 	
 	public void setAlarm(Calendar calendar, boolean is24Format){
@@ -138,11 +146,41 @@ public class AlarmClockBlock extends BaseSlideWidget {
 	}
 	
 	private void returnToOriginalSpot(SlideEvent event){
-		handler = new Handler();
 		runnable = new MyRunnable(event);
 		
 		handler.post(runnable);
 		
+	}
+	
+	public void prepareForInitMovement(){
+		handler.removeCallbacks(initRunnable);
+		
+		initMovementProcedure = 0;
+		isInInitMovement = true;
+		arcBound = new RectF(moveX - radius, moveY - radius, moveX + radius, moveY + radius);
+		
+		invalidate();
+	}
+	
+	public void performInitMovement(){
+		if(isInInitMovement){
+			initRunnable = new InitRunnable();
+			handler.post(initRunnable);
+		}
+	}
+	
+	private class InitRunnable implements Runnable{
+		@Override
+		public void run(){
+			if(initMovementProcedure < 1F){
+				initMovementProcedure += 0.1;
+				invalidate();
+				
+				handler.postDelayed(initRunnable, 20);
+			}else{
+				isInInitMovement = false;
+			}
+		}
 	}
 	
 	private class MyRunnable implements Runnable{
@@ -156,7 +194,7 @@ public class AlarmClockBlock extends BaseSlideWidget {
 		@Override
 		public void run(){
 			if(event.getAction() == SlideEvent.TOUCHMODE_IDLE && moveY != centerY){
-				moveY += (centerY - moveY) * 0.6F;
+				moveY += (centerY - moveY) * 0.3F;
 				invalidate();
 				
 				handler.postDelayed(runnable, 20);
@@ -207,19 +245,31 @@ public class AlarmClockBlock extends BaseSlideWidget {
 		paint.setColor(enabled ? color : 0xFF999999);
 		paint.setStyle(Paint.Style.STROKE);
 		paint.setStrokeWidth(DensityUtil.dip2px(context, 2));
-		canvas.drawCircle(moveX, moveY, radius, paint);
+		if(isInInitMovement){
+			canvas.drawArc(arcBound, 0, 360 * initMovementProcedure, false, paint);
+		}else{
+			canvas.drawCircle(moveX, moveY, radius, paint);
+		}
 		String text = alarm.getFormatedTime();
 		if(null != text){
 			textPaint.setTextSize(width * 0.25F);
 			textPaint.getTextBounds(text, 0, text.length(), bound);
 			
-			canvas.drawText(text, moveX - bound.width() / 2, moveY + bound.height() / 2, textPaint);
+			int offset = 0;
+			if(isInInitMovement){
+				offset = bound.height() - (int) (bound.height() * initMovementProcedure);
+				textPaint.setAlpha((int) (255 * initMovementProcedure));
+			}else{
+				textPaint.setAlpha(255);
+			}
+			
+			canvas.drawText(text, moveX - bound.width() / 2, moveY + bound.height() / 2 - offset, textPaint);
 			if(!alarm.is24Format()){
 				text = alarm.getAmpm();
 				textPaint.setTextSize(textPaint.getTextSize() / 2);
 				textPaint.getTextBounds(text, 0, text.length(), bound2);
 				
-				canvas.drawText(text, moveX - bound2.width() / 2, moveY + bound.height() / 2 + bound2.height() + DensityUtil.dip2px(context, 5), textPaint);
+				canvas.drawText(text, moveX - bound2.width() / 2, moveY + bound.height() / 2 + bound2.height() + DensityUtil.dip2px(context, 5) - offset, textPaint);
 			}
 		}
 	}

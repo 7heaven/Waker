@@ -21,6 +21,7 @@ import com.cfm.waker.service.WakerService;
 import com.cfm.waker.service.WakerService.LocalBinder;
 import com.cfm.waker.ui.SettingActivity;
 import com.cfm.waker.ui.base.BaseSlidableActivity;
+import com.cfm.waker.view.RowBlock;
 import com.cfm.waker.view.WakerViewPager;
 import com.cfm.waker.widget.DebossFontText;
 import com.cfm.waker.widget.DialPicker;
@@ -145,6 +146,10 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 				handler.removeCallbacks(vmRunnable);
 				handler.removeCallbacks(weekRunnable);
 				handler.removeCallbacks(mContentRunnable);
+				
+				if(vy >= viewPagerLayout.getMeasuredHeight() / 4){
+					((RowBlock) viewPager.getChildAt(viewPager.getCurrentItem())).prepareForAlarmsInit();
+				}
 			}
 			
 			@Override
@@ -174,6 +179,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 				int yPosition = dialLayout.getScrollY();
 				if(yPosition < -viewPagerLayout.getMeasuredHeight() / 8){
 					contentMovement(0);
+					((RowBlock) viewPager.getChildAt(viewPager.getCurrentItem())).performAlarmsInit();
 				}
 				if(yPosition >= -viewPagerLayout.getMeasuredHeight() / 8 && yPosition < featureLayout.getMeasuredHeight() / 2){
 					contentMovement(1);
@@ -319,6 +325,9 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 			alarmList.addAll(alarms);
 		}
 		alarmListAdapter.notifyDataSetChanged();
+		if(viewPager.getCurrentItem() == alarmListAdapter.getCount() - 1){
+			((RowBlock) viewPager.getChildAt(viewPager.getCurrentItem())).performLastAlarmInit();
+		}
 	}
 	
 	@Override

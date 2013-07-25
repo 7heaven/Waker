@@ -34,27 +34,17 @@ public class RowBlock extends RelativeLayout {
 	private int visiblePosition = -1;
 	
 	private Handler handler;
-	private AlarmRunnable runnable;
 	
-	private class AlarmRunnable implements Runnable{
+	private class AlarmInitRunnable implements Runnable{
 		private AlarmClockBlock alarm;
-		private int y;
 		
-		public AlarmRunnable(AlarmClockBlock alarm){
+		public AlarmInitRunnable(AlarmClockBlock alarm){
 			this.alarm = alarm;
-			y = alarm.getMeasuredHeight();
-		}
-		
-		public AlarmClockBlock getAlarmClockBlock(){
-			return alarm;
 		}
 		
 		@Override
 		public void run(){
-			y += (0 - y) * 0.51F;
-			alarm.scrollTo(0, y);
-			
-			if(y != 0) handler.postDelayed(runnable, 20);
+			alarm.performInitMovement();
 		}
 	}
 
@@ -72,6 +62,8 @@ public class RowBlock extends RelativeLayout {
 		LayoutInflater layoutInflater = LayoutInflater.from(context);
 		View view = layoutInflater.inflate(R.layout.viewpager_page_alarmblock, null, false);
 		addView(view);
+		
+		handler = new Handler();
 		
 		alarm0 = (AlarmClockBlock) view.findViewById(R.id.alarm0);
 		alarm1 = (AlarmClockBlock) view.findViewById(R.id.alarm1);
@@ -100,13 +92,30 @@ public class RowBlock extends RelativeLayout {
 	}
 	
 	public void performLastAlarmInit(){
-		runnable = new AlarmRunnable(getAlarmBlock(visiblePosition));
-		
-		handler.post(runnable);
+		AlarmClockBlock lastAlarm = getAlarmBlock(visiblePosition);
+		lastAlarm.prepareForInitMovement();
+		setAlarmVisible(visiblePosition);
+		lastAlarm.performInitMovement();
 	}
 	
-	public void cancelAlarmInitperforment(){
-		runnable.getAlarmClockBlock().scrollTo(0, 0);
-		handler.removeCallbacks(runnable);
+	public void prepareForAlarmsInit(){
+		getAlarmBlock(0).prepareForInitMovement();
+		getAlarmBlock(1).prepareForInitMovement();
+		getAlarmBlock(2).prepareForInitMovement();
+		getAlarmBlock(3).prepareForInitMovement();
 	}
+	
+	public void performAlarmsInit(){
+		
+		AlarmInitRunnable alarmInitRunnable0 = new AlarmInitRunnable(getAlarmBlock(0));
+		AlarmInitRunnable alarmInitRunnable1 = new AlarmInitRunnable(getAlarmBlock(1));
+		AlarmInitRunnable alarmInitRunnable2 = new AlarmInitRunnable(getAlarmBlock(2));
+		AlarmInitRunnable alarmInitRunnable3 = new AlarmInitRunnable(getAlarmBlock(3));
+		
+		handler.post(alarmInitRunnable0);
+		handler.postDelayed(alarmInitRunnable1, 250);
+		handler.postDelayed(alarmInitRunnable2, 500);
+		handler.postDelayed(alarmInitRunnable3, 750);
+	}
+	
 }

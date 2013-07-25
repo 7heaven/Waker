@@ -10,7 +10,7 @@
         android:layout_height="80.0dip"
         waker:font="fonts/swiss_ht.ttf"
         waker:color="#FFF99661"
-        android:visibility="gone" />
+        android:visibility="invisible" />
     
     <com.cfm.waker.widget.AlarmClockBlock
         android:id="@+id/alarm1"
@@ -19,7 +19,7 @@
         android:layout_toRightOf="@+id/alarm0"
         waker:font="fonts/swiss_ht.ttf"
         waker:color="#FF0099CC"
-        android:visibility="gone" />
+        android:visibility="invisible" />
     
     <com.cfm.waker.widget.AlarmClockBlock
         android:id="@+id/alarm2"
@@ -28,7 +28,7 @@
         android:layout_toRightOf="@+id/alarm1"
         waker:font="fonts/swiss_ht.ttf"
         waker:color="#FF8BCA09"
-        android:visibility="gone" />
+        android:visibility="invisible" />
     
     <com.cfm.waker.widget.AlarmClockBlock
         android:id="@+id/alarm3"
@@ -37,6 +37,6 @@
         android:layout_toRightOf="@+id/alarm2"
         waker:font="fonts/swiss_ht.ttf"
         waker:color="#FFFCD208"
-        android:visibility="gone" />
+        android:visibility="invisible" />
 
 </RelativeLayout>
