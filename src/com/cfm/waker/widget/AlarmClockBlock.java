@@ -173,7 +173,7 @@ public class AlarmClockBlock extends BaseSlideWidget {
 		@Override
 		public void run(){
 			if(initMovementProcedure < 1F){
-				initMovementProcedure += 0.1;
+				initMovementProcedure += 0.1F;
 				invalidate();
 				
 				handler.postDelayed(initRunnable, 20);

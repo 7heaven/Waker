@@ -148,7 +148,10 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 				handler.removeCallbacks(mContentRunnable);
 				
 				if(vy >= viewPagerLayout.getMeasuredHeight() / 4){
-					((RowBlock) viewPager.getChildAt(viewPager.getCurrentItem())).prepareForAlarmsInit();
+					View currentRow = alarmListAdapter.getItem(viewPager.getCurrentItem());
+					if(currentRow instanceof RowBlock){
+						((RowBlock) currentRow).prepareForAlarmsInit();
+					}
 				}
 			}
 			
@@ -179,7 +182,11 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 				int yPosition = dialLayout.getScrollY();
 				if(yPosition < -viewPagerLayout.getMeasuredHeight() / 8){
 					contentMovement(0);
-					((RowBlock) viewPager.getChildAt(viewPager.getCurrentItem())).performAlarmsInit();
+					
+					View currentRow = alarmListAdapter.getItem(viewPager.getCurrentItem());
+					if(currentRow instanceof RowBlock){
+						((RowBlock) currentRow).performAlarmsInit();
+					}
 				}
 				if(yPosition >= -viewPagerLayout.getMeasuredHeight() / 8 && yPosition < featureLayout.getMeasuredHeight() / 2){
 					contentMovement(1);

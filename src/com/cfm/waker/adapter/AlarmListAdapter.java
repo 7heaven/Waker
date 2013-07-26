@@ -107,6 +107,10 @@ public class AlarmListAdapter extends PagerAdapter{
 	public int getItemPosition(Object object){
 		return PagerAdapter.POSITION_NONE;
 	}
+	
+	public View getItem(int position){
+		return viewList.get(position);
+	}
 
 	@Override
 	public int getCount() {
