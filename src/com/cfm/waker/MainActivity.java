@@ -149,8 +149,10 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 				
 				if(vy >= viewPagerLayout.getMeasuredHeight() / 4){
 					View currentRow = alarmListAdapter.getItem(viewPager.getCurrentItem());
-					if(currentRow instanceof RowBlock){
-						((RowBlock) currentRow).prepareForAlarmsInit();
+					if(currentRow != null){
+						if(currentRow instanceof RowBlock){
+							((RowBlock) currentRow).prepareForAlarmsInit();
+						}
 					}
 				}
 			}

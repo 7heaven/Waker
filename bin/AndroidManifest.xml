@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.cfm.waker"
+    android:versionCode="1"
+    android:versionName="0.5.1" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="15"
+        android:maxSdkVersion="15" />
+    
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <application
+        android:allowBackup="true"
+        android:name=".WakerApplication"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <receiver 
+            android:name="com.cfm.waker.receiver.SetNextDayReceiver"
+            android:process=":remote" />
+        <activity
+            android:name="com.cfm.waker.MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.cfm.waker.ui.ShakeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.cfm.waker.ui.SettingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.cfm.waker.ui.AboutActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.cfm.waker.ui.AfterWakeUpActivity"
+            android:screenOrientation="portrait" />
+        
+        <service android:name="com.cfm.waker.service.WakerService" />
+        <receiver android:name="com.cfm.waker.receiver.BootReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <category android:name="android.intent.category.HOME" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>
