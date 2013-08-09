@@ -14,7 +14,6 @@ import android.graphics.drawable.Drawable;
 
 public class ThemeManager{
 	
-	private Context context;
 	private static ThemeManager instance;
 	
 	private int currentColor = -1;
@@ -24,7 +23,6 @@ public class ThemeManager{
 	private ArrayList<ThemeEnable> themeObjectList;
 	
     public ThemeManager(Context context){
-    	this.context = context;
     	themeObjectList = new ArrayList<ThemeEnable>();
     }
     

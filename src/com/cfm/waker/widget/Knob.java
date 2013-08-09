@@ -1,7 +1,6 @@
 package com.cfm.waker.widget;
 
 import com.cfm.waker.R;
-import com.cfm.waker.log.WLog;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -37,7 +36,7 @@ public class Knob extends DialPicker{
 	public Knob(Context context, AttributeSet attrs, int defStyle){
 		super(context, attrs, defStyle);
 		
-		setToKnotMode(true);
+		setToKnobMode(true);
 		
 		backgroundDrawable = context.getResources().getDrawable(R.drawable.background_knob);
 		dotDrawable = context.getResources().getDrawable(R.drawable.dot_knob);

@@ -9,11 +9,8 @@ package com.cfm.waker.entity;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
-
-import com.cfm.waker.log.WLog;
 
 public class Alarm implements Serializable{
 	

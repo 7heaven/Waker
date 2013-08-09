@@ -61,7 +61,7 @@ public class DialPicker extends View implements ThemeEnable{
 	private OnTimePickListener mOnTimePickListener;
 	
 	private boolean convert;
-	private boolean isKnotMode;
+	private boolean isKnobMode;
 	
 	protected boolean isCenterPressed;
 	protected boolean isCirclePressed;
@@ -113,7 +113,7 @@ public class DialPicker extends View implements ThemeEnable{
 		backgroundBound = new Rect();
 		
 		convert = false;
-		isKnotMode = false;
+		isKnobMode = false;
 		
 		isCenterPressed = false;
 		isCirclePressed = false;
@@ -149,7 +149,7 @@ public class DialPicker extends View implements ThemeEnable{
 		mediumCircleRange = (int) (backgroundRange * exactRangeRatio) / 2;
 		
 		outerPressRange = mediumCircleRange + thumbPressRange / 2;
-		setToKnotMode(isKnotMode);
+		setToKnobMode(isKnobMode);
 		
 		arcBound.top = centerPoint.y - arcRange;
 		arcBound.left = centerPoint.x - arcRange;
@@ -159,9 +159,9 @@ public class DialPicker extends View implements ThemeEnable{
 		performDial(drawDegree);
 	}
 	
-	public void setToKnotMode(boolean isKnotMode){
-		this.isKnotMode = isKnotMode;
-		if(isKnotMode){
+	public void setToKnobMode(boolean isKnobMode){
+		this.isKnobMode = isKnobMode;
+		if(isKnobMode){
 			innerPressRange = 0;
 		}else{
 			innerPressRange = mediumCircleRange - thumbPressRange / 2;

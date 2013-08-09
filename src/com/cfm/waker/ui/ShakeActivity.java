@@ -19,7 +19,6 @@ import com.cfm.waker.log.WLog;
 import com.cfm.waker.ui.base.BaseActivity;
 import com.cfm.waker.util.Constants;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -49,8 +48,6 @@ public class ShakeActivity extends BaseActivity implements OnShakeListener,
 	private int snoozeCount;
 	private int flagCount;
 	
-	private int sampleId;
-	private String musicPath;
 	private int streamId;
 	
 	private Handler handler;

@@ -34,8 +34,8 @@ public class DebossFontText extends View {
 	private Shader shader;
 	private Rect textBound;
 	
-	private int centerX,centerY;
-	private int width,height;
+	private int centerY;
+	private int height;
 	private float offset;
 	
 	private boolean isMarginShow;
@@ -117,9 +117,7 @@ public class DebossFontText extends View {
 			this.setMeasuredDimension(textWidth, (int) (textSize * 1.2F + (offset * 2)));
 		}
 		
-		width = getMeasuredWidth();
 		height = getMeasuredHeight();
-		centerX = width / 2;
 		centerY = height / 2;
 		
 		shader = new LinearGradient(0, 0, 0, height, new int[]{colorOffsetBright, colorOffsetDark}, null, Shader.TileMode.REPEAT);
