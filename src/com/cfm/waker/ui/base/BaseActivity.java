@@ -12,6 +12,7 @@ import com.cfm.waker.dao.WakerPreferenceManager;
 import com.cfm.waker.theme.ThemeManager;
 
 import android.app.Activity;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Window;
 
@@ -29,6 +30,9 @@ public class BaseActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		
+		getWindow().setBackgroundDrawable(new ColorDrawable(0));
+		getWindow().getDecorView().setBackgroundDrawable(null);
 		
 		mApplication = (WakerApplication) getApplication();
 		theme = ThemeManager.getInstance(this);
