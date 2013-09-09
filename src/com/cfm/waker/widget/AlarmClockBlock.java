@@ -24,7 +24,6 @@ import android.util.AttributeSet;
 import com.cfm.waker.R;
 import com.cfm.waker.dao.WakerDatabaseHelper;
 import com.cfm.waker.entity.Alarm;
-import com.cfm.waker.util.DensityUtil;
 import com.cfm.waker.view.SlideEvent;
 import com.cfm.waker.widget.base.BaseSlideWidget;
 
@@ -40,6 +39,7 @@ public class AlarmClockBlock extends BaseSlideWidget {
 	private int centerX, centerY;
 	private int radius;
 	private float moveX, moveY;
+	private int intrinsicHeight;
 	
 	private boolean enabled;
 	
@@ -78,6 +78,8 @@ public class AlarmClockBlock extends BaseSlideWidget {
 		super(context, attrs, defStyle);
 		
 		this.context = context;
+		
+		intrinsicHeight = context.getResources().getDimensionPixelOffset(R.dimen.alarmclockblock_height);
 		
 		enabled = false;
 		isInInitMovement = false;
@@ -126,9 +128,9 @@ public class AlarmClockBlock extends BaseSlideWidget {
 		case SlideEvent.TOUCHMODE_DRAGGING_VERTICALLY:
 			moveX = centerX;
 			moveY = centerY - event.getStartY() + event.getY();
-			if(event.getDy() > 0 && event.getDy() < DensityUtil.dip2px(context, 80)){
+			if(event.getDy() > 0 && event.getDy() < intrinsicHeight){
 				invalidate();
-			}else if(event.getDy() > DensityUtil.dip2px(context, 80)){
+			}else if(event.getDy() > intrinsicHeight){
 				event.setAction(SlideEvent.TOUCHMODE_IDLE);
 				enabled = !enabled;
 				alarm.setEnabled(enabled);
@@ -244,7 +246,7 @@ public class AlarmClockBlock extends BaseSlideWidget {
 		
 		paint.setColor(enabled ? color : 0xFF999999);
 		paint.setStyle(Paint.Style.STROKE);
-		paint.setStrokeWidth(DensityUtil.dip2px(context, 2));
+		paint.setStrokeWidth(context.getResources().getDimension(R.dimen.alarmclockblock_paint_stroke_width));
 		if(isInInitMovement){
 			canvas.drawArc(arcBound, 0, 360 * initMovementProcedure, false, paint);
 		}else{
@@ -269,7 +271,7 @@ public class AlarmClockBlock extends BaseSlideWidget {
 				textPaint.setTextSize(textPaint.getTextSize() / 2);
 				textPaint.getTextBounds(text, 0, text.length(), bound2);
 				
-				canvas.drawText(text, moveX - bound2.width() / 2, moveY + bound.height() / 2 + bound2.height() + DensityUtil.dip2px(context, 5) - offset, textPaint);
+				canvas.drawText(text, moveX - bound2.width() / 2, moveY + bound.height() / 2 + bound2.height() + context.getResources().getDimension(R.dimen.alarmclockblock_text_bound_offset) - offset, textPaint);
 			}
 		}
 	}

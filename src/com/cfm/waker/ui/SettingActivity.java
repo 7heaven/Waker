@@ -24,7 +24,6 @@ import com.cfm.waker.widget.TitleIndicator;
 public class SettingActivity extends BaseSlidableActivity{
 	
 	private Knob volumePicker;
-	private TitleIndicator volumeTitle;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
@@ -32,9 +31,6 @@ public class SettingActivity extends BaseSlidableActivity{
 		setContentView(R.layout.activity_settings);
 		
 		volumePicker = (Knob) findViewById(R.id.volume_picker);
-		volumeTitle = (TitleIndicator) findViewById(R.id.volume_title);
-		
-		theme.registerThemeObject(volumePicker, volumeTitle);
 		
 		volumePicker.setOnTimePickListener(new OnTimePickListener(){
 

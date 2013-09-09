@@ -330,6 +330,13 @@ public class DialPicker extends View implements ThemeEnable{
 		return p;
 	}
 	
+	protected int distance(Point point1, Point point2){
+		int dx = point2.x - point1.x;
+		int dy = point2.y - point1.y;
+		
+		return (int) Math.sqrt(dx * dx + dy * dy);
+	}
+	
 	/**
 	 * angle in radians
 	 * @param angel

@@ -7,6 +7,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -24,7 +25,12 @@ public class Knob extends DialPicker{
 	private int offset;
 	
 	private float dotRangeRatio = 0.05F;
+	
+	private int boundStrokeWidth;
+	private int progressStrokeWidth;
 
+	private RectF progressBound;
+	
 	public Knob(Context context){
 		this(context, null);
 	}
@@ -49,6 +55,11 @@ public class Knob extends DialPicker{
 		if(minDegreeRange != 0) drawDegree = minDegreeRange;
 		
 		exactRangeRatio = 0.65F;
+		
+		boundStrokeWidth = context.getResources().getDimensionPixelOffset(R.dimen.knob_bound_stroke_width);
+		progressStrokeWidth = context.getResources().getDimensionPixelOffset(R.dimen.knob_progress_stroke_width);
+		
+		progressBound = new RectF();
 	}
 	
 	@Override
@@ -59,6 +70,7 @@ public class Knob extends DialPicker{
 		if(maxDegreeRange != -1 && minDegreeRange != -1){
 			
 			paint.setStyle(Paint.Style.STROKE);
+			paint.setStrokeWidth(boundStrokeWidth);
 			//paint.setStrokeWidth(dotRange * 0.4F);
 			
 			int range = backgroundBound.width() / 2;
@@ -68,6 +80,16 @@ public class Knob extends DialPicker{
 			innerPoint = centerRadiusPoint(centerPoint, getRadiansForDraw(minDegreeRange), range);
 			outerPoint = centerRadiusPoint(centerPoint, getRadiansForDraw(minDegreeRange), range * 0.92F);
 			canvas.drawLine(innerPoint.x, innerPoint.y, outerPoint.x, outerPoint.y, paint);
+			
+			progressBound.set(backgroundBound);
+			int dis = distance(innerPoint, outerPoint) / 2;
+			progressBound.left += dis;
+			progressBound.top += dis;
+			progressBound.right -=dis;
+			progressBound.bottom -= dis;
+			
+			paint.setStrokeWidth(progressStrokeWidth);
+			canvas.drawArc(progressBound, minDegreeRange - 90, angleMinus(drawDegree, minDegreeRange), false, paint);
 		}
 		
 		paint.setStyle(Paint.Style.FILL);

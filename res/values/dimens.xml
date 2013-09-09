@@ -15,5 +15,14 @@
     
     <!-- WeekSelector -->
     <dimen name="weekselector_textsize">14dip</dimen>
+    
+    <!-- AlarmClockBlock -->
+    <dimen name="alarmclockblock_height">80dip</dimen>
+    <dimen name="alarmclockblock_paint_stroke_width">2dip</dimen>
+    <dimen name="alarmclockblock_text_bound_offset">5dip</dimen>
 
+    <!-- Knob -->
+    <dimen name="knob_bound_stroke_width">1dip</dimen>
+    <dimen name="knob_progress_stroke_width">5dip</dimen>
+    
 </resources>
