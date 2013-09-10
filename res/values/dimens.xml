@@ -23,6 +23,6 @@
 
     <!-- Knob -->
     <dimen name="knob_bound_stroke_width">1dip</dimen>
-    <dimen name="knob_progress_stroke_width">5dip</dimen>
+    <dimen name="knob_progress_stroke_width">17dip</dimen>
     
 </resources>

@@ -22,9 +22,12 @@ public class Knob extends DialPicker{
 	private int maxDegreeRange;
 	private int minDegreeRange;
 	
+	private float dotRadiusRange;
+	
 	private int offset;
 	
-	private float dotRangeRatio = 0.05F;
+	private float dotRangeRatio = 0.055F;
+	private float dotRadiusRatio = 1.115F;
 	
 	private int boundStrokeWidth;
 	private int progressStrokeWidth;
@@ -41,7 +44,6 @@ public class Knob extends DialPicker{
 	
 	public Knob(Context context, AttributeSet attrs, int defStyle){
 		super(context, attrs, defStyle);
-		
 		setToKnobMode(true);
 		
 		backgroundDrawable = context.getResources().getDrawable(R.drawable.background_knob);
@@ -63,14 +65,29 @@ public class Knob extends DialPicker{
 	}
 	
 	@Override
+	public void onMeasure(int widthMeasureSpec, int heightMeasureSpec){
+		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+		
+		progressBound.left = centerPoint.x - dotRadiusRange;
+		progressBound.top = centerPoint.y - dotRadiusRange;
+		progressBound.right = centerPoint.x + dotRadiusRange;
+		progressBound.bottom = centerPoint.y + dotRadiusRange;
+		
+		dotRadiusRange = mediumCircleRange * dotRadiusRatio;
+	}
+	
+	@Override
 	public void onDraw(Canvas canvas){
 		
-		float dotRange = backgroundBound.width() * dotRangeRatio;
+		//float dotRange = backgroundBound.width() * dotRangeRatio;
 		
 		if(maxDegreeRange != -1 && minDegreeRange != -1){
 			
 			paint.setStyle(Paint.Style.STROKE);
+			paint.setStrokeCap(Paint.Cap.ROUND);
+			/*
 			paint.setStrokeWidth(boundStrokeWidth);
+			
 			//paint.setStrokeWidth(dotRange * 0.4F);
 			
 			int range = backgroundBound.width() / 2;
@@ -80,13 +97,7 @@ public class Knob extends DialPicker{
 			innerPoint = centerRadiusPoint(centerPoint, getRadiansForDraw(minDegreeRange), range);
 			outerPoint = centerRadiusPoint(centerPoint, getRadiansForDraw(minDegreeRange), range * 0.92F);
 			canvas.drawLine(innerPoint.x, innerPoint.y, outerPoint.x, outerPoint.y, paint);
-			
-			progressBound.set(backgroundBound);
-			int dis = distance(innerPoint, outerPoint) / 2;
-			progressBound.left += dis;
-			progressBound.top += dis;
-			progressBound.right -=dis;
-			progressBound.bottom -= dis;
+			 */
 			
 			paint.setStrokeWidth(progressStrokeWidth);
 			canvas.drawArc(progressBound, minDegreeRange - 90, angleMinus(drawDegree, minDegreeRange), false, paint);
@@ -98,10 +109,12 @@ public class Knob extends DialPicker{
 		backgroundDrawable.draw(canvas);
 		
 		
+		/*
 		int halfDotRange = (int) (dotRange / 2);
 		canvas.drawCircle(drawPoint.x, drawPoint.y, dotRange * 0.45F, paint);
 		dotDrawable.setBounds(drawPoint.x - halfDotRange, drawPoint.y - halfDotRange, drawPoint.x + halfDotRange, drawPoint.y + halfDotRange);
 		dotDrawable.draw(canvas);
+		 */
 	}
 	
 	@Override
@@ -152,7 +165,7 @@ public class Knob extends DialPicker{
 		double realAngle = getRadiansForDraw(drawDegree);
 		
 		isDrawPressPoint = true;
-		drawPoint = centerRadiusPoint(centerPoint, realAngle, mediumCircleRange * 1.1F);
+		drawPoint = centerRadiusPoint(centerPoint, realAngle, dotRadiusRange);
 		
 		invalidate();
 	}
