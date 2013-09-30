@@ -19,7 +19,6 @@ import com.cfm.waker.ui.base.BaseSlidableActivity;
 import com.cfm.waker.widget.DialPicker.OnTimePickListener;
 import com.cfm.waker.widget.ExactLinearLayout;
 import com.cfm.waker.widget.Knob;
-import com.cfm.waker.widget.TitleIndicator;
 
 public class SettingActivity extends BaseSlidableActivity{
 	

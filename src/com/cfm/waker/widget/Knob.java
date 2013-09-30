@@ -122,7 +122,12 @@ public class Knob extends DialPicker{
 		if((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_DOWN){
 			double dx = event.getX() - centerPoint.x;
 			double dy = event.getY() - centerPoint.y;
-			offset = angleMinus(getDegrees(Math.atan2(dy, dx)), drawDegree);
+			
+			int angle = getDegrees(Math.atan2(dy, dx));
+			
+			if(isInRange(minDegreeRange, maxDegreeRange, angle)) return false;
+			
+			offset = angleMinus(angle, drawDegree);
 		}
 		
 		return super.onTouchEvent(event);

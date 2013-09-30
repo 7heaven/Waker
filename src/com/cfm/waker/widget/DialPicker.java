@@ -162,7 +162,7 @@ public class DialPicker extends View implements ThemeEnable{
 	public void setToKnobMode(boolean isKnobMode){
 		this.isKnobMode = isKnobMode;
 		if(isKnobMode){
-			innerPressRange = 0;
+			innerPressRange = mediumCircleRange - thumbPressRange / 2;
 		}else{
 			innerPressRange = mediumCircleRange - thumbPressRange / 2;
 		}
@@ -262,7 +262,7 @@ public class DialPicker extends View implements ThemeEnable{
 	}
 	
 	
-	//perform a dial action ever there's no touch event input
+	//perform a dial action even there's no touch event input
 	/**
 	 * angle in degrees
 	 * @param angle
@@ -373,7 +373,8 @@ public class DialPicker extends View implements ThemeEnable{
 		}
 	}
 	
-	protected boolean isInRange(int start, int range, int des){
+	protected boolean isInRange(int start, int end, int des){
+		int range = end - start;
 		if(start + range < 0){
 			return (des >= 0 && des <= start) || (des >= angleMinus(start, -range) && des <= 360);
 		}

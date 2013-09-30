@@ -42,7 +42,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 public class MainActivity extends BaseSlidableActivity implements OnTimePickListener{
 	
@@ -365,7 +364,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 	@Override
 	public void onCenterClick(){
 		if(weekSelector.getWeekSet() == 0){
-			WakerToast.makeNegativeText(this, getString(R.string.must_select_week_of_day), Toast.LENGTH_LONG).show();
+			WakerToast.makeNegativeText(this, getString(R.string.must_select_week_of_day), 1).show();
 		}else{
 			pickingTime = false;
 			
@@ -373,7 +372,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 			
 			wakerService.setAlarm(alarm);
 			
-			WakerToast.makePositiveText(this, getString(R.string.alarm_set, alarm.getFormatedTime()), Toast.LENGTH_LONG).show();
+			WakerToast.makePositiveText(this, getString(R.string.alarm_set, alarm.getFormatedTime()), 1).show();
 			
 			contentMovement(1);
 			dialPicker.setMode(DialPicker.MODE_PICK);
