@@ -127,7 +127,7 @@ public class Knob extends DialPicker{
 			
 			if(isInRange(minDegreeRange, maxDegreeRange, angle)) return false;
 			
-			offset = angleMinus(angle, drawDegree);
+			//offset = angleMinus(angle, drawDegree);
 		}
 		
 		return super.onTouchEvent(event);
@@ -141,14 +141,15 @@ public class Knob extends DialPicker{
 	public void setValue(float value){
 		int degree = (int) (angleMinus(maxDegreeRange, minDegreeRange) * value);
 		
-		offset = 0;
+		//offset = 0;
 		drawDegree = anglePlus(minDegreeRange, degree);
 		performDial(drawDegree);
 	}
 	
 	@Override
 	public void performDial(int angle){
-		int r = angleMinus(angle, offset);
+		//int r = angleMinus(angle, offset);
+		int r = angle;
 		
 		//to prevent drawDegree exceed Range
 		if(maxDegreeRange != -1 && minDegreeRange != -1){
