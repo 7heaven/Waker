@@ -20,7 +20,9 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
+import android.view.ViewConfiguration;
 
 public class DialPicker extends View implements ThemeEnable{
 	
@@ -30,6 +32,9 @@ public class DialPicker extends View implements ThemeEnable{
 	public static final int MODE_CONFIRM = 1;
 	
 	private int mode = MODE_PICK;
+	
+	private VelocityTracker velocityTracker = VelocityTracker.obtain();
+	protected float xVelocity;
 	
 	protected int mediumCircleRange;
 	protected float exactRangeRatio = 0.675F;
@@ -63,7 +68,6 @@ public class DialPicker extends View implements ThemeEnable{
 	private boolean convert;
 	private boolean isKnobMode;
 	
-	protected boolean isInMovingMode;
 	protected boolean isCenterPressed;
 	protected boolean isCirclePressed;
 	protected boolean isDrawPressPoint;
@@ -116,11 +120,11 @@ public class DialPicker extends View implements ThemeEnable{
 		convert = false;
 		isKnobMode = false;
 		
-		isInMovingMode = false;
 		isCenterPressed = false;
 		isCirclePressed = false;
 		isDrawPressPoint = false;
 		isDrawCenterButtonPressed = false;
+		
 	}
 	
 	public void setOnPickListener(OnPickListener mOnTimePickListener){
@@ -172,6 +176,8 @@ public class DialPicker extends View implements ThemeEnable{
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event){
+		velocityTracker.addMovement(event);
+		
 		final int action = event.getAction() & MotionEvent.ACTION_MASK;
 		
 		switch(action){
@@ -203,7 +209,6 @@ public class DialPicker extends View implements ThemeEnable{
 			
 			break;
 		case MotionEvent.ACTION_MOVE:
-			isInMovingMode = true;
 			float dx = event.getX() - centerPoint.x;
 			float dy = event.getY() - centerPoint.y;
 			if(isDrawPressPoint){
@@ -249,6 +254,11 @@ public class DialPicker extends View implements ThemeEnable{
 			isCenterPressed = false;
 			
 			invalidate();
+			
+			velocityTracker.computeCurrentVelocity(1000);
+			xVelocity = velocityTracker.getXVelocity();
+			
+			velocityTracker.clear();
 			
 			break;
 		}
@@ -377,7 +387,14 @@ public class DialPicker extends View implements ThemeEnable{
 	}
 	
 	protected boolean isInRange(int start, int end, int des){
-		int range = end - start;
+		
+		if(start > end){
+			return ((des <= end && des >=0) || (des >= start && des <= 360));
+		}else{
+			return des >=start && des <= end;
+		}
+		
+		/*
 		if(start + range < 0){
 			return (des >= 0 && des <= start) || (des >= angleMinus(start, -range) && des <= 360);
 		}
@@ -391,6 +408,7 @@ public class DialPicker extends View implements ThemeEnable{
 		}else{
 			return des >= start + range && des <= start;
 		}
+		 */
 	}
 	
 	//for Theme management

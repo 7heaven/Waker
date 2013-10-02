@@ -23,6 +23,7 @@ public class Knob extends DialPicker{
 	protected int minAngleRange;
 	
 	protected float dotRadiusRange;
+	protected float dotRange;
 	
 	protected int offset;
 	
@@ -68,12 +69,14 @@ public class Knob extends DialPicker{
 	public void onMeasure(int widthMeasureSpec, int heightMeasureSpec){
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 		
+		dotRange = mediumCircleRange * dotRangeRatio;
+		dotRadiusRange = mediumCircleRange * dotRadiusRatio;
+		
 		progressBound.left = centerPoint.x - dotRadiusRange;
 		progressBound.top = centerPoint.y - dotRadiusRange;
 		progressBound.right = centerPoint.x + dotRadiusRange;
 		progressBound.bottom = centerPoint.y + dotRadiusRange;
 		
-		dotRadiusRange = mediumCircleRange * dotRadiusRatio;
 	}
 	
 	@Override
@@ -125,7 +128,7 @@ public class Knob extends DialPicker{
 			
 			int angle = getDegrees(Math.atan2(dy, dx));
 			
-			if(isInRange(minAngleRange, maxAngleRange, angle)) return false;
+			if(!isInRange(minAngleRange, maxAngleRange, angle)) return false;
 			
 			//offset = angleMinus(angle, drawDegree);
 		}
