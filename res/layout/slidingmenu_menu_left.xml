@@ -11,8 +11,8 @@
         android:layout_height="250.0dip"
         android:layout_centerVertical="true"
         android:layout_marginLeft="-100.0dip"
-        waker:degreeRange_max="150"
-        waker:degreeRange_min="30" />
+        waker:angleRange_max="150"
+        waker:angleRange_min="30" />
     
     <com.cfm.waker.view.ThemeView
         android:id="@+id/margin_view"

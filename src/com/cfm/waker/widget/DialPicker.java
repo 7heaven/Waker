@@ -63,6 +63,7 @@ public class DialPicker extends View implements ThemeEnable{
 	private boolean convert;
 	private boolean isKnobMode;
 	
+	protected boolean isInMovingMode;
 	protected boolean isCenterPressed;
 	protected boolean isCirclePressed;
 	protected boolean isDrawPressPoint;
@@ -115,6 +116,7 @@ public class DialPicker extends View implements ThemeEnable{
 		convert = false;
 		isKnobMode = false;
 		
+		isInMovingMode = false;
 		isCenterPressed = false;
 		isCirclePressed = false;
 		isDrawPressPoint = false;
@@ -201,6 +203,7 @@ public class DialPicker extends View implements ThemeEnable{
 			
 			break;
 		case MotionEvent.ACTION_MOVE:
+			isInMovingMode = true;
 			float dx = event.getX() - centerPoint.x;
 			float dy = event.getY() - centerPoint.y;
 			if(isDrawPressPoint){

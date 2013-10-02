@@ -9,8 +9,8 @@
         android:layout_width="280.0dip"
         android:layout_height="280.0dip"
         android:layout_centerInParent="true"
-        waker:degreeRange_min="300"
-        waker:degreeRange_max="60"
+        waker:angleRange_min="300"
+        waker:angleRange_max="60"
         waker:color="@color/global_hint_color" />
     
     <com.cfm.waker.widget.DebossFontText

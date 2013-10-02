@@ -42,8 +42,8 @@
     </declare-styleable>
     
     <declare-styleable name="Knob">
-        <attr name="degreeRange_max" format="integer" />
-        <attr name="degreeRange_min" format="integer" />
+        <attr name="angleRange_max" format="integer" />
+        <attr name="angleRange_min" format="integer" />
     </declare-styleable>
     
     <declare-styleable name="SlidingMenu">
@@ -80,6 +80,16 @@
     
     <declare-styleable name="CurveView">
         <attr name="color" />
+    </declare-styleable>
+    
+    <declare-styleable name="CurveSwitcher">
+        <attr name="checked" format="boolean" />
+        <attr name="viewMode">
+            <enum name="upper" value="0" />
+            <enum name="lower" value="1" />
+        </attr>
+        <attr name="drawableMask" format="reference" />
+        <attr name="angleRange" format="integer" />
     </declare-styleable>
     
 </resources>

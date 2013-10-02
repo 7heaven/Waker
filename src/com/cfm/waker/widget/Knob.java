@@ -17,22 +17,22 @@ public class Knob extends DialPicker{
 	private static final String TAG = "Knob";
 	
 	private Drawable backgroundDrawable;
-	private Drawable dotDrawable;
+	protected Drawable dotDrawable;
 	
-	private int maxDegreeRange;
-	private int minDegreeRange;
+	protected int maxAngleRange;
+	protected int minAngleRange;
 	
-	private float dotRadiusRange;
+	protected float dotRadiusRange;
 	
-	private int offset;
+	protected int offset;
 	
-	private float dotRangeRatio = 0.055F;
-	private float dotRadiusRatio = 1.115F;
+	protected float dotRangeRatio = 0.055F;
+	protected float dotRadiusRatio = 1.115F;
 	
-	private int boundStrokeWidth;
-	private int progressStrokeWidth;
+	protected int boundStrokeWidth;
+	protected int progressStrokeWidth;
 
-	private RectF progressBound;
+	protected RectF progressBound;
 	
 	public Knob(Context context){
 		this(context, null);
@@ -50,11 +50,11 @@ public class Knob extends DialPicker{
 		dotDrawable = context.getResources().getDrawable(R.drawable.dot_knob);
 		
 		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.Knob);
-		maxDegreeRange = ta.getInt(R.styleable.Knob_degreeRange_max, -1);
-		minDegreeRange = ta.getInt(R.styleable.Knob_degreeRange_min, -1);
+		maxAngleRange = ta.getInt(R.styleable.Knob_angleRange_max, -1);
+		minAngleRange = ta.getInt(R.styleable.Knob_angleRange_min, -1);
 		ta.recycle();
 		
-		if(minDegreeRange != 0) drawDegree = minDegreeRange;
+		if(minAngleRange != 0) drawDegree = minAngleRange;
 		
 		exactRangeRatio = 0.65F;
 		
@@ -81,7 +81,7 @@ public class Knob extends DialPicker{
 		
 		//float dotRange = backgroundBound.width() * dotRangeRatio;
 		
-		if(maxDegreeRange != -1 && minDegreeRange != -1){
+		if(maxAngleRange != -1 && minAngleRange != -1){
 			
 			paint.setStyle(Paint.Style.STROKE);
 			paint.setStrokeCap(Paint.Cap.ROUND);
@@ -91,16 +91,16 @@ public class Knob extends DialPicker{
 			//paint.setStrokeWidth(dotRange * 0.4F);
 			
 			int range = backgroundBound.width() / 2;
-			Point innerPoint = centerRadiusPoint(centerPoint, getRadiansForDraw(maxDegreeRange), range);
-			Point outerPoint = centerRadiusPoint(centerPoint, getRadiansForDraw(maxDegreeRange), range * 0.92F);
+			Point innerPoint = centerRadiusPoint(centerPoint, getRadiansForDraw(maxAngleRange), range);
+			Point outerPoint = centerRadiusPoint(centerPoint, getRadiansForDraw(maxAngleRange), range * 0.92F);
 			canvas.drawLine(innerPoint.x, innerPoint.y, outerPoint.x, outerPoint.y, paint);
-			innerPoint = centerRadiusPoint(centerPoint, getRadiansForDraw(minDegreeRange), range);
-			outerPoint = centerRadiusPoint(centerPoint, getRadiansForDraw(minDegreeRange), range * 0.92F);
+			innerPoint = centerRadiusPoint(centerPoint, getRadiansForDraw(minAngleRange), range);
+			outerPoint = centerRadiusPoint(centerPoint, getRadiansForDraw(minAngleRange), range * 0.92F);
 			canvas.drawLine(innerPoint.x, innerPoint.y, outerPoint.x, outerPoint.y, paint);
 			 */
 			
 			paint.setStrokeWidth(progressStrokeWidth);
-			canvas.drawArc(progressBound, minDegreeRange - 90, angleMinus(drawDegree, minDegreeRange), false, paint);
+			canvas.drawArc(progressBound, minAngleRange - 90, angleMinus(drawDegree, minAngleRange), false, paint);
 		}
 		
 		paint.setStyle(Paint.Style.FILL);
@@ -125,7 +125,7 @@ public class Knob extends DialPicker{
 			
 			int angle = getDegrees(Math.atan2(dy, dx));
 			
-			if(isInRange(minDegreeRange, maxDegreeRange, angle)) return false;
+			if(isInRange(minAngleRange, maxAngleRange, angle)) return false;
 			
 			//offset = angleMinus(angle, drawDegree);
 		}
@@ -134,15 +134,15 @@ public class Knob extends DialPicker{
 	}
 	
 	public float getValue(){
-		float returnValue = 1F - (float) angleMinus(maxDegreeRange, drawDegree) / (float) angleMinus(maxDegreeRange,minDegreeRange);
+		float returnValue = 1F - (float) angleMinus(maxAngleRange, drawDegree) / (float) angleMinus(maxAngleRange,minAngleRange);
 		return returnValue;
 	}
 	
 	public void setValue(float value){
-		int degree = (int) (angleMinus(maxDegreeRange, minDegreeRange) * value);
+		int degree = (int) (angleMinus(maxAngleRange, minAngleRange) * value);
 		
 		//offset = 0;
-		drawDegree = anglePlus(minDegreeRange, degree);
+		drawDegree = anglePlus(minAngleRange, degree);
 		performDial(drawDegree);
 	}
 	
@@ -152,15 +152,15 @@ public class Knob extends DialPicker{
 		int r = angle;
 		
 		//to prevent drawDegree exceed Range
-		if(maxDegreeRange != -1 && minDegreeRange != -1){
-			//when move ACW & drawDegree exceed minDegreeRange;
-			if(angleMinus(drawDegree, r) < 179 && angleMinus(minDegreeRange, r) < 179){
+		if(maxAngleRange != -1 && minAngleRange != -1){
+			//when move ACW & drawDegree exceed minAngleRange;
+			if(angleMinus(drawDegree, r) < 179 && angleMinus(minAngleRange, r) < 179){
 				offset = angleMinus(angle, drawDegree);
-				drawDegree = minDegreeRange;
-			//when move CW & drawDegree exceed maxDegreeRange;
-			}else if(angleMinus(r, drawDegree) < 179 && angleMinus(r, maxDegreeRange) < 179){
+				drawDegree = minAngleRange;
+			//when move CW & drawDegree exceed maxAngleRange;
+			}else if(angleMinus(r, drawDegree) < 179 && angleMinus(r, maxAngleRange) < 179){
 				offset = angleMinus(angle, drawDegree);
-				drawDegree = maxDegreeRange;
+				drawDegree = maxAngleRange;
 			}else{
 				drawDegree = r;
 			}
