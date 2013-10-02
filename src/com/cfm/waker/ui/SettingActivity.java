@@ -16,13 +16,15 @@ import android.os.Bundle;
 import com.cfm.waker.dao.WakerPreferenceManager;
 import com.cfm.waker.log.WLog;
 import com.cfm.waker.ui.base.BaseSlidableActivity;
-import com.cfm.waker.widget.DialPicker.OnTimePickListener;
+import com.cfm.waker.widget.DebossFontText;
+import com.cfm.waker.widget.DialPicker.OnPickListener;
 import com.cfm.waker.widget.ExactLinearLayout;
 import com.cfm.waker.widget.Knob;
 
 public class SettingActivity extends BaseSlidableActivity{
 	
 	private Knob volumePicker;
+	private DebossFontText volumeText;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
@@ -30,14 +32,17 @@ public class SettingActivity extends BaseSlidableActivity{
 		setContentView(R.layout.activity_settings);
 		
 		volumePicker = (Knob) findViewById(R.id.volume_picker);
+		volumeText = (DebossFontText) findViewById(R.id.volume_text);
 		
-		volumePicker.setOnTimePickListener(new OnTimePickListener(){
+		volumePicker.setOnPickListener(new OnPickListener(){
 
 			@Override
 			public void onStartPick() {}
 
 			@Override
-			public void onPick(int value, int increment) {}
+			public void onPick(int value, int increment) {
+				volumeText.setText((int) (volumePicker.getValue() * 100) + "%");
+			}
 
 			@Override
 			public void onStopPick() {
@@ -96,6 +101,7 @@ public class SettingActivity extends BaseSlidableActivity{
 	public void onResume(){
 		super.onResume();
 		volumePicker.setValue(WakerPreferenceManager.getInstance(this).getGlobalAlarmVolume());
+		volumeText.setText((int) (volumePicker.getValue() * 100) + "%");
 	}
 	
 	@Override

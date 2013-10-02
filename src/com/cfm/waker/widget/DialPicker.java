@@ -58,7 +58,7 @@ public class DialPicker extends View implements ThemeEnable{
 	private RectF arcBound;
 	protected Rect backgroundBound;
 	
-	private OnTimePickListener mOnTimePickListener;
+	private OnPickListener mOnTimePickListener;
 	
 	private boolean convert;
 	private boolean isKnobMode;
@@ -68,7 +68,7 @@ public class DialPicker extends View implements ThemeEnable{
 	protected boolean isDrawPressPoint;
 	protected boolean isDrawCenterButtonPressed;
 	
-	public interface OnTimePickListener{
+	public interface OnPickListener{
 		
 		//on circle pressed
 		public void onStartPick();
@@ -121,11 +121,11 @@ public class DialPicker extends View implements ThemeEnable{
 		isDrawCenterButtonPressed = false;
 	}
 	
-	public void setOnTimePickListener(OnTimePickListener mOnTimePickListener){
+	public void setOnPickListener(OnPickListener mOnTimePickListener){
 		this.mOnTimePickListener = mOnTimePickListener;
 	}
 	
-	public OnTimePickListener getOnTimePickListener(){
+	public OnPickListener getOnPickListener(){
 		return mOnTimePickListener;
 	}
 	

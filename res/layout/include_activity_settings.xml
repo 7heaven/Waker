@@ -13,4 +13,15 @@
         waker:degreeRange_max="60"
         waker:color="@color/global_hint_color" />
     
+    <com.cfm.waker.widget.DebossFontText
+        android:id="@+id/volume_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        waker:font="fonts/swiss_ht.ttf"
+        waker:text="123"
+        waker:textColor="#FFCCCCCC"
+        waker:textSize="60.0dip"
+        waker:textPaddingOffset="0.0px"/>
+    
 </RelativeLayout>

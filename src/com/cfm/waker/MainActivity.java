@@ -26,7 +26,7 @@ import com.cfm.waker.view.WakerViewPager;
 import com.cfm.waker.widget.DebossFontText;
 import com.cfm.waker.widget.DialPicker;
 import com.cfm.waker.widget.WakerToast;
-import com.cfm.waker.widget.DialPicker.OnTimePickListener;
+import com.cfm.waker.widget.DialPicker.OnPickListener;
 import com.cfm.waker.widget.WeekSelector;
 
 import android.app.Activity;
@@ -43,7 +43,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
-public class MainActivity extends BaseSlidableActivity implements OnTimePickListener{
+public class MainActivity extends BaseSlidableActivity implements OnPickListener{
 	
 	private DebossFontText timeText;
 	private DebossFontText amPm;
@@ -94,7 +94,7 @@ public class MainActivity extends BaseSlidableActivity implements OnTimePickList
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		dialPicker = (DialPicker) findViewById(R.id.time_pick);
-		dialPicker.setOnTimePickListener(this);
+		dialPicker.setOnPickListener(this);
 		dialLayout = (RelativeLayout) findViewById(R.id.dial_layout);
 		featureLayout = (RelativeLayout) findViewById(R.id.params_layout);
 		

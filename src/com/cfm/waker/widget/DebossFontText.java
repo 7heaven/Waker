@@ -9,6 +9,7 @@ package com.cfm.waker.widget;
 
 import com.cfm.waker.R;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -17,9 +18,14 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Shader;
 import android.graphics.Typeface;
+import android.text.Layout.Alignment;
+import android.text.StaticLayout;
+import android.text.TextPaint;
+import android.text.TextUtils.TruncateAt;
 import android.util.AttributeSet;
 import android.view.View;
 
+@SuppressLint("DrawAllocation")
 public class DebossFontText extends View {
 	
 	private Typeface tf;
@@ -30,15 +36,16 @@ public class DebossFontText extends View {
 	
 	private String text;
 	
-	private Paint paint;
+	private TextPaint paint;
 	private Shader shader;
-	private Rect textBound;
 	
 	private int centerY;
 	private int height;
 	private float offset;
 	
 	private boolean isMarginShow;
+	
+	private StaticLayout layout;
 
 	public DebossFontText(Context context){
 		this(context, null);
@@ -51,8 +58,7 @@ public class DebossFontText extends View {
 	public DebossFontText(Context context, AttributeSet attrs, int defStyle){
 		super(context, attrs, defStyle);
 		
-		paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		textBound = new Rect();
+		paint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
 		
 		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.DebossFontText);
 		
@@ -63,6 +69,7 @@ public class DebossFontText extends View {
 		}
 		
 		text = ta.getString(R.styleable.DebossFontText_text);
+		
 		textSize = ta.getDimension(R.styleable.DebossFontText_textSize, context.getResources().getDimension(R.dimen.debossfonttext_default_textsize));
 		paint.setTextSize(textSize);
 		textColor = ta.getColor(R.styleable.DebossFontText_textColor, 0xFF999999);
@@ -100,6 +107,8 @@ public class DebossFontText extends View {
 	
 	public void setText(String text){
 		this.text = text;
+		
+		requestLayout();
 		invalidate();
 	}
 	
@@ -112,9 +121,10 @@ public class DebossFontText extends View {
 	
 	private void doMeasureWork(){
 		if(null != text){
-			paint.getTextBounds(text, 0, text.length(), textBound);
 			int textWidth = (int) paint.measureText(text);
 			this.setMeasuredDimension(textWidth, (int) (textSize * 1.2F + (offset * 2)));
+			layout = new StaticLayout(text, 0, text.length(), paint, getMeasuredWidth(), Alignment.ALIGN_CENTER, 1.0F, 0.0F, true, TruncateAt.END, getMeasuredWidth());
+			
 		}
 		
 		height = getMeasuredHeight();
@@ -130,14 +140,26 @@ public class DebossFontText extends View {
 		if(isMarginShow){
 			paint.setShader(null);
 			paint.setColor(colorOffsetDark);
-			canvas.drawText(text, 0, centerY + (textBound.height() / 2) - (offset * 2), paint);
+			canvas.translate(-offset, -offset);
+			layout.draw(canvas);
+			//canvas.drawText(text, 0, centerY + (textBound.height() / 2) - (offset * 2), paint);
 			paint.setColor(colorOffsetBright);
-			canvas.drawText(text, 0, centerY + (textBound.height() / 2), paint);
+			canvas.translate(offset, offset);
+			layout.draw(canvas);
+			//canvas.drawText(text, 0, centerY + (textBound.height() / 2), paint);
+			paint.setColor(textColor);
+			paint.setShader(shader);
+			canvas.translate(-offset, -offset);
+			layout.draw(canvas);
+			//canvas.drawText(text, 0, centerY + (textBound.height() / 2) - offset, paint);
+		}else{
+			paint.setColor(textColor);
+			paint.setShader(shader);
+			layout.draw(canvas);
+			//canvas.drawText(text, 0, centerY + (textBound.height() / 2) - offset, paint);
 		}
 		
-		paint.setColor(textColor);
-		paint.setShader(shader);
-		canvas.drawText(text, 0, centerY + (textBound.height() / 2) - offset, paint);
+		
 		
 	}
 	
