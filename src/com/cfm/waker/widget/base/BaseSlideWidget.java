@@ -12,7 +12,9 @@ import com.cfm.waker.view.SlideEvent;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
+import android.view.ViewConfiguration;
 
 /**
  * This abstract class BaseSlideWidget is single slide detectable widget that allow you to write a custom single slide widget more easily.
@@ -25,6 +27,10 @@ public abstract class BaseSlideWidget extends View{
 	protected static final String TAG = "BaseSlideWidget";
 	
 	private SlideEvent mSlideEvent;
+	private VelocityTracker velocityTracker = VelocityTracker.obtain();
+	private int minVelocity;
+	
+	private long t;
 
 	public BaseSlideWidget(Context context){
 		this(context, null);
@@ -38,12 +44,17 @@ public abstract class BaseSlideWidget extends View{
 		super(context, attrs, defStyle);
 		
 		mSlideEvent = new SlideEvent();
+		ViewConfiguration config = ViewConfiguration.get(context);
+		minVelocity = config.getScaledMinimumFlingVelocity();
 	}
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event){
+		velocityTracker.addMovement(event);
 		switch(event.getAction() & MotionEvent.ACTION_MASK){
 		case MotionEvent.ACTION_DOWN:
+			t = System.currentTimeMillis();
+			
 			mSlideEvent.setStartX(event.getX());
 			mSlideEvent.setStartY(event.getY());
 			
@@ -74,7 +85,15 @@ public abstract class BaseSlideWidget extends View{
 			break;
 		case MotionEvent.ACTION_CANCEL:
 		case MotionEvent.ACTION_UP:
+			t = System.currentTimeMillis() - t;
 			mSlideEvent.setAction(SlideEvent.TOUCHMODE_IDLE);
+			
+			velocityTracker.computeCurrentVelocity(1000);
+			if(velocityTracker.getXVelocity() < minVelocity && velocityTracker.getYVelocity() < minVelocity){
+				if(t < 200) performClick();
+				if(t > 500) performLongClick();
+			}
+			
 			break;
 		}
 		

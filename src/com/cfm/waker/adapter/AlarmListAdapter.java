@@ -150,5 +150,5 @@ public class AlarmListAdapter extends PagerAdapter{
 	public void startUpdate(View view){
 		
 	}
-
+	
 }

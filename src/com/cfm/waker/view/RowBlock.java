@@ -7,8 +7,13 @@
  */
 package com.cfm.waker.view;
 
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
+
 import com.cfm.waker.R;
 import com.cfm.waker.widget.AlarmClockBlock;
+import com.cfm.waker.widget.AlarmClockBlock.OnPerformListener;
 
 import android.content.Context;
 import android.os.Handler;
@@ -31,9 +36,18 @@ public class RowBlock extends RelativeLayout {
 	private AlarmClockBlock alarm2;
 	private AlarmClockBlock alarm3;
 	
+	private int[] colors;
+	private HashMap<Long, Integer> alarmIds;
+	
 	private int visiblePosition = -1;
 	
 	private Handler handler;
+	
+	private RefreshToPrecessCallback refreshCallback;
+	
+	public interface RefreshToPrecessCallback{
+		public void refresh(long alarmId);
+	}
 	
 	private class AlarmInitRunnable implements Runnable{
 		private AlarmClockBlock alarm;
@@ -69,6 +83,20 @@ public class RowBlock extends RelativeLayout {
 		alarm1 = (AlarmClockBlock) view.findViewById(R.id.alarm1);
 		alarm2 = (AlarmClockBlock) view.findViewById(R.id.alarm2);
 		alarm3 = (AlarmClockBlock) view.findViewById(R.id.alarm3);
+		
+		colors = new int[]{alarm0.getColor(), alarm1.getColor(), alarm2.getColor(), alarm3.getColor()};
+		alarmIds = new HashMap<Long, Integer>();
+	}
+	
+	public void updateInfo(){
+		alarmIds.put(alarm0.getAlarm().getId(), 0);
+		alarmIds.put(alarm1.getAlarm().getId(), 1);
+		alarmIds.put(alarm2.getAlarm().getId(), 2);
+		alarmIds.put(alarm3.getAlarm().getId(), 3);
+	}
+	
+	public int getItemPositionById(long id){
+		return (Integer) alarmIds.get(id);
 	}
 	
 	public AlarmClockBlock getAlarmBlock(int position){
@@ -118,4 +146,49 @@ public class RowBlock extends RelativeLayout {
 		handler.postDelayed(alarmInitRunnable3, 450);
 	}
 	
+	public void performAlarmDelete(final int position){
+		final AlarmClockBlock alarm = getAlarmBlock(position);
+		alarm.prepareForDelMovement();
+		alarm.performDelMovement();
+		alarm.setOnPerformListener(new OnPerformListener(){
+
+			@Override
+			public void onInitFinish() {}
+
+			@Override
+			public void onDelFinish() {
+				if(null != refreshCallback) refreshCallback.refresh(alarm.getAlarm().getId());
+				performRollback(position);
+			}
+		
+		});
+	}
+	
+	public void performRollback(int position){
+		
+	}
+	
+	public void setRefreshCallback(RefreshToPrecessCallback refreshCallback){
+		this.refreshCallback = refreshCallback;
+	}
+	
+	public RefreshToPrecessCallback getRefreshCallback(){
+		return refreshCallback;
+	}
+	
+	private int mixColor(int c0, int c1, float ratio){
+		int r0 = c0 >> 16 & 0xFF;
+		int g0 = c0 >> 8 & 0xFF;
+		int b0 = c0 & 0xFF;
+		
+		int r1 = c1 >> 16 & 0xFF;
+		int g1 = c1 >> 8 & 0xFF;
+		int b1 = c1 & 0xFF;
+		
+		int rRange = (int) ((r1 - r0) * ratio);
+		int gRange = (int) ((g1 - g0) * ratio);
+		int bRange = (int) ((b1 - b0) * ratio);
+		
+		return (r0 + rRange) << 16 | (g0 + gRange) << 8 | b0 + bRange;
+	}
 }

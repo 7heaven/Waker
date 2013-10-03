@@ -24,6 +24,7 @@ import android.util.AttributeSet;
 import com.cfm.waker.R;
 import com.cfm.waker.dao.WakerDatabaseHelper;
 import com.cfm.waker.entity.Alarm;
+import com.cfm.waker.view.RowBlock;
 import com.cfm.waker.view.SlideEvent;
 import com.cfm.waker.widget.base.BaseSlideWidget;
 
@@ -35,6 +36,11 @@ public class AlarmClockBlock extends BaseSlideWidget {
 	
 	private Alarm alarm;
 	
+	public static final int MODE_NORMAL = 0;
+	public static final int MODE_DELETE = 1;
+	
+	private int mode = MODE_NORMAL;
+	
 	private int width, height;
 	private int centerX, centerY;
 	private int radius;
@@ -42,6 +48,7 @@ public class AlarmClockBlock extends BaseSlideWidget {
 	private int intrinsicHeight;
 	
 	private boolean enabled;
+	private boolean trans = false;
 	
 	private Paint paint;
 	private TextPaint textPaint;
@@ -59,11 +66,18 @@ public class AlarmClockBlock extends BaseSlideWidget {
 	private Handler handler;
 	private MyRunnable runnable;
 	private InitRunnable initRunnable;
+	private DelRunnable delRunnable;
 	
-	private OnStateChangeListener onStateChangeListener;
+	private OnStateChangedListener onStateChangedListener;
+	private OnPerformListener onPerformListener;
 	
-	public interface OnStateChangeListener{
-		public void onStateChanged(long id, boolean isEnabled);
+	public interface OnStateChangedListener{
+		public void onStateChange(long id, boolean isEnabled);
+	}
+	
+	public interface OnPerformListener{
+		public void onInitFinish();
+		public void onDelFinish();
 	}
 	
 	public AlarmClockBlock(Context context){
@@ -106,6 +120,22 @@ public class AlarmClockBlock extends BaseSlideWidget {
 		handler = new Handler();
 	}
 	
+	public void setOnStateChangedListener(OnStateChangedListener onStateChangedListener){
+		this.onStateChangedListener = onStateChangedListener;
+	}
+	
+	public OnStateChangedListener getOnStateChangedListener(){
+		return onStateChangedListener;
+	}
+	
+	public void setOnPerformListener(OnPerformListener onPerformListener){
+		this.onPerformListener = onPerformListener;
+	}
+	
+	public OnPerformListener getPerformListener(){
+		return onPerformListener;
+	}
+	
 	public void setAlarm(Calendar calendar, boolean is24Format){
 		alarm = new Alarm(calendar, is24Format);
 		enabled = alarm.isEnabled();
@@ -114,6 +144,10 @@ public class AlarmClockBlock extends BaseSlideWidget {
 	public void setAlarm(Alarm alarm){
 		this.alarm = alarm;
 		enabled = alarm.isEnabled();
+	}
+	
+	public Alarm getAlarm(){
+		return alarm;
 	}
 	
 	@Override
@@ -135,7 +169,7 @@ public class AlarmClockBlock extends BaseSlideWidget {
 				enabled = !enabled;
 				alarm.setEnabled(enabled);
 				WakerDatabaseHelper.getInstance(context).updateAlarm(alarm.getId(), alarm);
-				if(null != onStateChangeListener) onStateChangeListener.onStateChanged(alarm.getId(), enabled);
+				if(null != onStateChangedListener) onStateChangedListener.onStateChange(alarm.getId(), enabled);
 				returnToOriginalSpot(event);
 			}
 			break;
@@ -171,7 +205,44 @@ public class AlarmClockBlock extends BaseSlideWidget {
 		}
 	}
 	
+	public void prepareForDelMovement(){
+		handler.removeCallbacks(delRunnable);
+		
+		initMovementProcedure = 1;
+		isInInitMovement = true;
+		arcBound = new RectF(moveX - radius, moveY - radius, moveX + radius, moveY + radius);
+		
+		invalidate();
+	}
+	
+	public void performDelMovement(){
+		if(isInInitMovement){
+			delRunnable = new DelRunnable();
+			handler.post(delRunnable);
+		}
+	}
+	
+	@Override
+	public boolean performClick(){
+		if(mode == MODE_DELETE){
+			((RowBlock) getParent().getParent()).performAlarmDelete(((RowBlock) getParent().getParent()).getItemPositionById(alarm.getId()));
+			mode = MODE_NORMAL;
+		}
+		return super.performClick();
+	}
+	
+	@Override
+	public boolean performLongClick(){
+		mode = MODE_DELETE;
+		return super.performLongClick();
+	}
+	
 	private class InitRunnable implements Runnable{
+		
+		public InitRunnable(){
+			handler.removeCallbacks(delRunnable);
+		}
+		
 		@Override
 		public void run(){
 			if(initMovementProcedure < 1F){
@@ -181,6 +252,27 @@ public class AlarmClockBlock extends BaseSlideWidget {
 				handler.postDelayed(initRunnable, 20);
 			}else{
 				isInInitMovement = false;
+				if(null != onPerformListener) onPerformListener.onInitFinish();
+			}
+		}
+	}
+	
+	private class DelRunnable implements Runnable{
+		
+		public DelRunnable(){
+			handler.removeCallbacks(initRunnable);
+		}
+		
+		@Override
+		public void run(){
+			if(initMovementProcedure > 0F){
+				initMovementProcedure -= 0.1F;
+				invalidate();
+				
+				handler.postDelayed(delRunnable, 20);
+			}else{
+				isInInitMovement = false;
+				if(null != onPerformListener) onPerformListener.onDelFinish();
 			}
 		}
 	}
@@ -202,6 +294,21 @@ public class AlarmClockBlock extends BaseSlideWidget {
 				handler.postDelayed(runnable, 20);
 			}
 		}
+	}
+	
+	public void setColor(int color){
+		this.color = color;
+		invalidate();
+	}
+	
+	public int getColor(){
+		return color;
+	}
+	
+	public void setToNormal(){
+		initMovementProcedure = 1F;
+		invalidate();
+		isInInitMovement = false;
 	}
 	
 	@Override
@@ -243,6 +350,16 @@ public class AlarmClockBlock extends BaseSlideWidget {
 		bound.bottom = (int) (moveY + centerY);
 		canvas.drawRect(bound, paint);
 		*/
+		
+		if(mode == MODE_DELETE){
+			if(trans){
+				trans = false;
+				canvas.translate(-5, 0);
+			}else{
+				trans = true;
+				canvas.translate(5, 0);
+			}
+		}
 		
 		paint.setColor(enabled ? color : 0xFF999999);
 		paint.setStyle(Paint.Style.STROKE);

@@ -22,6 +22,7 @@ import com.cfm.waker.service.WakerService.LocalBinder;
 import com.cfm.waker.ui.SettingActivity;
 import com.cfm.waker.ui.base.BaseSlidableActivity;
 import com.cfm.waker.view.RowBlock;
+import com.cfm.waker.view.RowBlock.RefreshToPrecessCallback;
 import com.cfm.waker.view.WakerViewPager;
 import com.cfm.waker.widget.DebossFontText;
 import com.cfm.waker.widget.DialPicker;
@@ -43,7 +44,8 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
-public class MainActivity extends BaseSlidableActivity implements OnPickListener{
+public class MainActivity extends BaseSlidableActivity implements OnPickListener,
+                                                                  RefreshToPrecessCallback{
 	
 	private DebossFontText timeText;
 	private DebossFontText amPm;
@@ -331,11 +333,21 @@ public class MainActivity extends BaseSlidableActivity implements OnPickListener
 		alarmList.clear();
 		if(null != alarms){
 			alarmList.addAll(alarms);
+			int i = 0;
+			do{
+				View v = alarmListAdapter.getItem(i);
+				if(v instanceof RowBlock){
+					((RowBlock) v).setRefreshCallback(this);
+					((RowBlock) v).updateInfo();
+				}
+			}while(++i < alarmListAdapter.getCount());
 		}
 		alarmListAdapter.notifyDataSetChanged();
+		/*
 		if(viewPager.getCurrentItem() == alarmListAdapter.getCount() - 1 && viewPager.getChildCount() > 0){
 			((RowBlock) viewPager.getChildAt(viewPager.getCurrentItem())).performLastAlarmInit();
 		}
+		 */
 	}
 	
 	@Override
@@ -414,6 +426,12 @@ public class MainActivity extends BaseSlidableActivity implements OnPickListener
 		}
 		
 		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public void refresh(long alarmId) {
+		WakerDatabaseHelper.getInstance(this).deleteAlarm(alarmId);
+		updateAlarmsByDatabase();
 	}
 
 }
