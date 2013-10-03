@@ -15,7 +15,6 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.text.Layout.Alignment;
