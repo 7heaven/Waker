@@ -193,6 +193,9 @@ public class MainActivity extends BaseSlidableActivity implements OnPickListener
 				}
 				if(yPosition >= -viewPagerLayout.getMeasuredHeight() / 8 && yPosition < featureLayout.getMeasuredHeight() / 2){
 					contentMovement(1);
+					
+					View v = alarmListAdapter.getItem(viewPager.getCurrentItem());
+					if(v instanceof RowBlock) ((RowBlock) alarmListAdapter.getItem(viewPager.getCurrentItem())).normalMode();
 				}
 				
 				dialLayout.requestLayout();
@@ -333,14 +336,6 @@ public class MainActivity extends BaseSlidableActivity implements OnPickListener
 		alarmList.clear();
 		if(null != alarms){
 			alarmList.addAll(alarms);
-			int i = 0;
-			do{
-				View v = alarmListAdapter.getItem(i);
-				if(v instanceof RowBlock){
-					((RowBlock) v).setRefreshCallback(this);
-					((RowBlock) v).updateInfo();
-				}
-			}while(++i < alarmListAdapter.getCount());
 		}
 		alarmListAdapter.notifyDataSetChanged();
 		/*

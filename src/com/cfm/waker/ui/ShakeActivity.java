@@ -97,6 +97,7 @@ public class ShakeActivity extends BaseActivity implements OnShakeListener,
 		button.setOnClickListener(this);
 		
 		alarm = WakerDatabaseHelper.getInstance(this).getAlarm(getIntent().getLongExtra(Constants.ALARM_ID, 0), mApplication.is24());
+		if(alarm == null) finish();
 		snoozeCount = getIntent().getIntExtra(Constants.ALARM_SNOOZE_COUNT, 0);
 		if(snoozeCount >= 3) button.setVisibility(View.GONE);
 		WLog.print(TAG, snoozeCount + "");

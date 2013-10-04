@@ -12,6 +12,7 @@ public class SlideEvent {
 	private float startX,startY;
 	private float x,y;
 	private float dx,dy;
+	private float xVel, yVel;
 
 	
 	public static final int                  TOUCHMODE_IDLE = 0x00000000;
@@ -87,6 +88,22 @@ public class SlideEvent {
 	
 	public void setY(float y){
 		this.y = y;
+	}
+	
+	public void setXVel(float xVel){
+		this.xVel = xVel;
+	}
+	
+	public float getXVel(){
+		return xVel;
+	}
+	
+	public void setYVel(float yVel){
+		this.yVel = yVel;
+	}
+	
+	public float getYVel(){
+		return yVel;
 	}
 	
 	public int getAction(){

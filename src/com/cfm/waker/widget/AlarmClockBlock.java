@@ -49,6 +49,7 @@ public class AlarmClockBlock extends BaseSlideWidget {
 	
 	private boolean enabled;
 	private boolean trans = false;
+	private int transN = 0;
 	
 	private Paint paint;
 	private TextPaint textPaint;
@@ -158,6 +159,7 @@ public class AlarmClockBlock extends BaseSlideWidget {
 			break;
 		case SlideEvent.TOUCHMODE_VERTICAL_START:
 			getParent().requestDisallowInterceptTouchEvent(true);
+			mode = MODE_NORMAL;
 			break;
 		case SlideEvent.TOUCHMODE_DRAGGING_VERTICALLY:
 			moveX = centerX;
@@ -190,8 +192,9 @@ public class AlarmClockBlock extends BaseSlideWidget {
 	
 	public void prepareForInitMovement(){
 		handler.removeCallbacks(initRunnable);
+		handler.removeCallbacks(delRunnable);
 		
-		initMovementProcedure = 0;
+		initMovementProcedure = 0F;
 		isInInitMovement = true;
 		arcBound = new RectF(moveX - radius, moveY - radius, moveX + radius, moveY + radius);
 		
@@ -208,7 +211,7 @@ public class AlarmClockBlock extends BaseSlideWidget {
 	public void prepareForDelMovement(){
 		handler.removeCallbacks(delRunnable);
 		
-		initMovementProcedure = 1;
+		initMovementProcedure = 1F;
 		isInInitMovement = true;
 		arcBound = new RectF(moveX - radius, moveY - radius, moveX + radius, moveY + radius);
 		
@@ -222,9 +225,19 @@ public class AlarmClockBlock extends BaseSlideWidget {
 		}
 	}
 	
+	public void setMode(int mode){
+		this.mode = mode;
+	}
+	
+	public int getMode(){
+		return mode;
+	}
+	
 	@Override
 	public boolean performClick(){
 		if(mode == MODE_DELETE){
+			handler.removeCallbacks(delRunnable);
+			handler.removeCallbacks(initRunnable);
 			((RowBlock) getParent().getParent()).performAlarmDelete(((RowBlock) getParent().getParent()).getItemPositionById(alarm.getId()));
 			mode = MODE_NORMAL;
 		}
@@ -271,7 +284,6 @@ public class AlarmClockBlock extends BaseSlideWidget {
 				
 				handler.postDelayed(delRunnable, 20);
 			}else{
-				isInInitMovement = false;
 				if(null != onPerformListener) onPerformListener.onDelFinish();
 			}
 		}
@@ -306,9 +318,9 @@ public class AlarmClockBlock extends BaseSlideWidget {
 	}
 	
 	public void setToNormal(){
-		initMovementProcedure = 1F;
-		invalidate();
+		initMovementProcedure = 0F;
 		isInInitMovement = false;
+		invalidate();
 	}
 	
 	@Override
@@ -353,11 +365,11 @@ public class AlarmClockBlock extends BaseSlideWidget {
 		
 		if(mode == MODE_DELETE){
 			if(trans){
-				trans = false;
-				canvas.translate(-5, 0);
+				canvas.translate(--transN, 0);
+				if(transN < -5) trans = false;
 			}else{
-				trans = true;
-				canvas.translate(5, 0);
+				canvas.translate(++transN, 0);
+				if(transN > 5) trans = true;
 			}
 		}
 		

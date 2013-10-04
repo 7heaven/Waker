@@ -30,7 +30,7 @@ public abstract class BaseSlideWidget extends View{
 	private VelocityTracker velocityTracker = VelocityTracker.obtain();
 	private int minVelocity;
 	
-	private long t;
+	protected long t;
 
 	public BaseSlideWidget(Context context){
 		this(context, null);
@@ -86,13 +86,21 @@ public abstract class BaseSlideWidget extends View{
 		case MotionEvent.ACTION_CANCEL:
 		case MotionEvent.ACTION_UP:
 			t = System.currentTimeMillis() - t;
-			mSlideEvent.setAction(SlideEvent.TOUCHMODE_IDLE);
+			
 			
 			velocityTracker.computeCurrentVelocity(1000);
-			if(velocityTracker.getXVelocity() < minVelocity && velocityTracker.getYVelocity() < minVelocity){
+			mSlideEvent.setXVel(velocityTracker.getXVelocity());
+			mSlideEvent.setYVel(velocityTracker.getYVelocity());
+			
+			int action = mSlideEvent.getAction() & SlideEvent.ACTION_DIRECTION_MASK;
+			
+			if(mSlideEvent.getXVel() < minVelocity && mSlideEvent.getYVel() < minVelocity){
 				if(t < 200) performClick();
 				if(t > 500) performLongClick();
 			}
+			
+			mSlideEvent.setAction(SlideEvent.TOUCHMODE_IDLE);
+			velocityTracker.clear();
 			
 			break;
 		}

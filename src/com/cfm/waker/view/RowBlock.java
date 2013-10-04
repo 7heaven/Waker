@@ -12,6 +12,7 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import com.cfm.waker.R;
+import com.cfm.waker.log.WLog;
 import com.cfm.waker.widget.AlarmClockBlock;
 import com.cfm.waker.widget.AlarmClockBlock.OnPerformListener;
 
@@ -20,6 +21,7 @@ import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 /**
@@ -42,6 +44,7 @@ public class RowBlock extends RelativeLayout {
 	private int visiblePosition = -1;
 	
 	private Handler handler;
+	private RollbackRunnable rollbackRunnable;
 	
 	private RefreshToPrecessCallback refreshCallback;
 	
@@ -59,6 +62,48 @@ public class RowBlock extends RelativeLayout {
 		@Override
 		public void run(){
 			alarm.performInitMovement();
+		}
+	}
+	
+	private class RollbackRunnable implements Runnable{
+		private AlarmClockBlock alarm;
+		private float margin;
+		private LayoutParams param;
+		private int position;
+		private float intrinsic;
+		
+		public RollbackRunnable(AlarmClockBlock alarm, int position){
+			this.alarm = alarm;
+			param = (LayoutParams) alarm.getLayoutParams();
+			margin = alarm.getMeasuredWidth() + param.leftMargin;
+			intrinsic = margin;
+			this.position = position;
+		}
+		
+		@Override
+		public void run(){
+			
+			param.leftMargin = (int) margin;
+			
+			alarm.setLayoutParams(param);
+			
+			int i = position;
+			float ratio = 1 - (margin / intrinsic);
+			do{
+				if(i < 3){
+					getAlarmBlock(i).setColor(mixColor(colors[i + 1], colors[i], ratio));
+				}else{
+					getAlarmBlock(i).setColor(mixColor(colors[0], colors[i], ratio));
+				}
+			}while(++i < 4);
+			
+			margin += -margin * 0.2F;
+			
+			if(margin > 0){
+				handler.postDelayed(rollbackRunnable, 20);
+			}else{
+				updateInfo(visiblePosition + 1);
+			}
 		}
 	}
 
@@ -88,11 +133,11 @@ public class RowBlock extends RelativeLayout {
 		alarmIds = new HashMap<Long, Integer>();
 	}
 	
-	public void updateInfo(){
-		alarmIds.put(alarm0.getAlarm().getId(), 0);
-		alarmIds.put(alarm1.getAlarm().getId(), 1);
-		alarmIds.put(alarm2.getAlarm().getId(), 2);
-		alarmIds.put(alarm3.getAlarm().getId(), 3);
+	public void updateInfo(int count){
+		alarmIds.clear();
+		do{
+			alarmIds.put(getAlarmBlock(count - 1).getAlarm().getId(), count - 1);
+		}while(--count > 0);
 	}
 	
 	public int getItemPositionById(long id){
@@ -117,6 +162,28 @@ public class RowBlock extends RelativeLayout {
 	public void setAlarmVisible(int position){
 		getAlarmBlock(position).setVisibility(View.VISIBLE);
 		if(visiblePosition < position) visiblePosition = position;
+	}
+	
+	public void setAllAlarmsInvisible(){
+		alarm0.setVisibility(View.GONE);
+		alarm1.setVisibility(View.GONE);
+		alarm2.setVisibility(View.GONE);
+		alarm3.setVisibility(View.GONE);
+		visiblePosition = -1;
+	}
+	
+	public void normalize(){
+		alarm0.setToNormal();
+		alarm1.setToNormal();
+		alarm2.setToNormal();
+		alarm3.setToNormal();
+	}
+	
+	public void normalMode(){
+		alarm0.setMode(AlarmClockBlock.MODE_NORMAL);
+		alarm1.setMode(AlarmClockBlock.MODE_NORMAL);
+		alarm2.setMode(AlarmClockBlock.MODE_NORMAL);
+		alarm3.setMode(AlarmClockBlock.MODE_NORMAL);
 	}
 	
 	public void performLastAlarmInit(){
@@ -147,6 +214,7 @@ public class RowBlock extends RelativeLayout {
 	}
 	
 	public void performAlarmDelete(final int position){
+		handler.removeCallbacks(rollbackRunnable);
 		final AlarmClockBlock alarm = getAlarmBlock(position);
 		alarm.prepareForDelMovement();
 		alarm.performDelMovement();
@@ -165,7 +233,17 @@ public class RowBlock extends RelativeLayout {
 	}
 	
 	public void performRollback(int position){
-		
+		final AlarmClockBlock alarm = getAlarmBlock(position);
+		rollbackRunnable = new RollbackRunnable(alarm, position);
+		handler.post(rollbackRunnable);
+		LayoutParams param = (LayoutParams) alarm.getLayoutParams();
+		param.leftMargin = alarm.getMeasuredWidth() + param.leftMargin;
+		alarm.setLayoutParams(param);
+		alarm.setToNormal();
+		int i = visiblePosition;
+		do{
+			if(i < 3) getAlarmBlock(i).setMode(getAlarmBlock(i + 1).getMode());
+		}while(--i >= position);
 	}
 	
 	public void setRefreshCallback(RefreshToPrecessCallback refreshCallback){
@@ -177,18 +255,23 @@ public class RowBlock extends RelativeLayout {
 	}
 	
 	private int mixColor(int c0, int c1, float ratio){
+		int a0 = c0 >> 24 & 0xFF;
 		int r0 = c0 >> 16 & 0xFF;
 		int g0 = c0 >> 8 & 0xFF;
 		int b0 = c0 & 0xFF;
 		
+		int a1 = c1 >> 24 & 0xFF;
 		int r1 = c1 >> 16 & 0xFF;
 		int g1 = c1 >> 8 & 0xFF;
 		int b1 = c1 & 0xFF;
 		
+		int aRange = (int) ((a1 - a0) * ratio);
 		int rRange = (int) ((r1 - r0) * ratio);
 		int gRange = (int) ((g1 - g0) * ratio);
 		int bRange = (int) ((b1 - b0) * ratio);
 		
-		return (r0 + rRange) << 16 | (g0 + gRange) << 8 | b0 + bRange;
+		int result = (a0 + aRange) << 24 | (r0 + rRange) << 16 | (g0 + gRange) << 8 | (b0 + bRange);
+		
+		return result;
 	}
 }

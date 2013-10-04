@@ -13,6 +13,7 @@ import java.util.List;
 import com.cfm.waker.R;
 import com.cfm.waker.entity.Alarm;
 import com.cfm.waker.view.RowBlock;
+import com.cfm.waker.view.RowBlock.RefreshToPrecessCallback;
 
 import android.content.Context;
 import android.os.Parcelable;
@@ -78,6 +79,8 @@ public class AlarmListAdapter extends PagerAdapter{
 				viewList.add(position, rowBlock);
 			}
 			
+			rowBlock.setAllAlarmsInvisible();
+			
 			int i = 0;
 			int bdg = 0;
 			
@@ -96,6 +99,9 @@ public class AlarmListAdapter extends PagerAdapter{
 				rowBlock.getAlarmBlock(i).setAlarm(alarmList.get(position * 4 + i));
 				
 			}while(++i < bdg);
+			
+			rowBlock.updateInfo(bdg);
+			rowBlock.setRefreshCallback((RefreshToPrecessCallback) context);
 			
 			((ViewPager) view).addView(rowBlock);
 			
