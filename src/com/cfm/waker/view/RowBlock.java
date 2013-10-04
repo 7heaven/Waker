@@ -8,11 +8,8 @@
 package com.cfm.waker.view;
 
 import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
 
 import com.cfm.waker.R;
-import com.cfm.waker.log.WLog;
 import com.cfm.waker.widget.AlarmClockBlock;
 import com.cfm.waker.widget.AlarmClockBlock.OnPerformListener;
 
@@ -21,11 +18,10 @@ import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 /**
- * a RowBlock is a simple Class contain 4 AlarmClockBLock </br>
+ * a RowBlock is a simple Class contain 4 AlarmClockBLocks </br>
  * @author caifangmao8@gmail.com
  *
  */

@@ -13,6 +13,7 @@ import android.view.ViewConfiguration;
 
 import com.cfm.waker.R;
 import com.cfm.waker.log.WLog;
+import com.cfm.waker.theme.ThemeEnable;
 
 public class CurveSwitcher extends Knob {
 	
