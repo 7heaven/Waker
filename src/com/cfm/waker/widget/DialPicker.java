@@ -394,21 +394,6 @@ public class DialPicker extends View implements ThemeEnable{
 			return des >=start && des <= end;
 		}
 		
-		/*
-		if(start + range < 0){
-			return (des >= 0 && des <= start) || (des >= angleMinus(start, -range) && des <= 360);
-		}
-		
-		if(start + range > 360){
-			return (des >= start && des <= 360) || (des >= 0 && des <= anglePlus(start, range));
-		}
-		
-		if(range > 0){
-			return des >= start && des <= start + range;
-		}else{
-			return des >= start + range && des <= start;
-		}
-		 */
 	}
 	
 	//for Theme management

@@ -31,6 +31,9 @@ public abstract class BaseSlideWidget extends View{
 	private int minVelocity;
 	
 	protected long t;
+	
+	protected boolean clickable;
+	protected boolean longClickable;
 
 	public BaseSlideWidget(Context context){
 		this(context, null);
@@ -46,6 +49,9 @@ public abstract class BaseSlideWidget extends View{
 		mSlideEvent = new SlideEvent();
 		ViewConfiguration config = ViewConfiguration.get(context);
 		minVelocity = config.getScaledMinimumFlingVelocity();
+		
+		clickable = true;
+		longClickable = false;
 	}
 	
 	@Override
@@ -92,11 +98,9 @@ public abstract class BaseSlideWidget extends View{
 			mSlideEvent.setXVel(velocityTracker.getXVelocity());
 			mSlideEvent.setYVel(velocityTracker.getYVelocity());
 			
-			int action = mSlideEvent.getAction() & SlideEvent.ACTION_DIRECTION_MASK;
-			
 			if(mSlideEvent.getXVel() < minVelocity && mSlideEvent.getYVel() < minVelocity){
-				if(t < 200) performClick();
-				if(t > 500) performLongClick();
+				if(t < 200 && clickable) performClick();
+				if(t > 500 && longClickable) performLongClick();
 			}
 			
 			mSlideEvent.setAction(SlideEvent.TOUCHMODE_IDLE);

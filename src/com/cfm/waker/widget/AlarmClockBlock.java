@@ -68,6 +68,9 @@ public class AlarmClockBlock extends BaseSlideWidget {
 	private MyRunnable runnable;
 	private InitRunnable initRunnable;
 	private DelRunnable delRunnable;
+	private PrepareDelRunnable prepareDelRunnable;
+	
+	private RowBlock mRowBlock;
 	
 	private OnStateChangedListener onStateChangedListener;
 	private OnPerformListener onPerformListener;
@@ -151,13 +154,27 @@ public class AlarmClockBlock extends BaseSlideWidget {
 		return alarm;
 	}
 	
+	public void setRowBlock(RowBlock rowBlock){
+		mRowBlock = rowBlock;
+	}
+	
+	public RowBlock getRowBlock(){
+		return mRowBlock;
+	}
+	
 	@Override
 	public boolean onSlideEvent(SlideEvent event){
 		switch(event.getAction()){
 		case SlideEvent.TOUCHMODE_DOWN:
+			longClickable = true;
 			if(event.getStartY() > height) return false;
 			break;
+		case SlideEvent.TOUCHMODE_HORIZONTAL_START:
+			longClickable = false;
+			mode = MODE_NORMAL;
+			break;
 		case SlideEvent.TOUCHMODE_VERTICAL_START:
+			longClickable = false;
 			getParent().requestDisallowInterceptTouchEvent(true);
 			mode = MODE_NORMAL;
 			break;
@@ -225,8 +242,20 @@ public class AlarmClockBlock extends BaseSlideWidget {
 		}
 	}
 	
+	public void performPrepareDelMovement(){
+		prepareDelRunnable = new PrepareDelRunnable();
+		handler.post(prepareDelRunnable);
+	}
+	
+	public void stopPrepareDelMovement(){
+		handler.removeCallbacks(prepareDelRunnable);
+	}
+	
 	public void setMode(int mode){
 		this.mode = mode;
+		if(mode == MODE_DELETE){
+			performPrepareDelMovement();
+		}
 	}
 	
 	public int getMode(){
@@ -238,7 +267,7 @@ public class AlarmClockBlock extends BaseSlideWidget {
 		if(mode == MODE_DELETE){
 			handler.removeCallbacks(delRunnable);
 			handler.removeCallbacks(initRunnable);
-			((RowBlock) getParent().getParent()).performAlarmDelete(((RowBlock) getParent().getParent()).getItemPositionById(alarm.getId()));
+			mRowBlock.performAlarmDelete(mRowBlock.getItemPositionById(alarm.getId()));
 			mode = MODE_NORMAL;
 		}
 		return super.performClick();
@@ -247,7 +276,13 @@ public class AlarmClockBlock extends BaseSlideWidget {
 	@Override
 	public boolean performLongClick(){
 		mode = MODE_DELETE;
+		performPrepareDelMovement();
 		return super.performLongClick();
+	}
+	
+	public void longClickRollback(){
+		mode = MODE_NORMAL;
+		stopPrepareDelMovement();
 	}
 	
 	private class InitRunnable implements Runnable{
@@ -286,6 +321,23 @@ public class AlarmClockBlock extends BaseSlideWidget {
 			}else{
 				if(null != onPerformListener) onPerformListener.onDelFinish();
 			}
+		}
+	}
+	
+	private class PrepareDelRunnable implements Runnable{
+		@Override
+		public void run(){
+			if(trans){
+				transN--;
+				if(transN < -5) trans = false;
+			}else{
+				transN++;
+				if(transN > 5) trans = true;
+			}
+			
+			invalidate();
+			
+			handler.postDelayed(prepareDelRunnable, 20);
 		}
 	}
 	
@@ -364,13 +416,7 @@ public class AlarmClockBlock extends BaseSlideWidget {
 		*/
 		
 		if(mode == MODE_DELETE){
-			if(trans){
-				canvas.translate(--transN, 0);
-				if(transN < -5) trans = false;
-			}else{
-				canvas.translate(++transN, 0);
-				if(transN > 5) trans = true;
-			}
+			canvas.translate(transN, 0);
 		}
 		
 		paint.setColor(enabled ? color : 0xFF999999);
